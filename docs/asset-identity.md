@@ -14,9 +14,22 @@ shows, for every token:
 - the max supply and minted supply
 - the holder count
 
-Before you buy, check the deployment transaction on the token page matches
-the token you researched. A copycat deployment has a different transaction
-hash and block, whatever its ticker says.
+The deployment transaction appears in three places, so you never have to
+take a ticker on trust:
+
+- the market board, in its own column beside the ticker
+- every search result
+- the token page, above the price
+
+Before you buy, check the deployment transaction matches the token you
+researched. A copycat deployment has a different transaction hash and block,
+whatever its ticker says.
+
+Search never merges two deployments that share a ticker. If two exist, you
+see both rows with their own transactions, and you choose.
+
+When no source reported a deployment for a row, the row says so. It does not
+fall back to the ticker.
 
 ## Bitcoin Stamps
 
