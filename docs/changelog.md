@@ -1,5 +1,31 @@
 # Changelog
 
+## 2026-08-30 (third release)
+
+- Asset identity: a token page now has an address that names its deployment,
+  `/trade/src20/<ticker>/<deploy transaction>`. That is what Copy link gives
+  you and what a market row opens, so a link cannot open a different token
+  for whoever receives it.
+- Asset identity: the shorter `/trade/src20/<ticker>` still works and now
+  resolves before it shows a market. One deployment moves you to the longer
+  link. More than one shows you each deployment and asks. A ticker with no
+  deployment says so. An index that did not answer says that instead, which
+  is a different thing. Only the first opens a market.
+- Search: a 64 character transaction id now offers the SRC-20 deployment
+  alongside the stamp, and picks neither for you.
+- Wallets: [the wallet page](wallets.md) now carries a table of what each
+  wallet can actually do here, generated from the code that talks to it.
+  OKX Wallet no longer appears to support listing, cancelling, or minting,
+  because it does not.
+- Wallets: Leather is supported for connecting and signing. StampDEX shows
+  your Stamps and SRC-20 and Leather signs for them; Leather does not display
+  those assets itself.
+- Wallets: an Xverse session now ends when you switch accounts inside the
+  wallet, instead of carrying on with the address you left.
+- Market board: a token nobody has priced no longer sorts as though its price
+  were zero, and a price range filter no longer returns it as a match. On
+  2026-08-28, 258 of 500 rows had no price from any source.
+
 ## 2026-08-30 (second release)
 
 - Asset identity: the market board and every search result now print the
