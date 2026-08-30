@@ -5,6 +5,7 @@ import { join, dirname, resolve } from 'node:path';
 
 const ROOT = resolve(dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1')), '..');
 const BAD_CHARS = [0x2014, 0x00e2, 0x00c2, 0x00c3, 0xfffd];
+const NEWLINE = String.fromCharCode(10);
 
 const files = [];
 const walk = (dir) => {
@@ -45,6 +46,39 @@ for (const file of files) {
     if (!existsSync(targetPath)) {
       const line = text.slice(0, match.index).split('\n').length;
       findings.push(`${file}:${line} missing asset: ${target}`);
+    }
+  }
+}
+
+// The wallet capability tables are generated from
+// `frontend/src/wallet/capabilities.js` in the `stampdex` repository. Hand
+// editing them makes this page disagree with the product, which is the one
+// thing the page exists to prevent. Check the markers are intact and that
+// every wallet named above the table also appears inside it.
+const walletsPage = join(ROOT, 'docs', 'wallets.md');
+if (existsSync(walletsPage)) {
+  const text = readFileSync(walletsPage, 'utf8');
+  for (const block of ['wallet-capabilities', 'wallet-native-display']) {
+    const open = `<!-- generated:${block} -->`;
+    const close = `<!-- end:${block} -->`;
+    const from = text.indexOf(open);
+    const to = text.indexOf(close);
+    if (from === -1 || to === -1 || to < from) {
+      findings.push(`${walletsPage}: the ${block} block is missing or out of order`);
+      continue;
+    }
+    const rows = text
+      .slice(from + open.length, to)
+      .split(NEWLINE)
+      .filter((line) => line.trim().startsWith('|'));
+    if (rows.length < 3) {
+      findings.push(`${walletsPage}: the ${block} block has no table`);
+    }
+  }
+  const header = text.split(NEWLINE).find((line) => line.startsWith('| Action |')) ?? '';
+  for (const wallet of ['Universe Wallet', 'UniSat', 'Leather', 'Xverse', 'OKX Wallet']) {
+    if (!header.includes(wallet)) {
+      findings.push(`${walletsPage}: ${wallet} is offered but not in the capability table`);
     }
   }
 }
