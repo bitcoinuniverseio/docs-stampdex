@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-08-30 (second release)
+
+- Asset identity: the market board and every search result now print the
+  deployment transaction behind a ticker, in a column that used to hold three
+  scores named Liquidity, Momentum, and Risk. Those scores came from a formula
+  StampDEX never published and counted a missing reading as a zero, so they
+  are gone.
+- Search: two deployments that share a ticker no longer collapse into one
+  result. Both appear, each with its own deployment transaction.
+- Search: a result with no volume reading says unknown instead of 0, and a
+  result with no listing reading no longer shows a Listed badge.
+- Address holdings: `/address/<address>` shows what any Bitcoin address holds,
+  read from the public index, with no wallet connection. The older
+  `/shelf/<address>` links open the same page.
+- Removed: the daily games, the pack-opening and battle hub, and the points,
+  streaks, badges, and confetti that went with them. StampDEX is a market, and
+  a market this thin cannot afford invented activity.
+
 ## 2026-08-30
 
 - Buying: the buy panel says where your BTC goes before you sign, not only

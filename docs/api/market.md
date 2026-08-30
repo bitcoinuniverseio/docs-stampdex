@@ -25,6 +25,11 @@ curl "https://stamp.api.bitcoinuniverse.io/api/v1/market/tokens/KEVIN"
 - Every market row carries a `sources` object naming the origin of each
   number (`stampchain`, `stampdex`, or `none`). See
   [Data sources](../data-sources.md) for what those origins mean.
+- Every market row carries `deploy_tx`, `deploy_block`, `deploy_time`, and
+  `creator`, which identify the deployment behind the ticker.
+  `sources.identity` is `stampchain` when a source reported one and `none`
+  when none did. `deploy_tx` is null in that case; the ticker is never used
+  in its place. See [Asset identity](../asset-identity.md).
 - `mint_progress` is minted supply against max supply, as a percentage.
 - A null or absent value means the source had no answer. It is never
   silently replaced with 0.
