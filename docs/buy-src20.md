@@ -21,6 +21,10 @@ What happens at each step of a buy, and what to check before you sign.
 3. **Review the trade.** Before your wallet opens, StampDEX shows the
    token, amount, unit price, total, service fee, network fee rate, and
    the payment address. Read it. It is exactly what you will sign.
+   The same panel says where the BTC goes: into a trade address StampDEX
+   controls, released to the seller only when the tokens reach you. That
+   line is on the buy panel whether or not you use the review step, so
+   turning on quick trade does not hide it.
 4. **Sign in your wallet.** Your wallet displays the same transaction.
    If the numbers differ from what StampDEX showed, refuse and report it.
 5. **Wait for settlement.** Your payment confirms on Bitcoin, the token

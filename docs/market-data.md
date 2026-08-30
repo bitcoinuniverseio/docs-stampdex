@@ -23,9 +23,26 @@ unknown.
 
 ## Unknown is not zero
 
-A dash or the word unknown means the source had no answer. A 0 means the
-source answered zero. StampDEX keeps those separate everywhere: a token
-with no listings shows no floor, not a floor of 0.
+A double dash means the source had no answer, and a screen reader hears the
+word Unknown in its place. A 0 means the source answered zero. StampDEX keeps
+those separate everywhere: a token with no listings shows no floor, not a
+floor of 0, and a token that traded nothing in the last day shows 0, not a
+blank.
+
+Which source answered decides this, not the number that happened to arrive.
+The market API sends a `sources` map beside every row; when it reports `none`
+for a field, that field is unknown even if a nested block carries a zero.
+
+## Totals name their coverage
+
+The market volume total sums only the tokens a source could answer for, and
+the chip says how many that is. `0.037 BTC (3/106)` means three of the one
+hundred and six tokens on the board had a volume reading. It is not the
+volume of the whole board.
+
+Under the counts, the market page says the same thing in words: how many
+tokens have a listing you can fill on StampDEX, and how many carry a price
+read from the index with no order behind it.
 
 ## Freshness
 
