@@ -25,8 +25,15 @@ the holding's value as unknown, not as zero.
 
 ## Reading it without connecting
 
-The data behind the portfolio is public chain and marketplace data. The
-API serves it for any address:
+The data behind the portfolio is public chain and marketplace data.
+
+Open `https://stampdex.fun/address/<address>` for any Bitcoin address to see
+the SRC-20 balances and the stamps it holds. No wallet connection is needed,
+and the page says StampDEX cannot tell who controls the address. Typing an
+address into search opens the same page. Older `/shelf/<address>` links still
+work.
+
+The API serves the same data:
 
 ```bash
 curl "https://stamp.api.bitcoinuniverse.io/api/v1/wallet/bc1qexample.../portfolio"
