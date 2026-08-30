@@ -34,7 +34,12 @@ Connect one only when you want to trade.
   [Asset identity](docs/asset-identity.md).
 - **You sign what you see.** Trades are PSBTs your own wallet reviews and
   signs, with the amount, price, total, and every fee shown first. Your
-  wallet keys never leave your wallet.
+  keys never leave your wallet.
+- **Your BTC does move through us.** While an SRC-20 trade settles, your
+  payment sits in a trade address StampDEX controls, and the seller is paid
+  only when the tokens reach you. StampDEX says so before you sign, and
+  every order says where the money is. See
+  [Orders and settlement](docs/orders-and-settlement.md).
 - **A quiet market looks quiet.** No fake urgency, no invented volume, no
   countdown theater. What you see traded, traded.
 
@@ -89,9 +94,13 @@ are and the transaction ids to verify. See
 
 ## Wallets
 
-Universe Wallet, UniSat, Xverse, and OKX Wallet. Universe Wallet also
-embeds the StampDEX trading desk directly. Details in
+Universe Wallet, UniSat, Leather, Xverse, and OKX Wallet. Connecting is not
+the same as being able to do everything: OKX Wallet signs Bitcoin
+transactions here but cannot list, cancel, or mint. What each wallet can do
+is a table generated from the code that talks to it, in
 [Wallets](docs/wallets.md).
+
+Universe Wallet embeds the StampDEX trading desk directly.
 
 ## API in one line
 
