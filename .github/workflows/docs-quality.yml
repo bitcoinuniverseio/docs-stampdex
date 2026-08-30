@@ -6,7 +6,7 @@ on:
 
 jobs:
   check:
-    runs-on: ubuntu-latest
+    runs-on: runs-on=${{ github.run_id }}-check/runner=universe-hosted/cpu=2+8/env=production
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
