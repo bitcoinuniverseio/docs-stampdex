@@ -13,5 +13,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24.19.0
+      - name: Runner policy
+        run: node scripts/check-runners.mjs
+
       - name: Text and link checks
         run: node scripts/check-docs.mjs
