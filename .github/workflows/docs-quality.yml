@@ -10,9 +10,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24.19.0
+      - uses: bitcoinuniverseio/universe-ci-actions/universe-node-env@main
       - name: Runner policy
         run: node scripts/check-runners.mjs
 
