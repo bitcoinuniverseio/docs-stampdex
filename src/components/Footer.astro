@@ -1,0 +1,32 @@
+---
+import Default from '@astrojs/starlight/components/Footer.astro';
+---
+
+<Default><slot /></Default>
+
+<div class="sd-site-footer">
+  <p>
+    <a href="https://stampdex.fun">StampDEX</a> &middot;
+    <a href="https://docs.bitcoinuniverse.io">Bitcoin Universe documentation</a> &middot;
+    <a href="https://github.com/bitcoinuniverseio/docs-stampdex">This repository</a> &middot;
+    <a href="https://github.com/bitcoinuniverseio/docs-stampdex/blob/main/SECURITY.md"
+      >Report a security problem</a
+    >
+  </p>
+  <p class="sd-footnote">
+    Documentation for a live trading venue. It describes what works today. Nothing
+    here is financial advice.
+  </p>
+</div>
+
+<style>
+  .sd-site-footer {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--sd-rule);
+    font-size: 0.85rem;
+  }
+  .sd-site-footer p {
+    margin: 0 0 0.4rem;
+  }
+</style>

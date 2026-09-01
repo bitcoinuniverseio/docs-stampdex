@@ -1,0 +1,60 @@
+---
+import registry from '../data/registry.json';
+
+interface Props {
+  protocol: 'stamps' | 'src20';
+}
+const { protocol } = Astro.props;
+const entry = (registry.protocols as Record<string, any>)[protocol];
+const s = entry.sourceOfTruth;
+const idx = entry.indexer;
+---
+
+<div class="sd-scroll">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Question</th>
+        <th scope="col">Answered by</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">What is for sale, and at what price</th>
+        <td>{s.orderBook}</td>
+      </tr>
+      <tr>
+        <th scope="row">Who owns it</th>
+        <td>{s.ownership}</td>
+      </tr>
+      <tr>
+        <th scope="row">Whether a trade completed</th>
+        <td>{s.settlement}</td>
+      </tr>
+      <tr>
+        <th scope="row">Protocol state</th>
+        <td>{s.protocolState}</td>
+      </tr>
+      <tr>
+        <th scope="row">Primary index</th>
+        <td>{idx.primary}</td>
+      </tr>
+      <tr>
+        <th scope="row">Fallback sources</th>
+        <td>{idx.fallbacks.join('; ')}</td>
+      </tr>
+      <tr>
+        <th scope="row">Freshness policy</th>
+        <td>{entry.freshness.policy}</td>
+      </tr>
+      <tr>
+        <th scope="row">Confirmation policy</th>
+        <td>{entry.confirmation.policy}</td>
+      </tr>
+      <tr>
+        <th scope="row">Reorg policy</th>
+        <td>{entry.reorg.policy}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
