@@ -6,21 +6,21 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
   cancel-in-progress: false
 
 jobs:
-  build:
-    # The RunsOn artifact proxy returns a plain-text endpoint marker to
-    # actions/upload-artifact, which makes the Pages upload fail after a
-    # successful build. This workflow runs only for trusted main pushes or a
-    # maintainer dispatch, so the organisation-owned Linux fleet is safe here.
-    runs-on: [self-hosted, Linux, linux-ultra]
+  build-and-publish:
+    # Routed through the shared capacity router rather than the self-hosted
+    # fleet. The organisation-owned Linux runners do not pick up jobs for this
+    # repository, and the RunsOn artifact proxy returns a plain-text endpoint
+    # marker to actions/upload-artifact, which breaks the Pages artifact
+    # upload. Publishing to a branch avoids both problems: it needs no
+    # artifact upload and no particular runner.
+    runs-on: runs-on=${{ github.run_id }}-pages/runner=universe-hosted/cpu=2+8/env=production
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
@@ -41,24 +41,27 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Internal links and anchors
-        run: npm run check:links
+      - name: Internal links, page metadata, and mobile reflow
+        run: npm run check:site
 
-      - name: Page metadata (one h1, skip link, descriptions, Open Graph, alt text)
-        run: npm run check:metadata
+      # GitHub Pages serves this branch directly. Without .nojekyll it would
+      # run Jekyll over the output, and Jekyll drops directories whose names
+      # begin with an underscore, which is where Astro puts its assets.
+      - name: Mark the output as not-Jekyll
+        run: touch dist/.nojekyll
 
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-
-  deploy:
-    needs: build
-    runs-on: [self-hosted, Linux, linux-ultra]
-    timeout-minutes: 10
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Publish to the gh-pages branch
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          cd dist
+          git init -q
+          git checkout -q -b gh-pages
+          git add -A
+          git commit -q -m "Deploy ${GITHUB_SHA} from ${GITHUB_REF_NAME}"
+          git push -q --force \
+            "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
+            gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
