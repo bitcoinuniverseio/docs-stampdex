@@ -1,0 +1,237 @@
+---
+/**
+ * The custody ledger: at every stage of a trade, where the asset is, where
+ * the BTC is, and who the trade is waiting on.
+ *
+ * Two datasets, one drawing routine, so the SRC-20 and the Bitcoin Stamps
+ * pictures are directly comparable. The geometry is computed rather than
+ * hand-placed, so adding a stage cannot silently break the grid.
+ */
+
+type Side = 'bid' | 'ask' | 'venue' | 'chain' | 'none';
+
+interface Cell {
+  where: string;
+  side: Side;
+  note: string;
+}
+
+interface Stage {
+  state: string;
+  asset: Cell;
+  btc: Cell;
+  waiting: string;
+}
+
+interface Dataset {
+  id: string;
+  assetLabel: string;
+  assetSub: string;
+  btcLabel: string;
+  btcSub: string;
+  stages: Stage[];
+  failure: Stage | null;
+  title: string;
+  desc: string;
+  caption: string;
+}
+
+const src20: Dataset = {
+  id: 'src20',
+  assetLabel: 'THE TOKENS',
+  assetSub: 'the listed amount',
+  btcLabel: 'THE BTC',
+  btcSub: 'the payment',
+  stages: [
+    {
+      state: 'OPEN',
+      asset: { where: 'Listing escrow', side: 'venue', note: 'signed into escrow' },
+      btc: { where: "Buyer's wallet", side: 'bid', note: 'nothing committed' },
+      waiting: 'A buyer',
+    },
+    {
+      state: 'PENDING',
+      asset: { where: 'Listing escrow', side: 'venue', note: 'locked to a buyer' },
+      btc: { where: "Buyer's wallet", side: 'bid', note: 'not yet signed' },
+      waiting: 'The buyer to pay',
+    },
+    {
+      state: 'AWAITING TRANSFER',
+      asset: { where: 'Listing escrow', side: 'venue', note: 'still held' },
+      btc: { where: 'Listing escrow', side: 'venue', note: 'payment broadcast' },
+      waiting: 'Bitcoin confirmations',
+    },
+    {
+      state: 'SETTLING',
+      asset: { where: 'Listing escrow', side: 'venue', note: 'balance verified' },
+      btc: { where: 'Listing escrow', side: 'venue', note: 'not yet released' },
+      waiting: 'The settlement worker',
+    },
+    {
+      state: 'AWAITING CONF.',
+      asset: { where: 'In the transfer tx', side: 'chain', note: 'broadcast to chain' },
+      btc: { where: 'Listing escrow', side: 'venue', note: 'held until 2 conf.' },
+      waiting: 'Two confirmations',
+    },
+    {
+      state: 'FILLED',
+      asset: { where: "Buyer's wallet", side: 'bid', note: 'delivered' },
+      btc: { where: "Seller's wallet", side: 'ask', note: 'less the seller fee' },
+      waiting: 'Nobody. Done',
+    },
+  ],
+  failure: {
+    state: 'FAILED',
+    asset: { where: 'Listing escrow', side: 'venue', note: 'never transferred' },
+    btc: { where: 'Listing escrow', side: 'venue', note: 'held, not lost' },
+    waiting: 'An operator',
+  },
+  title: 'Custody at every stage of an SRC-20 trade on StampDEX',
+  desc:
+    'A grid with one column per order state and two rows. The first row says where the tokens are, the second says where the BTC is, and a strip underneath says who the trade is waiting on. From Open to Settling the tokens sit in the per-listing escrow that StampDEX controls. The buyer BTC stays in the buyer own wallet until the payment is broadcast, and then it too sits in the listing escrow. At Awaiting confirmation the tokens are in a broadcast Bitcoin transaction waiting for two blocks of depth. Only at Filled do the tokens reach the buyer wallet and the proceeds reach the seller wallet. In the last column, separated by a dashed rule, the Failed state shows both the tokens and the BTC still in the listing escrow, held and recoverable, waiting on an operator.',
+  caption:
+    'Read down a column to see the whole picture at one moment. The line that matters: between <strong>Awaiting transfer</strong> and <strong>Filled</strong>, the BTC has left the buyer and has not reached the seller. It is in the escrow addresses StampDEX created for that one listing. That is not a loss and it is not a queue. It is a named on-chain address you can look up in any block explorer.',
+};
+
+const stamps: Dataset = {
+  id: 'stamps',
+  assetLabel: 'THE STAMP',
+  assetSub: 'the listed asset',
+  btcLabel: 'THE BTC',
+  btcSub: 'the payment',
+  stages: [
+    {
+      state: 'DISPENSER OPEN',
+      asset: { where: "Seller's dispenser", side: 'ask', note: 'escrowed on chain' },
+      btc: { where: "Buyer's wallet", side: 'bid', note: 'nothing committed' },
+      waiting: 'A buyer',
+    },
+    {
+      state: 'COMPOSED',
+      asset: { where: "Seller's dispenser", side: 'ask', note: 'unchanged' },
+      btc: { where: "Buyer's wallet", side: 'bid', note: 'built, not signed' },
+      waiting: 'The buyer to sign',
+    },
+    {
+      state: 'BROADCAST',
+      asset: { where: "Seller's dispenser", side: 'ask', note: 'unchanged' },
+      btc: { where: 'In the payment tx', side: 'chain', note: 'in the mempool' },
+      waiting: 'A block',
+    },
+    {
+      state: 'CONFIRMED',
+      asset: { where: "Buyer's wallet", side: 'bid', note: 'dispensed' },
+      btc: { where: "Seller's address", side: 'ask', note: 'same transaction' },
+      waiting: 'Nobody. Done',
+    },
+  ],
+  failure: null,
+  title: 'Custody at every stage of a Bitcoin Stamps purchase on StampDEX',
+  desc:
+    'A grid with four columns and two rows. The first row says where the stamp is, the second says where the BTC is, and a strip underneath says who the purchase is waiting on. While the dispenser is open, the stamp is held by Counterparty at the seller address and the BTC is in the buyer own wallet. After the buyer signs, the BTC is in a broadcast Bitcoin transaction and the stamp has not moved. When that transaction confirms, the stamp reaches the buyer and the BTC reaches the seller in the same transaction. At no stage does a StampDEX-controlled address appear.',
+  caption:
+    'Compare this with the SRC-20 ledger. There is no purple column here, because a stamp purchase never passes through a StampDEX-controlled address. The stamp moves and the payment lands in one confirmed Bitcoin transaction, so there is no state in which your money has left you and not reached the seller.',
+};
+
+interface Props {
+  variant?: 'src20' | 'stamps';
+}
+const { variant = 'src20' } = Astro.props;
+const data = variant === 'stamps' ? stamps : src20;
+
+const colW = 168;
+const gutter = 160;
+const laneH = 76;
+const headH = 32;
+const waitH = 38;
+const pad = 10;
+const all: Stage[] = data.failure ? [...data.stages, data.failure] : data.stages;
+const width = gutter + all.length * colW + pad;
+const height = headH + laneH * 2 + waitH + pad * 2;
+
+const laneY = (i: number) => headH + pad + i * laneH;
+const colX = (i: number) => gutter + i * colW;
+const titleId = `custody-${data.id}-title`;
+const descId = `custody-${data.id}-desc`;
+const splitAt = data.failure ? data.stages.length : -1;
+---
+
+<figure class="sd-figure">
+  <div class="sd-figure-scroll">
+    <svg
+      viewBox={`0 0 ${width} ${height}`}
+      role="img"
+      aria-labelledby={`${titleId} ${descId}`}
+      class="sd-wide"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <title id={titleId}>{data.title}</title>
+      <desc id={descId}>{data.desc}</desc>
+
+      <text x={pad} y={laneY(0) + 24} class="sd-svg-title sd-svg-ink">{data.assetLabel}</text>
+      <text x={pad} y={laneY(0) + 41} class="sd-svg-label sd-svg-muted">{data.assetSub}</text>
+      <text x={pad} y={laneY(1) + 24} class="sd-svg-title sd-svg-ink">{data.btcLabel}</text>
+      <text x={pad} y={laneY(1) + 41} class="sd-svg-label sd-svg-muted">{data.btcSub}</text>
+      <text x={pad} y={laneY(2) + 21} class="sd-svg-title sd-svg-muted">WAITING ON</text>
+
+      {
+        [0, 1, 2].map((i) => (
+          <line x1={pad} y1={laneY(i) - 6} x2={width - pad} y2={laneY(i) - 6}
+            class="sd-svg-rule" stroke-width="1" />
+        ))
+      }
+      <line x1={pad} y1={laneY(2) + waitH - 8} x2={width - pad} y2={laneY(2) + waitH - 8}
+        class="sd-svg-rule" stroke-width="1" />
+
+      {
+        splitAt > 0 && (
+          <line x1={colX(splitAt) - 6} y1={4} x2={colX(splitAt) - 6}
+            y2={laneY(2) + waitH - 8} class="sd-svg-rule" stroke-width="1"
+            stroke-dasharray="3 4" />
+        )
+      }
+
+      {
+        all.map((stage, i) => (
+          <>
+            <text x={colX(i) + 4} y={headH - 13} class="sd-svg-title sd-svg-muted"
+              textLength={stage.state.length > 18 ? colW - 16 : undefined}
+              lengthAdjust="spacingAndGlyphs">
+              {stage.state}
+            </text>
+            {[stage.asset, stage.btc].map((cell, lane) => (
+              <>
+                <rect x={colX(i) + 2} y={laneY(lane) + 3} width={colW - 12}
+                  height={laneH - 22} rx="3"
+                  class={`sd-svg-${cell.side}-f sd-svg-${cell.side}-s`} stroke-width="1.25" />
+                <text x={colX(i) + 11} y={laneY(lane) + 24}
+                  class={`sd-svg-label sd-svg-${cell.side}`} style="font-weight:700"
+                  textLength={cell.where.length > 18 ? colW - 26 : undefined}
+                  lengthAdjust="spacingAndGlyphs">
+                  {cell.where}
+                </text>
+                <text x={colX(i) + 11} y={laneY(lane) + 41} class="sd-svg-label sd-svg-muted"
+                  textLength={cell.note.length > 20 ? colW - 26 : undefined}
+                  lengthAdjust="spacingAndGlyphs">
+                  {cell.note}
+                </text>
+              </>
+            ))}
+            <text x={colX(i) + 4} y={laneY(2) + 20} class="sd-svg-label sd-svg-ink"
+              textLength={stage.waiting.length > 23 ? colW - 16 : undefined}
+              lengthAdjust="spacingAndGlyphs">
+              {stage.waiting}
+            </text>
+          </>
+        ))
+      }
+    </svg>
+  </div>
+  <figcaption set:html={data.caption} />
+</figure>
+
+<style>
+  .sd-figure svg.sd-wide {
+    min-width: 52rem;
+  }
+</style>

@@ -1,0 +1,39 @@
+{
+  "name": "docs-stampdex",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Public documentation for StampDEX, the trading venue for Bitcoin Stamps and SRC-20.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bitcoinuniverseio/docs-stampdex.git"
+  },
+  "homepage": "https://bitcoinuniverseio.github.io/docs-stampdex/",
+  "license": "CC-BY-4.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check:runners": "node scripts/check-runners.mjs",
+    "check:copy": "node scripts/check-docs.mjs",
+    "check:manifest": "node scripts/check-manifest.mjs",
+    "check:links": "node scripts/check-links.mjs",
+    "make:og": "node scripts/make-og.mjs",
+    "make:screens": "node scripts/make-screens.mjs",
+    "test": "npm run check:runners && npm run check:copy && npm run check:contrast && npm run check:manifest",
+    "check:contrast": "node scripts/check-contrast.mjs",
+    "check:metadata": "node scripts/check-metadata.mjs",
+    "check:site": "npm run check:links && npm run check:metadata && npm run check:overflow",
+    "check:overflow": "node scripts/check-overflow.mjs"
+  },
+  "devDependencies": {
+    "@astrojs/starlight": "0.36.1",
+    "ajv": "8.17.1",
+    "ajv-formats": "3.0.1",
+    "astro": "5.14.1",
+    "sharp": "0.34.4"
+  }
+}

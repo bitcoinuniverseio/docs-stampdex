@@ -1,0 +1,67 @@
+---
+title: Page freshness
+description: "When each page here was last verified, which product surface it was verified against, and what change should trigger a recheck of it."
+source:
+  repo: bitcoinuniverseio/docs-stampdex
+  path: this repository
+  verified: "2026-09-01"
+---
+
+A page is stale when the surface it describes changes. This table names that surface, so
+a maintainer knows what to reread rather than guessing.
+
+Every page also carries its own **Source and verification** panel under the title, with
+the same information for that page alone.
+
+| Page | Verified | Related surface | Recheck when |
+| --- | --- | --- | --- |
+| [Home](/docs-stampdex/) | 2026-09-01 | The whole product | Any release |
+| [Start here](/docs-stampdex/start-here/) | 2026-09-01 | The frontend route manifest | A route changes |
+| [What StampDEX is](/docs-stampdex/what-is-stampdex/) | 2026-09-01 | Product scope and custody claims | Scope or the trust model changes |
+| [What you can and cannot do](/docs-stampdex/capabilities/) | 2026-09-01 | The ecosystem capability registry | The registry snapshot is regenerated |
+| [Bitcoin Stamps](/docs-stampdex/concepts/bitcoin-stamps/) | 2026-09-01 | The stamps module and dispenser composition | Stamp trading changes |
+| [SRC-20](/docs-stampdex/concepts/src20/) | 2026-09-01 | The SRC-20 marketplace and PSBT services | The listing flow changes |
+| [The market board](/docs-stampdex/guides/browse-the-market/) | 2026-09-01 | Market aggregation and source labelling | Source labelling changes |
+| [Token pages](/docs-stampdex/guides/token-pages/) | 2026-09-01 | Deployment resolution | A resolution state is added or renamed |
+| [Collection pages](/docs-stampdex/guides/collection-pages/) | 2026-09-01 | The collections controller | Collection figures change |
+| [Your portfolio](/docs-stampdex/guides/portfolio/) | 2026-09-01 | The profile and address views | Portfolio surfaces change |
+| [Buy SRC-20](/docs-stampdex/guides/buy-src20/) | 2026-09-01 | The orders module and the buy panel | The order flow changes |
+| [Sell SRC-20](/docs-stampdex/guides/sell-src20/) | 2026-09-01 | Prepare-listing and finalize | Listing validation changes |
+| [Cancel a listing](/docs-stampdex/guides/cancel-a-listing/) | 2026-09-01 | The cancel route and the action challenge | Challenge handling changes |
+| [Change a listing price](/docs-stampdex/guides/change-a-listing-price/) | 2026-09-01 | The registry update-listing entries and the reprice route | Either changes |
+| [Collect Bitcoin Stamps](/docs-stampdex/guides/collect-stamps/) | 2026-09-01 | Dispenser composition | Dispenser handling changes |
+| [List and unlist a stamp](/docs-stampdex/guides/list-a-stamp/) | 2026-09-01 | Dispenser open and close composition | Either changes |
+| [Review a PSBT](/docs-stampdex/guides/psbt-review/) | 2026-09-01 | Output layout and fee constants | The transaction shape or the fee address changes |
+| [Where your funds are](/docs-stampdex/concepts/custody/) | 2026-09-01 | The escrow model and the custody claims test | The trust model changes |
+| [Order lifecycle](/docs-stampdex/concepts/order-lifecycle/) | 2026-09-01 | The order status enum | A status is added or renamed |
+| [Settlement lifecycle](/docs-stampdex/concepts/settlement-lifecycle/) | 2026-09-01 | The settlement worker and its constants | A timeout or confirmation depth changes |
+| [Offers](/docs-stampdex/concepts/offers/) | 2026-09-01 | The registry offer actions | The registry records offers as supported |
+| [Recovery](/docs-stampdex/concepts/recovery/) | 2026-09-01 | The failure path and diagnosis routes | A recovery route changes |
+| [Asset identity](/docs-stampdex/concepts/asset-identity/) | 2026-09-01 | Identity fields on tokens and stamps | An identity field changes |
+| [Deployment identity](/docs-stampdex/concepts/deployment-identity/) | 2026-09-01 | The deployments endpoints | A resolution value changes |
+| [Market data](/docs-stampdex/concepts/market-data/) | 2026-09-01 | Market aggregation | A preference order or a guard changes |
+| [Unknown is not zero](/docs-stampdex/concepts/unknown-is-not-zero/) | 2026-09-01 | The known-flag derivation | The rule changes anywhere |
+| [Data provenance](/docs-stampdex/concepts/data-provenance/) | 2026-09-01 | The registry source-of-truth entries and the index base URL | The index source moves |
+| [Freshness](/docs-stampdex/concepts/freshness/) | 2026-09-01 | The indexer status service and cache constants | A threshold or a cache age changes |
+| [Fees](/docs-stampdex/reference/fees/) | 2026-09-01 | The service fee constants and the fee address | Any fee constant changes |
+| [Wallets](/docs-stampdex/reference/wallets/) | 2026-09-01 | The wallet capability table | Wallet support changes |
+| [Capability matrix](/docs-stampdex/reference/capability-matrix/) | 2026-09-01 | The ecosystem capability registry | The snapshot is regenerated |
+| [Order states](/docs-stampdex/reference/order-states/) | 2026-09-01 | The order status enum and list filtering | Either changes |
+| [Glossary](/docs-stampdex/reference/glossary/) | 2026-09-01 | Product vocabulary | New terms appear |
+| [API pages](/docs-stampdex/api/quickstart/) | 2026-09-01 | The controllers and the throttler configuration | An endpoint or a limit changes |
+| [Safety](/docs-stampdex/safety/) | 2026-09-01 | Escrow handling and the custody claims test | The trust model changes |
+| [Troubleshooting](/docs-stampdex/troubleshooting/) and [FAQ](/docs-stampdex/faq/) | 2026-09-01 | Error strings across all modules | An error message changes |
+| [Release evidence](/docs-stampdex/project/release-evidence/) | 2026-09-01 | The release capability registry | The verifier is rerun |
+| Screenshots in the assets directory | 2026-08-28, captured from production | The live site | The interface changes visibly |
+
+## The screenshots
+
+The five images in this repository were captured from the production site on 2026-08-28.
+They are real captures, not mockups. Where an interface needs describing and no real
+capture exists, this site uses a hand-drawn diagram and says so in words rather than
+inventing an image.
+
+## Related
+
+- [Changelog](/docs-stampdex/project/changelog/)
+- [Contributing](/docs-stampdex/project/contributing/)

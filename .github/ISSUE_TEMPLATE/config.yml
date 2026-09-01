@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: A bug in the StampDEX product
+    url: https://github.com/bitcoinuniverseio/stampdex/issues
+    about: Stuck orders, interface bugs, and API problems belong in the application repository.
+  - name: A suspected security problem
+    url: https://github.com/bitcoinuniverseio/docs-stampdex/blob/main/SECURITY.md
+    about: Email legal@bitcoinuniverse.io. Never open a public issue for a security problem.
+  - name: Where is my money during a trade
+    url: https://bitcoinuniverseio.github.io/docs-stampdex/concepts/custody/
+    about: The custody ledger shows where the asset and the payment sit at every stage.
+  - name: My order says Failed
+    url: https://bitcoinuniverseio.github.io/docs-stampdex/concepts/recovery/
+    about: Your BTC is in the listing escrow. This page says what happens next.
