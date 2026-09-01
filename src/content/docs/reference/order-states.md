@@ -16,7 +16,7 @@ The friendly names are what the site shows.
 | `pending` | Pending | Locked by one buyer who is paying | In the buyer's wallet until the payment broadcasts | The buyer pays, or 30 minutes pass |
 | `awaiting_tx3` | Awaiting transfer | The payment is broadcast, waiting on confirmation and an index check | In the listing escrow | The check passes, or the grace period expires |
 | `settling_tx3` | Settling | A worker is verifying and broadcasting the token transfer | In the listing escrow | The transfer broadcasts, or the order fails |
-| `awaiting_tx3_confirmation` | Awaiting confirmation | The transfer is broadcast and needs two blocks of depth | In the listing escrow | Two confirmations |
+| `awaiting_tx3_confirmation` | Awaiting confirmation | The transfer is broadcast and needs two blocks of depth, the default | In the listing escrow | Two confirmations |
 | `filled` | Filled | Settled | Delivered to the seller, less their fee | Nothing. It is final |
 | `cancelled` | Cancelled | The seller cancelled before a sale | Returned, or never moved | Nothing |
 | `expired` | Expired | A draft or a buyer lock ran out of time | Never moved | Nothing |
