@@ -1,0 +1,83 @@
+---
+title: Bitcoin Stamps
+description: "What a Bitcoin Stamp is, how it is issued as a Counterparty asset, how StampDEX trades one through a dispenser, and which stamp actions are not supported."
+source:
+  path: stamps module, stamp trading service, Counterparty compose routes
+  verified: "2026-09-01"
+---
+
+Bitcoin Stamps store artwork bytes inside Bitcoin transactions. The image does not sit
+on a server that can vanish. It sits in the chain itself, in every full copy of
+Bitcoin.
+
+That gives a stamp two properties collectors care about: it cannot be altered, and it
+lasts as long as Bitcoin does. The file hash printed on a stamp page is the hash of
+those exact bytes.
+
+## How a stamp is issued
+
+A stamp is a Counterparty asset. Its identity is a set of on-chain facts:
+
+| Fact | What it tells you |
+| --- | --- |
+| Stamp number | The position in the stamp index |
+| `cpid` | The Counterparty asset id |
+| Transaction hash | The Bitcoin transaction that created it |
+| Creator address | Who issued it |
+| File hash and size | The exact bytes, and how many |
+| Supply, and whether issuance is locked | A locked stamp with supply 1 is one of one, forever |
+
+A collection is curated metadata that groups stamps. Membership comes from the
+collection index, not from the chain, so StampDEX names the source of collection data
+on the page.
+
+## How a stamp trades
+
+Stamps trade through **Counterparty dispensers**. A dispenser is a vending contract:
+the seller escrows the asset in a dispenser at their own address and sets an asking
+rate. A buyer sends that amount of BTC to the dispenser address, and when the
+transaction confirms, Counterparty dispenses the asset.
+
+StampDEX composes the dispense transaction through the Counterparty compose API,
+converts it into a PSBT your wallet can inspect, and shows you the price, the dispenser
+address, and the fees. Your wallet signs it.
+
+**No StampDEX escrow is involved in a stamp trade.** The stamp and the payment change
+hands in one confirmed Bitcoin transaction. See
+[Where your funds are](/docs-stampdex/concepts/custody/).
+
+### What StampDEX refuses to do
+
+If the prevout data needed to describe a transaction's inputs cannot be recovered, the
+compose call returns no PSBT and a warning instead. A bare Counterparty transaction
+with no prevouts is one your wallet could neither inspect nor safely sign, so it is not
+offered as signable.
+
+Other refusals you may meet, each with its own message: buying from your own dispenser,
+a dispenser that is no longer open, a dispenser with nothing remaining, a quantity
+larger than the remaining supply, and a dispenser whose price is unavailable.
+
+### Closing a dispenser has a delay
+
+Closing a dispenser does not immediately return the escrowed stamp. Counterparty
+enforces a close cooldown, so a stamp you have just delisted stays escrowed until that
+finalizes. Plan around it. See
+[List and unlist a stamp](/docs-stampdex/guides/list-a-stamp/).
+
+## What is not available for stamps
+
+The ecosystem registry records these as unsupported for Bitcoin Stamps, with reasons:
+
+- `update-listing`: listings must be cancelled and relisted, because no atomic listing
+  update is implemented.
+- `make-offer`, `accept-offer`, `cancel-offer`, `sell`: there is no executable offer
+  workflow on this marketplace surface.
+- `settle`, `reconcile`: this surface has no settle or reconcile authority.
+
+See [What you can and cannot do](/docs-stampdex/capabilities/) for the full table.
+
+## Related
+
+- [Collect Bitcoin Stamps](/docs-stampdex/guides/collect-stamps/)
+- [Asset identity](/docs-stampdex/concepts/asset-identity/)
+- [Collection pages](/docs-stampdex/guides/collection-pages/)

@@ -1,0 +1,47 @@
+---
+import Default from '@astrojs/starlight/components/PageTitle.astro';
+
+const route = Astro.locals.starlightRoute;
+const data = route.entry.data as any;
+const source = data.source;
+const id = route.id;
+const file = id === '' || id === 'index' ? 'src/content/docs/index.mdx' : `src/content/docs/${id}.md`;
+const editUrl = `https://github.com/bitcoinuniverseio/docs-stampdex/edit/main/${file}`;
+---
+
+<Default><slot /></Default>
+
+{
+  source && (
+    <details class="sd-source">
+      <summary>Source and verification</summary>
+      <dl>
+        <dt>Owning repository</dt>
+        <dd>{source.repo}</dd>
+        {source.path && (
+          <>
+            <dt>Source path</dt>
+            <dd>{source.path}</dd>
+          </>
+        )}
+        <dt>Applicable release</dt>
+        <dd>{source.release}</dd>
+        <dt>Chain and network</dt>
+        <dd>
+          {source.chain} / {source.network}
+        </dd>
+        <dt>Lifecycle</dt>
+        <dd>{source.lifecycle}</dd>
+        <dt>Last verified</dt>
+        <dd>{source.verified}</dd>
+        <dt>This page</dt>
+        <dd>
+          <a href={editUrl}>Edit on GitHub</a> &middot;{' '}
+          <a href="https://docs.bitcoinuniverse.io/products/stampdex/">
+            Bitcoin Universe platform
+          </a>
+        </dd>
+      </dl>
+    </details>
+  )
+}

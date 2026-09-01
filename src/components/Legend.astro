@@ -1,0 +1,25 @@
+---
+/** The four meanings any colour on this site is allowed to carry. */
+interface Props {
+  sides?: Array<'bid' | 'ask' | 'venue' | 'chain'>;
+}
+const { sides = ['bid', 'ask', 'venue', 'chain'] } = Astro.props;
+
+const text: Record<string, string> = {
+  bid: 'Buyer side: held by the buyer, or delivered to the buyer',
+  ask: 'Seller side: held by the seller, or delivered to the seller',
+  venue: 'Held by StampDEX for the length of one trade',
+  chain: 'Settled on Bitcoin, final',
+};
+---
+
+<ul class="sd-legend">
+  {
+    sides.map((side) => (
+      <li>
+        <span class="swatch" data-side={side} aria-hidden="true" />
+        <span>{text[side]}</span>
+      </li>
+    ))
+  }
+</ul>
