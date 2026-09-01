@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "docs-stampdex",
+  "name": "StampDEX documentation",
+  "classification": "product-docs",
+  "repository": "bitcoinuniverseio/docs-stampdex",
+  "documentationUrl": "https://docs.bitcoinuniverse.io/products/stampdex/",
+  "docsRoot": "docs",
+  "sourceRef": "main",
+  "releasedRef": "ad0876f3149144e12b9f9e7c59b8791d712b6bf0",
+  "releaseVersion": "continuous",
+  "lifecycle": "stable",
+  "chains": [
+    {
+      "chain": "bitcoin",
+      "networks": [
+        "mainnet"
+      ]
+    }
+  ],
+  "protocols": [
+    "src-20"
+  ],
+  "audiences": [
+    "user",
+    "collector",
+    "app-developer"
+  ],
+  "owners": [
+    "bitcoinuniverseio"
+  ],
+  "lastVerified": {
+    "commit": "ad0876f3149144e12b9f9e7c59b8791d712b6bf0",
+    "timestamp": "2026-09-01T02:00:00Z"
+  },
+  "securityClassification": "public"
+}
