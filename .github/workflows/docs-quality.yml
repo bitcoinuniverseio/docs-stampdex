@@ -49,6 +49,9 @@ jobs:
       - name: Page metadata (one h1, skip link, descriptions, Open Graph, alt text)
         run: npm run check:metadata
 
+      - name: Nothing unbreakable that would push a 320px screen sideways
+        run: npm run check:overflow
+
       - name: Search index exists
         run: test -f dist/pagefind/pagefind.js
 
