@@ -1,0 +1,89 @@
+---
+title: Review a PSBT before signing
+description: "What to check in the transaction your wallet shows you before you sign anything on StampDEX, output by output, including the fixed service fee address."
+source:
+  path: src20 marketplace service output layout, service fee constants, wallet adapters
+  verified: "2026-09-01"
+---
+
+**For:** anyone about to sign.
+**Goal:** know that what your wallet is asking you to sign is what StampDEX told you it
+was.
+**Prerequisites:** a transaction on screen. **Chain and network:** Bitcoin mainnet.
+
+**Safety:** this is the last point at which anything is reversible. After you sign and
+broadcast, Bitcoin decides.
+
+## The rule
+
+StampDEX builds transactions. Your wallet displays them and signs them, or refuses.
+Nothing spends your funds without a signature made in your wallet. So the review screen
+and the wallet screen must agree, and if they do not, the correct action is to refuse.
+
+## What to check on a buy
+
+| Check | Why |
+| --- | --- |
+| The total amount leaving your wallet | It should equal the listing total plus your service fee plus the network fee |
+| The destination address | It should match the payment address on the review panel |
+| The fee rate | You chose it. A rate you did not choose is a reason to stop |
+| Nothing else is being spent | A buy should not touch unrelated outputs |
+
+## What to check on a listing
+
+| Check | Why |
+| --- | --- |
+| Only your one anchor input is signed | The listing uses `SIGHASH_ALL \| ANYONECANPAY` on your input alone |
+| The token amount | It should match what you typed |
+| The escrow addresses | They are the ones the prepare step returned, not addresses that arrived later |
+
+If your wallet cannot show you an unfinalized PSBT clearly, that is a wallet
+limitation, not a reason to sign blind.
+
+## The service fee output
+
+Every SRC-20 settlement carries the service fee as its own output to a fixed
+pay-to-Taproot address:
+
+```
+bc1pl0xdhr5delrk80d6s5h5qa9awsf7qzc45jl8na6ns8vp3e0vv7wqxattxy
+```
+
+It is a constant, not a per-user address, and it is visible on chain in every SRC-20
+settlement and in every deploy, mint, or transfer StampDEX builds. You can check it
+yourself in any explorer. A transaction claiming a StampDEX service fee to a different
+address is not one of ours.
+
+## The small outputs are not a mistake
+
+An SRC-20 transaction has several tiny outputs. They carry the protocol's data and
+markers, not value:
+
+| Output | Value | What it is |
+| --- | --- | --- |
+| Recipient marker | 330 sats | The output the SRC-20 transfer credits |
+| Data chunks | 330 sats each | The pay-to-witness-script-hash outputs carrying the encoded transfer |
+| Seller anchor | 548 sats | The marker output the listing flow spends and returns |
+
+Seeing a handful of 330 and 548 sat outputs in a token transaction is normal. Seeing
+them in a plain BTC send is not.
+
+## Signing a message is not signing a transaction
+
+Cancelling a listing, and every other mutation, asks your wallet to sign a short text
+message rather than a transaction. That message names the action, your address, a hash
+of the exact request, a single-use value, and an expiry. It cannot move funds, and it
+works once. If you are asked to sign the same challenge twice, something failed in
+between; read the order state before retrying.
+
+## Never do this
+
+No wallet needs your recovery phrase or a private key to work with StampDEX, and
+StampDEX never asks for either. If any page, in any tab, asks you to type a recovery
+phrase or import a seed in order to trade, close it.
+
+## Related
+
+- [Safety and trust](/docs-stampdex/safety/)
+- [Fees](/docs-stampdex/reference/fees/)
+- [Wallets](/docs-stampdex/reference/wallets/)

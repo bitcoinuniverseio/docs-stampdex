@@ -1,0 +1,95 @@
+---
+title: The market board
+description: "How to read the StampDEX SRC-20 market board: what each column means, why a total names its coverage, and why an unknown value never sorts as a zero."
+source:
+  path: market aggregation, src20 hub map, market controller
+  verified: "2026-09-01"
+---
+
+import Shot from '../../../components/Shot.astro';
+
+**For:** anyone, with or without a wallet.
+**Goal:** find a token and understand its numbers before you open its page.
+**Prerequisites:** none.
+**Chain and network:** Bitcoin mainnet. **Safety:** reading only, nothing is signed.
+
+## Where it is
+
+[stampdex.fun](https://stampdex.fun) opens the board. `/src20` and `/markets` are the
+same view.
+<Shot
+  src="home-light-desktop.webp"
+  width={1400}
+  height={875}
+  alt="The StampDEX market board in the light theme: a table of SRC-20 tokens with columns for ticker, deployment transaction, floor, volume, holders, and mint progress. Several rows show a double dash where no source answered, rather than a zero."
+  caption="The market board. The deployment transaction sits in its own column beside the ticker, and rows with no reading show a dash."
+/>
+
+
+## The columns
+
+| Column | What it is | When it is unknown |
+| --- | --- | --- |
+| Ticker | The short name | Never |
+| Deployment transaction | The transaction that created the token, in its own column beside the ticker | When no source reported a deployment. The ticker is never used in its place |
+| Floor | The lowest live listing price, in sats per token | When no source priced it. Not shown as 0 |
+| Volume | Traded value over the stated window | When no source answered |
+| Holders | Addresses holding a balance | When no source answered. A genuine 0 is shown as 0 |
+| Mint progress | Minted supply against max supply | When supply figures are missing |
+| Market cap | Price times supply, from the stated source | When no price exists, or when the computed cap exceeds the total supply of Bitcoin |
+
+That last rule is not hypothetical. A token declaring an absurd max supply once
+produced a market cap above 200 million BTC. StampDEX reports a cap larger than
+21,000,000 BTC as unknown rather than repeating it.
+
+## Every number names its source
+
+Each row carries a `sources` map with one entry per figure. The values are:
+
+| Value | Meaning |
+| --- | --- |
+| `stampchain` | The number came from the stamp index |
+| `stampdex` | The number came from trades and listings made on StampDEX itself |
+| `none` | No source had an answer. The field is unknown |
+
+The source map decides what you see, not the number that happened to arrive. A nested
+block can carry a literal zero while the source map says `none`; the source map wins,
+and the field renders as unknown. See
+[Unknown is not zero](/docs-stampdex/concepts/unknown-is-not-zero/).
+
+## Totals name their coverage
+
+The board's volume total sums only the tokens a source could answer for, and the chip
+says how many that is. `0.037 BTC (3/106)` means three of the one hundred and six
+tokens on the board had a volume reading. It is not the volume of the whole board.
+
+Underneath the counts, the page says the same thing in words: how many tokens have a
+listing you can fill on StampDEX, and how many carry a price read from the index with
+no order behind it.
+
+## Sorting and filtering
+
+A token nobody has priced does not sort as though its price were zero, and a price
+range filter does not return it as a match. An unknown is excluded from a comparison
+rather than treated as the bottom of it.
+
+## How to verify
+
+```bash
+curl "https://stamp.api.bitcoinuniverse.io/api/v1/market/tokens?limit=2"
+```
+
+The `sources` object on each row is the same one the board reads.
+
+## Common failure states
+
+| You see | Cause | What to do |
+| --- | --- | --- |
+| Most rows unknown | The index did not answer | Check [the status endpoint](/docs-stampdex/api/status/) |
+| Numbers look old | Server-side caches, 20 to 300 seconds depending on the surface | Wait. Polling faster returns the same answer |
+| HTTP 429 from the API | Over 300 requests per minute | Slow down. See [Rate limits](/docs-stampdex/api/rate-limits/) |
+
+## Related
+
+- [Token pages](/docs-stampdex/guides/token-pages/)
+- [Market data](/docs-stampdex/concepts/market-data/)
