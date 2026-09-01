@@ -24,10 +24,7 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24.19.0
-          cache: npm
+      - uses: bitcoinuniverseio/universe-ci-actions/universe-node-env@8e24bc760556caa5ec8c7c497baaad2e9adcc912 # v1
 
       - name: Runner policy
         run: node scripts/check-runners.mjs
@@ -55,13 +52,17 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          cd dist
-          git init -q
-          git checkout -q -b gh-pages
-          git add -A
-          git commit -q -m "Deploy ${GITHUB_SHA} from ${GITHUB_REF_NAME}"
-          git push -q --force \
-            "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
-            gh-pages
+          git fetch origin gh-pages
+          publish_dir="${RUNNER_TEMP}/docs-stampdex-pages"
+          git worktree add -B gh-pages "$publish_dir" origin/gh-pages
+          find "$publish_dir" -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -a dist/. "$publish_dir/"
+          git -C "$publish_dir" add -A
+          if git -C "$publish_dir" diff --cached --quiet; then
+            echo "The published files did not change."
+            exit 0
+          fi
+          git -C "$publish_dir" commit -q -m "Deploy ${GITHUB_SHA} from ${GITHUB_REF_NAME}"
+          git -C "$publish_dir" push -q origin gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

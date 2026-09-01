@@ -14,16 +14,13 @@ concurrency:
 jobs:
   check:
     # This repository is public, so pull request jobs run through the shared
-    # capacity router rather than on the self-hosted fleet: a fork pull request
-    # must never reach organisation-owned infrastructure.
+    # capacity router. A fork pull request must not reach organisation-owned
+    # infrastructure.
     runs-on: runs-on=${{ github.run_id }}-check/runner=universe-hosted/cpu=2+8/env=production
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24.19.0
-          cache: npm
+      - uses: bitcoinuniverseio/universe-ci-actions/universe-node-env@8e24bc760556caa5ec8c7c497baaad2e9adcc912 # v1
 
       - name: Runner policy
         run: node scripts/check-runners.mjs
