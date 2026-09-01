@@ -13,10 +13,10 @@ concurrency:
 
 jobs:
   check:
-    # This repository is public, so pull request jobs run through the shared
-    # capacity router. A fork pull request must not reach organisation-owned
-    # infrastructure.
-    runs-on: runs-on=${{ github.run_id }}-check/runner=universe-hosted/cpu=2+8/env=production
+    # A fork must not run its code on an organisation-owned runner. GitHub
+    # evaluates this condition before it assigns the job.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: [self-hosted, Linux, X64, linux-ultra]
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4

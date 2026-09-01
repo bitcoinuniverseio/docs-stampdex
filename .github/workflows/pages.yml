@@ -14,13 +14,9 @@ concurrency:
 
 jobs:
   build-and-publish:
-    # Routed through the shared capacity router rather than the self-hosted
-    # fleet. The organisation-owned Linux runners do not pick up jobs for this
-    # repository, and the RunsOn artifact proxy returns a plain-text endpoint
-    # marker to actions/upload-artifact, which breaks the Pages artifact
-    # upload. Publishing to a branch avoids both problems: it needs no
-    # artifact upload and no particular runner.
-    runs-on: runs-on=${{ github.run_id }}-pages/runner=universe-hosted/cpu=2+8/env=production
+    # This push-only job uses the owned fleet. Publishing to a branch avoids
+    # the Pages artifact proxy and keeps the deploy path small.
+    runs-on: [self-hosted, Linux, X64, linux-ultra]
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
