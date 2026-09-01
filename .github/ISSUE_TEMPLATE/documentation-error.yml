@@ -1,0 +1,41 @@
+name: Documentation is wrong
+description: A page says something that is not true of the product.
+title: "[wrong] "
+labels: [documentation, correction]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A wrong sentence about where somebody's money is costs more than a missing one.
+        If the error could lead a reader to lose funds, email `legal@bitcoinuniverse.io`
+        instead and do not fill this in.
+  - type: input
+    id: page
+    attributes:
+      label: Which page
+      description: The URL on bitcoinuniverseio.github.io/docs-stampdex, or the file path.
+      placeholder: https://bitcoinuniverseio.github.io/docs-stampdex/reference/fees/
+    validations:
+      required: true
+  - type: textarea
+    id: says
+    attributes:
+      label: What it says
+      description: Quote the sentence.
+    validations:
+      required: true
+  - type: textarea
+    id: truth
+    attributes:
+      label: What is actually true
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: How you know
+      description: >
+        An API response, a transaction id, a screenshot of the product, or the file in
+        the application repository. A correction with evidence lands the same day.
+    validations:
+      required: true

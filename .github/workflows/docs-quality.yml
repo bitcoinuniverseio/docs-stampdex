@@ -4,15 +4,66 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-quality-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   check:
+    # This repository is public, so pull request jobs run through the shared
+    # capacity router. A fork pull request must not reach organisation-owned
+    # infrastructure.
     runs-on: runs-on=${{ github.run_id }}-check/runner=universe-hosted/cpu=2+8/env=production
-    timeout-minutes: 5
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-      - uses: bitcoinuniverseio/universe-ci-actions/universe-node-env@8e24bc760556caa5ec8c7c497baaad2e9adcc912 # v1 # v1
+      - uses: bitcoinuniverseio/universe-ci-actions/universe-node-env@8e24bc760556caa5ec8c7c497baaad2e9adcc912 # v1
+
       - name: Runner policy
         run: node scripts/check-runners.mjs
 
-      - name: Text and link checks
-        run: node scripts/check-docs.mjs
+      - name: Install
+        run: npm ci
+
+      - name: Copy guard (long dash, banned word, marketing phrases, relative links)
+        run: npm run check:copy
+
+      - name: Colour contrast meets WCAG 2.2 AA in both themes
+        run: npm run check:contrast
+
+      - name: Documentation manifest is valid
+        run: npm run check:manifest
+
+      - name: Build
+        run: npm run build
+
+      - name: Internal links and anchors
+        run: npm run check:links
+
+      - name: Page metadata (one h1, skip link, descriptions, Open Graph, alt text)
+        run: npm run check:metadata
+
+      - name: Nothing unbreakable that would push a 320px screen sideways
+        run: npm run check:overflow
+
+      - name: Search index exists
+        run: test -f dist/pagefind/pagefind.js
+
+      - name: Sitemap exists
+        run: test -f dist/sitemap-index.xml
+
+      - name: Machine-readable index exists
+        run: test -s dist/llms.txt
+
+      - name: No image over 200 KB
+        run: |
+          oversized=$(find dist -type f \( -name '*.png' -o -name '*.webp' -o -name '*.jpg' \) -size +200k)
+          if [ -n "$oversized" ]; then
+            echo "Over the 200 KB image budget:"
+            echo "$oversized"
+            exit 1
+          fi
+          echo "Every image is within budget."

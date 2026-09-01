@@ -1,0 +1,102 @@
+---
+/**
+ * Supported and unsupported marketplace actions for one protocol, rendered
+ * straight from src/data/registry.json. Where the registry gives a reason an
+ * action is unsupported, that reason is printed verbatim. It is usually the
+ * most useful sentence on the page.
+ */
+import registry from '../data/registry.json';
+
+interface Props {
+  protocol: 'stamps' | 'src20';
+}
+const { protocol } = Astro.props;
+const entry = (registry.protocols as Record<string, any>)[protocol];
+const supported: Array<{ action: string; mode: string }> = entry.marketplace.actions.supported;
+const unsupported: Array<{ action: string; reason: string }> =
+  entry.marketplace.actions.unsupported;
+
+const order = [
+  'view',
+  'discover',
+  'view-collection',
+  'view-activity',
+  'view-transaction',
+  'list',
+  'unlist',
+  'update-listing',
+  'buy',
+  'sell',
+  'make-offer',
+  'accept-offer',
+  'cancel-offer',
+  'settle',
+  'reconcile',
+];
+
+const rows = order
+  .map((action) => {
+    const yes = supported.find((s) => s.action === action);
+    const no = unsupported.find((s) => s.action === action);
+    if (!yes && !no) return null;
+    return {
+      action,
+      supported: Boolean(yes),
+      mode: yes ? yes.mode : null,
+      reason: no ? no.reason : null,
+    };
+  })
+  .filter(Boolean) as Array<{
+  action: string;
+  supported: boolean;
+  mode: string | null;
+  reason: string | null;
+}>;
+---
+
+<div class="sd-scroll">
+  <table>
+    <caption class="sd-cap">
+      Marketplace actions for {entry.displayName}. Owner: {entry.marketplace.owner}.
+      Availability: {entry.marketplace.availability}. Execution mode:
+      {entry.marketplace.mode}.
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Action</th>
+        <th scope="col">Works today</th>
+        <th scope="col">What that means</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        rows.map((row) => (
+          <tr>
+            <th scope="row"><code>{row.action}</code></th>
+            <td>
+              <span class="sd-chip" data-side={row.supported ? 'chain' : 'none'}>
+                {row.supported ? 'YES' : 'NO'}
+              </span>
+            </td>
+            <td>
+              {row.supported
+                ? `Executed at StampDEX (${row.mode}).`
+                : row.reason}
+            </td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .sd-cap {
+    caption-side: bottom;
+    text-align: left;
+    font-size: 0.78rem;
+    color: var(--sd-muted);
+    padding: 0.5rem 0 0;
+    line-height: 1.5;
+  }
+</style>

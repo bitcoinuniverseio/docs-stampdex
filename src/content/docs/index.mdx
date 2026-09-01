@@ -1,0 +1,123 @@
+---
+title: StampDEX documentation
+description: How the StampDEX trading venue for Bitcoin Stamps and SRC-20 works, including the order lifecycle, custody at every step, fees, settlement, and the public read API.
+template: splash
+hero:
+  tagline: The trading venue for Bitcoin Stamps and SRC-20. This site documents how a trade is built, where your funds sit at every stage, and what the venue can and cannot do.
+  actions:
+    - text: Start here
+      link: /docs-stampdex/start-here/
+      icon: right-arrow
+    - text: Where your funds are
+      link: /docs-stampdex/concepts/custody/
+      variant: minimal
+    - text: Open StampDEX
+      link: https://stampdex.fun
+      variant: minimal
+      icon: external
+---
+
+import Legend from '../../components/Legend.astro';
+import Shot from '../../components/Shot.astro';
+
+<div class="sd-home-lede">
+
+StampDEX is the marketplace and explorer at [stampdex.fun](https://stampdex.fun) for
+two Bitcoin protocols: **Bitcoin Stamps**, artwork written into Bitcoin transactions,
+and **SRC-20**, the token standard built on the same mechanism. You can browse the
+whole venue without a wallet. Connect one only when you want to trade.
+
+This documentation exists for one reason above the others: a trade on Bitcoin takes
+time, and during that time your money is somewhere specific. Every page here says
+where.
+
+</div>
+
+<Shot
+  src="home-dark-desktop.webp"
+  width={1400}
+  height={875}
+  alt="The StampDEX market page in the dark theme: an SRC-20 token table with per-token source labels, floor prices, volume, and holders. Missing values show as dashes, not zeros."
+  caption="The venue itself. Every row carries the deployment transaction that identifies the token, and a source label for each figure."
+/>
+
+<dl class="sd-tape">
+  <div><dt>Lifecycle</dt><dd>Stable</dd></div>
+  <div><dt>Chain</dt><dd>Bitcoin</dd></div>
+  <div><dt>Network</dt><dd>mainnet</dd></div>
+  <div><dt>Protocols</dt><dd>Stamps, SRC-20</dd></div>
+  <div><dt>Execution</dt><dd>External</dd></div>
+  <div><dt>Version</dt><dd>Continuous</dd></div>
+</dl>
+
+Continuous means there is no numbered release to quote. The exact commit serving you is
+readable at any moment from
+[`GET /api/version`](/docs-stampdex/api/status/), and that is the version this
+documentation asks you to check against. See
+[Release evidence](/docs-stampdex/project/release-evidence/).
+
+## Who this is for
+
+<ul class="sd-cards">
+  <li>
+    <h3>Traders</h3>
+    <p>You want to know what a listing really is, what it costs, and what happens between signing and settlement. Start with <a href="/docs-stampdex/guides/buy-src20/">Buy SRC-20</a> and <a href="/docs-stampdex/concepts/custody/">Where your funds are</a>.</p>
+  </li>
+  <li>
+    <h3>Collectors</h3>
+    <p>You want to identify a stamp beyond its picture and buy it without guessing. Start with <a href="/docs-stampdex/guides/collect-stamps/">Collect Bitcoin Stamps</a> and <a href="/docs-stampdex/concepts/asset-identity/">Asset identity</a>.</p>
+  </li>
+  <li>
+    <h3>Application developers</h3>
+    <p>You want the same data the site reads, with no key and no account. Start with the <a href="/docs-stampdex/api/quickstart/">API quick start</a>.</p>
+  </li>
+</ul>
+
+## The one thing to understand first
+
+Trades are executed at StampDEX, not inside other Bitcoin Universe products. The
+registry that describes the Universe ecosystem records both Stamps and SRC-20 as
+`mode: external-execution`, owned by StampDEX. Other Universe surfaces can show you a
+stamp or a token, but the order book, the matching, and the settlement happen here.
+
+While an SRC-20 trade settles, your BTC is not in your wallet and not in the seller's
+wallet. It is in escrow addresses created for that one listing, which StampDEX
+controls. StampDEX states that before you sign. Everything on this site uses the same
+four colours to say where value sits:
+
+<Legend />
+
+Read [Where your funds are](/docs-stampdex/concepts/custody/) for the diagram that
+tracks all of it, stage by stage.
+
+## Go somewhere useful
+
+| I want to | Read |
+| --- | --- |
+| Understand the venue in five minutes | [Start here](/docs-stampdex/start-here/) |
+| Know exactly which actions work | [What you can and cannot do](/docs-stampdex/capabilities/) |
+| Buy a token | [Buy SRC-20](/docs-stampdex/guides/buy-src20/) |
+| Sell a token | [Sell SRC-20](/docs-stampdex/guides/sell-src20/) |
+| Change my listing price | [Change a listing price](/docs-stampdex/guides/change-a-listing-price/) |
+| Buy a stamp | [Collect Bitcoin Stamps](/docs-stampdex/guides/collect-stamps/) |
+| Follow a stuck order | [Order lifecycle](/docs-stampdex/concepts/order-lifecycle/) and [Recovery](/docs-stampdex/concepts/recovery/) |
+| Know what it costs | [Fees](/docs-stampdex/reference/fees/) |
+| Check a number's source | [Data provenance](/docs-stampdex/concepts/data-provenance/) |
+| Build against the API | [API quick start](/docs-stampdex/api/quickstart/) |
+
+## Source, status, and support
+
+| | |
+| --- | --- |
+| Product | [stampdex.fun](https://stampdex.fun) |
+| Documentation source | [github.com/bitcoinuniverseio/docs-stampdex](https://github.com/bitcoinuniverseio/docs-stampdex) |
+| Application issues | [github.com/bitcoinuniverseio/stampdex/issues](https://github.com/bitcoinuniverseio/stampdex/issues) |
+| Live status | [`GET /api/v1/indexer/status`](/docs-stampdex/api/status/) |
+| Changelog | [Changelog](/docs-stampdex/project/changelog/) |
+| Security reports | `legal@bitcoinuniverse.io`, never a public issue. See [Safety](/docs-stampdex/safety/) |
+| Central platform | [docs.bitcoinuniverse.io](https://docs.bitcoinuniverse.io) |
+
+<p class="sd-footnote">
+Nothing on this site is financial advice. StampDEX shows identity and market facts and
+builds transactions. What you buy, and at what price, is your decision.
+</p>

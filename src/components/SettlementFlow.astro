@@ -1,0 +1,128 @@
+---
+/**
+ * What settlement checks, in order, and where each check sends the order when
+ * it does not pass. Colour keeps its meaning: purple is money held by
+ * StampDEX, green is settled on Bitcoin.
+ */
+
+const W = 152;
+const H = 56;
+const ROW1 = 74;
+const ROW2 = 206;
+const step = 182;
+const left = 12;
+
+const steps = [
+  { label: 'PAYMENT SIGNED', sub: 'by the buyer', side: 'bid' },
+  { label: 'CHECK 1', sub: 'payment confirmed?', side: 'none' },
+  { label: 'CHECK 2', sub: 'balance verified?', side: 'none' },
+  { label: 'TRANSFER SENT', sub: 'broadcast to Bitcoin', side: 'venue' },
+  { label: 'FILLED', sub: 'both sides paid', side: 'chain' },
+];
+
+const outcomes = [
+  { at: 1, label: 'EXPIRED', sub: 'nothing moved', side: 'none', why: 'never confirmed' },
+  { at: 2, label: 'FAILED', sub: 'BTC held in escrow', side: 'venue', why: 'balance unverified' },
+];
+
+const width = left + step * (steps.length - 1) + W + 14;
+const height = ROW2 + H + 40;
+---
+
+<figure class="sd-figure">
+  <div class="sd-figure-scroll">
+    <svg
+      viewBox={`0 0 ${width} ${height}`}
+      role="img"
+      aria-labelledby="sf-title sf-desc"
+      class="sd-wide"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <title id="sf-title">What settlement checks before it releases funds</title>
+      <desc id="sf-desc">
+        A left to right pipeline of five steps. The buyer signs the payment. Check one
+        asks whether the payment confirmed on Bitcoin; a payment that never confirms leaves
+        the order Expired with nothing moved. Check two asks whether the expected
+        token balance is verified on the index; if it is not, the order becomes Failed
+        and the buyer BTC is held in the listing escrow rather than released. Only when
+        both checks pass is the token transfer broadcast, and two confirmations later the
+        order is Filled with both sides paid.
+      </desc>
+
+      <defs>
+        <marker id="sd-arrow-2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7"
+          markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0.5 L8 4 L0 7.5 z" class="sd-svg-muted" />
+        </marker>
+      </defs>
+
+      {
+        steps.slice(0, -1).map((_, i) => (
+          <>
+            <line x1={left + step * i + W + 2} y1={ROW1 + H / 2}
+              x2={left + step * (i + 1) - 3} y2={ROW1 + H / 2} class="sd-svg-rule"
+              stroke-width="1.5" marker-end="url(#sd-arrow-2)" />
+            <text
+              x={left + step * i + W + (step - W) / 2}
+              y={ROW1 - 14}
+              text-anchor="middle"
+              class="sd-svg-label sd-svg-muted"
+            >
+              {i === 0 ? 'broadcast' : i === 3 ? '2 confirmations' : 'yes'}
+            </text>
+          </>
+        ))
+      }
+
+      {
+        outcomes.map((o) => (
+          <>
+            <line x1={left + step * o.at + W / 2} y1={ROW1 + H + 2}
+              x2={left + step * o.at + W / 2} y2={ROW2 - 3} class="sd-svg-rule"
+              stroke-width="1.5" marker-end="url(#sd-arrow-2)" />
+            <text x={left + step * o.at + W / 2 + 8} y={ROW1 + H + 34}
+              class="sd-svg-label sd-svg-muted">
+              no: {o.why}
+            </text>
+            <rect x={left + step * o.at} y={ROW2} width={W} height={H} rx="3"
+              class={`sd-svg-${o.side}-f sd-svg-${o.side}-s`} stroke-width="1.5" />
+            <text x={left + step * o.at + 9} y={ROW2 + 22}
+              class={`sd-svg-title ${o.side === 'none' ? 'sd-svg-ink' : `sd-svg-${o.side}`}`}>
+              {o.label}
+            </text>
+            <text x={left + step * o.at + 9} y={ROW2 + 40} class="sd-svg-label sd-svg-muted">
+              {o.sub}
+            </text>
+          </>
+        ))
+      }
+
+      {
+        steps.map((s, i) => (
+          <>
+            <rect x={left + step * i} y={ROW1} width={W} height={H} rx="3"
+              class={`sd-svg-${s.side}-f sd-svg-${s.side}-s`} stroke-width="1.5" />
+            <text x={left + step * i + 9} y={ROW1 + 22}
+              class={`sd-svg-title ${s.side === 'none' ? 'sd-svg-ink' : `sd-svg-${s.side}`}`}>
+              {s.label}
+            </text>
+            <text x={left + step * i + 9} y={ROW1 + 40} class="sd-svg-label sd-svg-muted">
+              {s.sub}
+            </text>
+          </>
+        ))
+      }
+    </svg>
+  </div>
+  <figcaption>
+    Both branches downward end somewhere named. Neither ends in silence. The second
+    branch is the one worth remembering: settlement would rather stop with your BTC in a
+    known escrow address than release it against a balance it could not verify.
+  </figcaption>
+</figure>
+
+<style>
+  .sd-figure svg.sd-wide {
+    min-width: 50rem;
+  }
+</style>

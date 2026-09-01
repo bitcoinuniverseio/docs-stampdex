@@ -1,0 +1,87 @@
+---
+title: Data provenance
+description: "Which service answers each question on StampDEX, which of them are third parties, what the ecosystem registry records as each source of truth, and how to check it live."
+source:
+  repo: bitcoinuniverseio/core registry, and bitcoinuniverseio/stampdex for the client map
+  path: MARKETPLACE_PROTOCOL_REGISTRY sourceOfTruth and indexer entries
+  verified: "2026-09-01"
+---
+
+import SourceOfTruth from '../../../components/SourceOfTruth.astro';
+
+StampDEX names the source behind every number it shows. This page says where each kind
+of data comes from, and how to check for yourself.
+
+## The map
+
+| Data | Source | Operated by |
+| --- | --- | --- |
+| Bitcoin chain data: UTXOs, fee rates, block height, transaction status, broadcast | Universe Bitcoin node API | Universe |
+| Listings, orders, and trades made on StampDEX | The StampDEX database | Universe |
+| Stamps and SRC-20 index: deployments, supplies, holders, stamp metadata | stampchain.io | A third party |
+| Collection and trait metadata | stampchain.io | A third party |
+| Stamp artwork | stampchain.io, cached and thumbnailed by the StampDEX media cache | A third party, served through Universe |
+| Token logos | OpenStamp and a wallet icon service, resolved server side and cached | Third parties |
+| Counterparty compose for stamp trades | Counterparty API | Universe-operated node |
+
+Bitcoin chain reads use Universe-operated services only. When that node is
+unreachable, the affected reads **fail** rather than quietly switching to another
+provider. Changing provenance without saying so would defeat the point of naming
+sources at all.
+
+## What the registry records
+
+The Bitcoin Universe ecosystem registry records the source of truth for each protocol
+independently of the product's own description. This is the platform's record, not
+StampDEX's.
+
+### Bitcoin Stamps
+
+<SourceOfTruth protocol="stamps" />
+
+### SRC-20
+
+<SourceOfTruth protocol="src20" />
+
+Two things in those tables deserve saying in plain words.
+
+**The order book depends on the Counterparty data layer.** For stamps, the order book
+is the StampDEX Counterparty dispenser order book and ownership resolution is
+indexer-backed through StampDEX and Counterparty. If that data layer is wrong or
+behind, the venue is wrong or behind with it.
+
+**Universe does not cross-check the provider against Bitcoin.** The registry records,
+for both protocols, that Universe allowlists and validates the exact request it
+forwards, and that StampDEX or Counterparty validates the underlying state, but that
+Universe does not compare the provider's chain tip against Bitcoin's own tip.
+
+## The third-party dependence, stated plainly
+
+The Stamps and SRC-20 index StampDEX reads is stampchain.io, run by the Bitcoin Stamps
+project. StampDEX does not hide this. Market rows carry a source object naming the
+origin of each number, and the status endpoint names the operator.
+
+A Universe-operated Counterparty node is syncing. Until it is ready and a Universe
+stamps index runs on top of it, index reads stay on stampchain.io. This page will
+change when that changes.
+
+## Check it live
+
+```bash
+curl https://stamp.api.bitcoinuniverse.io/api/v1/indexer/status
+```
+
+The answer names the mempool source, the stamp index source and its lag behind the
+Bitcoin tip, the per-kind sources for index, collections, and media, and an `operator`
+field that reads `universe` only when every stamp source is a Universe host. It also
+states the freshness in plain words.
+
+There is a per-transaction version too, which traces a single transaction through
+signed, broadcast, mempool, confirmed, and indexed. See
+[Status and version](/docs-stampdex/api/status/).
+
+## Related
+
+- [Freshness](/docs-stampdex/concepts/freshness/)
+- [Unknown is not zero](/docs-stampdex/concepts/unknown-is-not-zero/)
+- [What you can and cannot do](/docs-stampdex/capabilities/)
