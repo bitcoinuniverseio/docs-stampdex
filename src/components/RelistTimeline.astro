@@ -1,0 +1,79 @@
+---
+/**
+ * What "no atomic listing update" costs you, drawn as a timeline. The gap in
+ * the middle is the whole point of the picture.
+ */
+const bar = 34;
+const y = 46;
+const width = 760;
+const height = 150;
+
+const blocks = [
+  { x: 12, w: 190, side: 'ask', label: 'LISTING A, OPEN', sub: 'at the old price' },
+  { x: 210, w: 150, side: 'none', label: 'CANCELLED', sub: 'you sign' },
+  { x: 368, w: 150, side: 'none', label: 'NOT FOR SALE', sub: 'the gap' },
+  { x: 526, w: 220, side: 'ask', label: 'LISTING B, OPEN', sub: 'at the new price, new order id' },
+];
+---
+
+<figure class="sd-figure">
+  <div class="sd-figure-scroll">
+    <svg
+      viewBox={`0 0 ${width} ${height}`}
+      role="img"
+      aria-labelledby="rt-title rt-desc"
+      class="sd-wide"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <title id="rt-title">Changing a price means cancel and relist, not an edit</title>
+      <desc id="rt-desc">
+        A timeline in four blocks. The first block is the original listing, open at the
+        old price. The second is the cancellation, which you sign. The third is a gap in
+        which the asset is not for sale at all. The fourth is a new listing at the new
+        price, with a new order id. Below the timeline, two arrows mark the two
+        signatures and the two network fees the sequence costs.
+      </desc>
+
+      {
+        blocks.map((b) => (
+          <>
+            <rect x={b.x} y={y} width={b.w} height={bar} rx="3"
+              class={`sd-svg-${b.side}-f sd-svg-${b.side}-s`} stroke-width="1.5"
+              stroke-dasharray={b.label === 'NOT FOR SALE' ? '4 3' : undefined} />
+            <text x={b.x + 10} y={y + 22}
+              class={`sd-svg-title ${b.side === 'none' ? 'sd-svg-ink' : `sd-svg-${b.side}`}`}>
+              {b.label}
+            </text>
+            <text x={b.x + 10} y={y + bar + 16} class="sd-svg-label sd-svg-muted">
+              {b.sub}
+            </text>
+          </>
+        ))
+      }
+
+      <text x={12} y={26} class="sd-svg-title sd-svg-muted">TIME</text>
+
+      <line x1={210} y1={y - 8} x2={210} y2={y + bar + 34} class="sd-svg-rule"
+        stroke-width="1" />
+      <line x1={526} y1={y - 8} x2={526} y2={y + bar + 34} class="sd-svg-rule"
+        stroke-width="1" />
+      <text x={216} y={y + bar + 48} class="sd-svg-label sd-svg-ink">
+        signature 1, network fee 1
+      </text>
+      <text x={532} y={y + bar + 48} class="sd-svg-label sd-svg-ink">
+        signature 2, network fee 2
+      </text>
+    </svg>
+  </div>
+  <figcaption>
+    Two signatures, two network fees, one window where nobody can buy the asset. That is
+    what the registry means when it records that no atomic listing update is
+    implemented.
+  </figcaption>
+</figure>
+
+<style>
+  .sd-figure svg.sd-wide {
+    min-width: 40rem;
+  }
+</style>

@@ -4,34 +4,48 @@
   "name": "StampDEX documentation",
   "classification": "product-docs",
   "repository": "bitcoinuniverseio/docs-stampdex",
-  "documentationUrl": "https://docs.bitcoinuniverse.io/products/stampdex/",
-  "docsRoot": "docs",
+  "documentationUrl": "https://bitcoinuniverseio.github.io/docs-stampdex/",
+  "docsRoot": "src/content/docs",
   "sourceRef": "main",
-  "releasedRef": "ad0876f3149144e12b9f9e7c59b8791d712b6bf0",
+  "releasedRef": "2443143044448d71f6a2f8f08d2e48e620ca0ff8",
   "releaseVersion": "continuous",
   "lifecycle": "stable",
   "chains": [
     {
       "chain": "bitcoin",
-      "networks": [
-        "mainnet"
-      ]
+      "networks": ["mainnet"]
     }
   ],
-  "protocols": [
-    "src-20"
+  "protocols": ["stamps", "src-20"],
+  "audiences": ["user", "collector", "app-developer"],
+  "owners": ["bitcoinuniverseio"],
+  "statusSources": [
+    "https://stamp.api.bitcoinuniverse.io/api/health",
+    "https://stamp.api.bitcoinuniverse.io/api/version",
+    "https://stamp.api.bitcoinuniverse.io/api/v1/indexer/status"
   ],
-  "audiences": [
-    "user",
-    "collector",
-    "app-developer"
-  ],
-  "owners": [
-    "bitcoinuniverseio"
+  "redirects": [
+    { "from": "/start-here", "to": "/start-here/" },
+    { "from": "/what-is-stampdex", "to": "/what-is-stampdex/" },
+    { "from": "/buy-src20", "to": "/guides/buy-src20/" },
+    { "from": "/sell-src20", "to": "/guides/sell-src20/" },
+    { "from": "/collect-stamps", "to": "/guides/collect-stamps/" },
+    { "from": "/portfolio", "to": "/guides/portfolio/" },
+    { "from": "/orders-and-settlement", "to": "/concepts/order-lifecycle/" },
+    { "from": "/asset-identity", "to": "/concepts/asset-identity/" },
+    { "from": "/market-data", "to": "/concepts/market-data/" },
+    { "from": "/data-sources", "to": "/concepts/data-provenance/" },
+    { "from": "/freshness", "to": "/concepts/freshness/" },
+    { "from": "/fees", "to": "/reference/fees/" },
+    { "from": "/wallets", "to": "/reference/wallets/" },
+    { "from": "/glossary", "to": "/reference/glossary/" },
+    { "from": "/changelog", "to": "/project/changelog/" },
+    { "from": "/contributing", "to": "/project/contributing/" },
+    { "from": "/api/quickstart", "to": "/api/quickstart/" }
   ],
   "lastVerified": {
-    "commit": "ad0876f3149144e12b9f9e7c59b8791d712b6bf0",
-    "timestamp": "2026-09-01T02:00:00Z"
+    "commit": "2443143044448d71f6a2f8f08d2e48e620ca0ff8",
+    "timestamp": "2026-09-01T11:00:00Z"
   },
   "securityClassification": "public"
 }

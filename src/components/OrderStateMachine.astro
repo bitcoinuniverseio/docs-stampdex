@@ -1,0 +1,168 @@
+---
+/**
+ * The SRC-20 order state machine. Nodes are states, arrows are the events
+ * that move an order between them. A node's colour says where the BTC is in
+ * that state, so this diagram and the custody ledger agree by construction.
+ */
+
+type Side = 'bid' | 'ask' | 'venue' | 'chain' | 'none';
+
+interface Node {
+  id: string;
+  label: string;
+  sub: string;
+  side: Side;
+  x: number;
+  y: number;
+}
+
+const W = 160;
+const H = 52;
+const ROW1 = 74;
+const ROW2 = 228;
+const step = 200;
+const left = 14;
+
+const main: Node[] = [
+  { id: 'draft', label: 'DRAFT', sub: 'not signed yet', side: 'none', x: left, y: ROW1 },
+  { id: 'open', label: 'OPEN', sub: 'on the book', side: 'none', x: left + step, y: ROW1 },
+  { id: 'pending', label: 'PENDING', sub: 'buyer holds BTC', side: 'bid', x: left + step * 2, y: ROW1 },
+  { id: 'await', label: 'AWAITING TRANSFER', sub: 'BTC in escrow', side: 'venue', x: left + step * 3, y: ROW1 },
+  { id: 'settling', label: 'SETTLING', sub: 'BTC in escrow', side: 'venue', x: left + step * 4, y: ROW1 },
+  { id: 'awaitconf', label: 'AWAITING CONF.', sub: 'BTC in escrow', side: 'venue', x: left + step * 5, y: ROW1 },
+  { id: 'filled', label: 'FILLED', sub: 'both sides paid', side: 'chain', x: left + step * 6, y: ROW1 },
+];
+
+const terminals: Node[] = [
+  { id: 'expired', label: 'EXPIRED', sub: 'nothing moved', side: 'none', x: left, y: ROW2 },
+  { id: 'cancelled', label: 'CANCELLED', sub: 'tokens returned', side: 'none', x: left + step, y: ROW2 },
+  { id: 'failed', label: 'FAILED', sub: 'BTC held in escrow', side: 'venue', x: left + step * 4, y: ROW2 },
+];
+
+const nodes = [...main, ...terminals];
+const width = left + step * 6 + W + 16;
+const height = ROW2 + H + 46;
+
+const transitions = [
+  { from: 0, label: 'seller signs' },
+  { from: 1, label: 'buyer locks' },
+  { from: 2, label: 'buyer pays' },
+  { from: 3, label: 'payment confirms' },
+  { from: 4, label: 'transfer broadcast' },
+  { from: 5, label: '2 confirmations' },
+];
+---
+
+<figure class="sd-figure">
+  <div class="sd-figure-scroll">
+    <svg
+      viewBox={`0 0 ${width} ${height}`}
+      role="img"
+      aria-labelledby="osm-title osm-desc"
+      class="sd-wide"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <title id="osm-title">The SRC-20 order state machine on StampDEX</title>
+      <desc id="osm-desc">
+        Seven states run left to right along the top. Draft becomes Open when the seller
+        signs. Open becomes Pending when a buyer locks the listing. Pending becomes
+        Awaiting transfer when the buyer pays, and if the buyer stops, the lock lapses
+        and the order returns to Open. Awaiting transfer becomes Settling when the
+        payment confirms, Settling becomes Awaiting confirmation when the token transfer
+        is broadcast, and two confirmations make it Filled. Three terminal states sit on
+        a second row: Expired below Draft, reached when an unsigned listing runs out of
+        time; Cancelled below Open, reached when the seller signs a cancellation; and
+        Failed below Settling, reached when the token balance cannot be verified, with
+        the buyer's BTC still held in the listing escrow.
+      </desc>
+
+      <defs>
+        <marker id="sd-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7"
+          markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0.5 L8 4 L0 7.5 z" class="sd-svg-muted" />
+        </marker>
+      </defs>
+
+      {/* main chain arrows */}
+      {
+        transitions.map((t) => {
+          const a = main[t.from];
+          const b = main[t.from + 1];
+          const x1 = a.x + W;
+          const x2 = b.x;
+          const y = ROW1 + H / 2;
+          return (
+            <>
+              <line x1={x1 + 2} y1={y} x2={x2 - 3} y2={y} class="sd-svg-rule"
+                stroke-width="1.5" marker-end="url(#sd-arrow)" />
+              <text x={(x1 + x2) / 2} y={ROW1 - 14} text-anchor="middle"
+                class="sd-svg-label sd-svg-muted">
+                {t.label}
+              </text>
+            </>
+          );
+        })
+      }
+
+      {/* draft to expired */}
+      <line x1={left + W / 2} y1={ROW1 + H + 2} x2={left + W / 2} y2={ROW2 - 3}
+        class="sd-svg-rule" stroke-width="1.5" marker-end="url(#sd-arrow)" />
+      <text x={left + W / 2 + 8} y={ROW1 + H + 46} class="sd-svg-label sd-svg-muted">
+        never signed
+      </text>
+
+      {/* open to cancelled */}
+      <line x1={left + step + W / 2} y1={ROW1 + H + 2} x2={left + step + W / 2}
+        y2={ROW2 - 3} class="sd-svg-rule" stroke-width="1.5" marker-end="url(#sd-arrow)" />
+      <text x={left + step + W / 2 + 8} y={ROW1 + H + 46} class="sd-svg-label sd-svg-muted">
+        seller signs a cancel
+      </text>
+
+      {/* settling to failed */}
+      <line x1={left + step * 4 + W / 2} y1={ROW1 + H + 2} x2={left + step * 4 + W / 2}
+        y2={ROW2 - 3} class="sd-svg-rule" stroke-width="1.5" marker-end="url(#sd-arrow)" />
+      <text x={left + step * 4 + W / 2 + 8} y={ROW1 + H + 46} class="sd-svg-label sd-svg-muted">
+        balance not verified
+      </text>
+
+      {/* pending back to open: the lock lapses */}
+      <path
+        d={`M ${left + step * 2 + 14} ${ROW1 + H + 2} L ${left + step * 2 + 14} ${ROW1 + H + 22} L ${left + step + W - 14} ${ROW1 + H + 22} L ${left + step + W - 14} ${ROW1 + H + 5}`}
+        fill="none" class="sd-svg-rule" stroke-width="1.5" marker-end="url(#sd-arrow)"
+      />
+      <text x={left + step + W + 6} y={ROW1 + H + 19} class="sd-svg-label sd-svg-muted">
+        lock lapses, back on the book
+      </text>
+
+      {
+        nodes.map((n) => (
+          <>
+            <rect x={n.x} y={n.y} width={W} height={H} rx="3"
+              class={`sd-svg-${n.side}-f sd-svg-${n.side}-s`} stroke-width="1.5" />
+            <text x={n.x + 9} y={n.y + 21}
+              class={`sd-svg-title ${n.side === 'none' ? 'sd-svg-ink' : `sd-svg-${n.side}`}`}
+              textLength={n.label.length > 18 ? W - 18 : undefined}
+              lengthAdjust="spacingAndGlyphs">
+              {n.label}
+            </text>
+            <text x={n.x + 9} y={n.y + 38} class="sd-svg-label sd-svg-muted">
+              {n.sub}
+            </text>
+          </>
+        ))
+      }
+    </svg>
+  </div>
+  <figcaption>
+    Colour says where the BTC is, and nothing else. Purple is the per-listing escrow
+    StampDEX controls. <strong>Failed</strong> is purple for the same reason
+    <strong>Settling</strong> is: the money is in the same place. Failed is not a state
+    where funds vanish, it is a state where they stop moving.
+  </figcaption>
+</figure>
+
+<style>
+  .sd-figure svg.sd-wide {
+    min-width: 58rem;
+  }
+</style>

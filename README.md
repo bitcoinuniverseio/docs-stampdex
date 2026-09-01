@@ -1,133 +1,97 @@
-# StampDEX
+# StampDEX documentation
 
-**Trade SRC-20 tokens and collect Bitcoin Stamps, with every number
-naming its source and every transaction shown before you sign.**
+**The public documentation site for [StampDEX](https://stampdex.fun), the trading
+venue for Bitcoin Stamps and SRC-20.**
 
-StampDEX is the SRC-20 marketplace and Bitcoin Stamps explorer at
-[stampdex.fun](https://stampdex.fun). Browse everything without a wallet.
-Connect one only when you want to trade.
+> **[Read the documentation](https://bitcoinuniverseio.github.io/docs-stampdex/)**
+
+This repository holds the source of that site. The product itself is a separate,
+private application; this is its public documentation.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/home-dark-desktop.png">
   <img src="assets/home-light-desktop.png" alt="The StampDEX market page: an SRC-20 token table with per-token source labels, floor prices, volume, and holders. Missing values show as dashes, not zeros.">
 </picture>
 
-[Launch StampDEX](https://stampdex.fun) ·
-[Start here](docs/start-here.md) ·
-[Buy](docs/buy-src20.md) ·
-[Sell](docs/sell-src20.md) ·
-[Collect](docs/collect-stamps.md) ·
-[API](docs/api/quickstart.md) ·
-[Safety](docs/safety.md)
+## What the site covers
 
-## What makes it different
+49 pages across nine sections.
 
-- **Every number names its source.** Each market row carries a source
-  label, and `GET /api/v1/indexer/status` reports the live index source,
-  its lag behind the Bitcoin tip, and whether Universe or a third party
-  operates it. See [Data sources](docs/data-sources.md).
-- **Unknown is never zero.** A value the source did not answer shows as
-  unknown. StampDEX does not fill gaps with zeros or invented numbers.
-- **Identity before price.** Tokens show their deployment transaction and
-  block; stamps show their number, asset id, creator, and file hash. A
-  ticker alone never stands in for identity. See
-  [Asset identity](docs/asset-identity.md).
-- **You sign what you see.** Trades are PSBTs your own wallet reviews and
-  signs, with the amount, price, total, and every fee shown first. Your
-  keys never leave your wallet.
-- **Your BTC does move through us.** While an SRC-20 trade settles, your
-  payment sits in a trade address StampDEX controls, and the seller is paid
-  only when the tokens reach you. StampDEX says so before you sign, and
-  every order says where the money is. See
-  [Orders and settlement](docs/orders-and-settlement.md).
-- **A quiet market looks quiet.** No fake urgency, no invented volume, no
-  countdown theater. What you see traded, traded.
-
-## The product
-
-<table>
-  <tr>
-    <td width="50%">
-      <img src="assets/trade-dark-desktop.png" alt="The KEVIN token terminal. A panel titled What this token is shows the deploy transaction, deploy block, date, and creator, and a section named Where these numbers came from lists the source of each figure.">
-      <p><b>The token terminal.</b> Deployment identity, order book, price history, and the source of every figure, on one page.</p>
-    </td>
-    <td width="50%">
-      <img src="assets/stamps-dark-desktop.png" alt="The Bitcoin Stamps collections page showing pixel-art collections with floor, volume, market cap, listed count, and holders. A collection with no floor shows a dash.">
-      <p><b>The stamps explorer.</b> On-chain artwork, collections, listings, offers, and dispensers, image first.</p>
-    </td>
-  </tr>
-</table>
-
-## How a trade works
-
-```mermaid
-sequenceDiagram
-    participant S as Seller's wallet
-    participant D as StampDEX
-    participant B as Buyer's wallet
-    participant BTC as Bitcoin
-    S->>D: Sign a listing (tokens into per-listing escrow)
-    D->>B: Show amount, unit price, total, and fees
-    B->>BTC: Sign and pay the exact total
-    BTC->>D: Payment confirms
-    D->>BTC: Verify tokens, broadcast settlement
-    BTC->>B: Tokens delivered
-    BTC->>S: Payment delivered
-```
-
-Every state along the way is named on the order page, with where the funds
-are and the transaction ids to verify. See
-[Orders and settlement](docs/orders-and-settlement.md).
-
-## Documentation
-
-| I want to | Read |
+| Section | What is in it |
 | --- | --- |
-| Understand the product in five minutes | [Start here](docs/start-here.md) · [What is StampDEX](docs/what-is-stampdex.md) |
-| Buy or sell SRC-20 tokens | [Buy](docs/buy-src20.md) · [Sell](docs/sell-src20.md) · [Fees](docs/fees.md) |
-| Collect Bitcoin Stamps | [Collect stamps](docs/collect-stamps.md) · [Asset identity](docs/asset-identity.md) |
-| Follow a trade | [Orders and settlement](docs/orders-and-settlement.md) · [Troubleshooting](docs/troubleshooting.md) |
-| Track my holdings | [Portfolio](docs/portfolio.md) · [Wallets](docs/wallets.md) |
-| Trust but verify | [Safety](docs/safety.md) · [Data sources](docs/data-sources.md) · [Market data](docs/market-data.md) |
-| Build on the API | [Quick start](docs/api/quickstart.md) · [Market](docs/api/market.md) · [Stamps](docs/api/stamps.md) · [Orders](docs/api/orders.md) · [Media](docs/api/media.md) |
-| Look something up | [FAQ](docs/faq.md) · [Glossary](docs/glossary.md) |
+| Start | What StampDEX is, a five minute orientation, and the exact list of actions that work |
+| Browse | The market board, token pages, collection pages, and the portfolio |
+| Trade | Buying, selling, cancelling, repricing, collecting stamps, listing stamps, and reviewing a PSBT |
+| How settlement works | Custody at every stage, the order state machine, the settlement pipeline, offers, and recovery |
+| Identity and data | Asset identity, deployment identity, market data, unknown against zero, provenance, and freshness |
+| Reference | Fees, wallets, the capability matrix, order states, and a glossary |
+| API | Quick start, rate limits, market, stamps, orders, media, status, and worked examples |
+| Safety and support | Safety and trust, troubleshooting, and the FAQ |
+| Project | Changelog, release evidence, page freshness, and contributing |
 
-## Wallets
+## The three things it says that most marketplace documentation does not
 
-Universe Wallet, UniSat, Leather, Xverse, and OKX Wallet. Connecting is not
-the same as being able to do everything: OKX Wallet signs Bitcoin
-transactions here but cannot list, cancel, or mint. What each wallet can do
-is a table generated from the code that talks to it, in
-[Wallets](docs/wallets.md).
+**Where your money is at every moment.** An SRC-20 trade routes the buyer's payment
+through escrow addresses StampDEX controls until the tokens arrive.
+[Where your funds are](https://bitcoinuniverseio.github.io/docs-stampdex/concepts/custody/)
+draws that stage by stage, for both protocols, so a pending settlement is never
+mistaken for a lost payment.
 
-Universe Wallet embeds the StampDEX trading desk directly.
+**Which actions are actually supported, and why the others are not.** The capability
+tables are generated from the Bitcoin Universe ecosystem registry, and every
+unsupported action carries the registry's own recorded reason. Neither protocol
+supports an in-place listing price update: listings must be cancelled and relisted,
+because no atomic listing update is implemented. See
+[What you can and cannot do](https://bitcoinuniverseio.github.io/docs-stampdex/capabilities/).
 
-## API in one line
+**What has and has not been verified.**
+[Release evidence](https://bitcoinuniverseio.github.io/docs-stampdex/project/release-evidence/)
+states, action by action, which paths have recorded mainnet evidence and which are
+implemented and deployed without it.
+
+## Grounding
+
+| Claim type | Checked against |
+| --- | --- |
+| Which marketplace actions are supported | The ecosystem capability registry in `bitcoinuniverseio/core`, via the published snapshot, vendored here as `src/data/registry.json` |
+| Product behaviour, fees, timeouts, error strings | The private `bitcoinuniverseio/stampdex` application source |
+| Live values: version, index lag, fee rates | The public API at `https://stamp.api.bitcoinuniverse.io` |
+| Screenshots | Real captures from production on 2026-08-28. Nothing here is a mockup |
+
+Every page carries a **Source and verification** panel under its title naming the
+owning repository, the source path, the applicable release, the chain and network, the
+lifecycle, and the date it was last checked.
+
+## Building it
 
 ```bash
-curl https://stamp.api.bitcoinuniverse.io/api/v1/market/tokens?limit=5
+npm install
+npm run dev      # local preview
+npm run build    # static build into dist/, including the Pagefind search index
+npm test         # runner policy, copy guard, manifest validation
+npm run check:links   # internal links and anchors, after a build
 ```
 
-No key needed for reads. 300 requests per minute per IP. Full docs in the
-[API quick start](docs/api/quickstart.md).
+Astro and Starlight, deployed to GitHub Pages by `.github/workflows/pages.yml`. No
+external CDNs, no web fonts, no analytics, and no trackers. Content pages work with
+JavaScript disabled; JavaScript adds search and the theme toggle only.
 
-## Data transparency
+## Contributing
 
-Bitcoin chain data comes from Universe-operated infrastructure. The
-Stamps and SRC-20 index currently comes from stampchain.io, a third
-party, and StampDEX says so in the product and in its status endpoint
-rather than hiding it. The full map, and how to check it live, is in
-[Data sources](docs/data-sources.md).
+Corrections are the most valuable contribution here. See
+[CONTRIBUTING.md](CONTRIBUTING.md) and the
+[contributing page](https://bitcoinuniverseio.github.io/docs-stampdex/project/contributing/).
 
-## Support
+## Support and security
 
-- Bugs and questions:
-  [GitHub issues](https://github.com/bitcoinuniverseio/stampdex/issues)
-- Suspected security problem: email `legal@bitcoinuniverse.io`, and do
-  not open a public issue
-- Corrections to these docs: [Contributing](docs/contributing.md)
+- Documentation problems: [issues in this repository](https://github.com/bitcoinuniverseio/docs-stampdex/issues)
+- Product bugs: [issues in the application repository](https://github.com/bitcoinuniverseio/stampdex/issues)
+- Suspected security problem: see [SECURITY.md](SECURITY.md). Email
+  `legal@bitcoinuniverse.io` and do not open a public issue.
+- Everything else: [SUPPORT.md](SUPPORT.md)
 
-## License
+## Licence
 
-This documentation is (c) Bitcoin Universe. The StampDEX application is
-proprietary; this repository documents it publicly.
+Documentation content is licensed under
+[CC BY 4.0](LICENSE). The StampDEX application itself is proprietary; this repository
+documents it publicly.

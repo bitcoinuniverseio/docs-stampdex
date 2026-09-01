@@ -1,0 +1,40 @@
+name: Something is not documented
+description: You looked for an answer here and did not find one.
+title: "[gap] "
+labels: [documentation, gap]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Tell us the question you had. The question is more useful than a suggested page
+        title, because it says what a reader was actually trying to do.
+  - type: textarea
+    id: question
+    attributes:
+      label: What were you trying to find out
+    validations:
+      required: true
+  - type: textarea
+    id: looked
+    attributes:
+      label: Where you looked
+      description: Which pages you tried, and what you searched for.
+    validations:
+      required: false
+  - type: textarea
+    id: answer
+    attributes:
+      label: Did you find the answer elsewhere
+      description: If you did, say where. That tells us what to link or absorb.
+    validations:
+      required: false
+  - type: dropdown
+    id: risk
+    attributes:
+      label: Could not knowing this cost somebody money
+      options:
+        - "No, it is a convenience"
+        - "Maybe"
+        - "Yes"
+    validations:
+      required: true

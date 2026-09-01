@@ -1,0 +1,86 @@
+---
+title: Contributing
+description: "How to correct or improve this documentation, the writing and colour rules it holds itself to, and the grounding rule that keeps claims tied to evidence."
+source:
+  repo: bitcoinuniverseio/docs-stampdex
+  path: this repository
+  verified: "2026-09-01"
+---
+
+Corrections and improvements are welcome. A wrong sentence about where somebody's money
+is costs more than a missing one, so corrections are the most valuable contribution
+here.
+
+## How
+
+- **Found a mistake or a gap:** open an
+  [issue](https://github.com/bitcoinuniverseio/docs-stampdex/issues) naming the page and
+  the problem.
+- **Have the fix:** open a pull request. Every page carries an Edit on GitHub link under
+  its title that takes you straight to the file.
+
+## Running the site locally
+
+```bash
+npm install
+npm run dev
+npm run build
+npm test
+```
+
+`npm test` runs the runner policy check, the copy checks, and the manifest validation.
+`npm run build` validates every internal link and builds the search index.
+
+## Writing rules
+
+- Short, plain sentences. One idea per sentence.
+- State facts you can verify against the live product, the public API, or the ecosystem
+  capability registry. If you cannot verify a claim, do not write it.
+- **Never use a long dash.** The build fails on one.
+- Say authoritative, owning, official, or the source of truth. One near synonym for
+  those is banned in prose and the copy guard rejects it.
+- No marketing vocabulary. `scripts/check-docs.mjs` holds the rejected list, and the
+  build fails on any of them.
+- Test every command before committing it, and say what to expect back.
+- A missing value is unknown, not zero. The docs follow the same honesty rule the
+  product does.
+- Prefer a diagram or a table over a paragraph. Diagrams are inline SVG with a title and
+  a description, and they must read in both themes.
+
+## The colour rule
+
+Four colours carry meaning on this site, and nothing else is coloured:
+
+| Colour | Meaning |
+| --- | --- |
+| Buyer teal | Held by the buyer, or delivered to the buyer |
+| Seller amber | Held by the seller, or delivered to the seller |
+| Venue violet | Held by StampDEX for the length of one trade |
+| Chain green | Settled on Bitcoin, final |
+
+If you add a diagram, use those and no others. A reader who has learned the legend on
+one page should not have to relearn it on the next.
+
+## The grounding rule
+
+Code presence is not released capability. A route existing is not production
+availability. A parser existing is not wallet support.
+
+When the ecosystem capability registry records an action as unsupported, use the
+registry's own recorded reason. It is usually the most useful sentence on the page. See
+[What you can and cannot do](/docs-stampdex/capabilities/).
+
+## What does not belong here
+
+- Credentials, keys, internal host names, private ports, or operator procedure. Private
+  material lives in the private repositories.
+- Documentation for features that are not live. Describe what works today, and use
+  [Release evidence](/docs-stampdex/project/release-evidence/) to say what has and has
+  not been verified.
+- Fabricated screenshots. If no real capture exists, draw a diagram and describe the
+  interface in words.
+
+## Related
+
+- [Page freshness](/docs-stampdex/project/page-freshness/)
+- [Changelog](/docs-stampdex/project/changelog/)
