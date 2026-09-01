@@ -36,7 +36,7 @@ address. That is the whole reason the check exists.
 | Index grace period | 30 minutes | How long settlement waits for the expected balance before marking the order Failed |
 | Payment claim lease | 10 minutes | Makes a repeated payment confirmation safe rather than duplicating work |
 | Settlement claim lease | 10 minutes | Stops two workers settling the same order |
-| Confirmation depth | 2 blocks | How deep the settlement transaction must be before the order reads Filled |
+| Confirmation depth | 2 blocks by default | How deep the settlement transaction must be before the order reads Filled. An operator can raise it |
 | Reorg watch window | 24 hours | How far back settled trades are re-checked |
 
 Background passes run on their own schedule: expired locks are released about every
@@ -46,7 +46,9 @@ reorg watch about every ten.
 ## Confirmation depth
 
 An order does not read **Filled** at the first confirmation. It waits for two blocks of
-depth. An unknown chain tip counts as not settled, never as settled: if StampDEX cannot
+depth by default. That depth is operator-configurable and bounded, so it can be raised
+but never set below one, and the ecosystem registry records confirmation policy as
+delegated to StampDEX rather than set at the Universe layer. An unknown chain tip counts as not settled, never as settled: if StampDEX cannot
 read the chain, it does not assume the best case.
 
 ## Reorgs
