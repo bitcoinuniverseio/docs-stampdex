@@ -73,7 +73,7 @@ against the token you researched. See
 ## My trade is taking a while. Should I worry?
 
 Usually not. Bitcoin confirmations set the pace, settlement waits for two blocks of
-depth, and the order page names each state with its transaction id. See
+depth by default, and the order page names each state with its transaction id. See
 [Order lifecycle](/docs-stampdex/concepts/order-lifecycle/) and
 [Recovery](/docs-stampdex/concepts/recovery/).
 
