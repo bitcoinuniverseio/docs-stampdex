@@ -1,0 +1,68 @@
+name: pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build-and-publish:
+    # Routed through the shared capacity router rather than the self-hosted
+    # fleet. The organisation-owned Linux runners do not pick up jobs for this
+    # repository, and the RunsOn artifact proxy returns a plain-text endpoint
+    # marker to actions/upload-artifact, which breaks the Pages artifact
+    # upload. Publishing to a branch avoids both problems: it needs no
+    # artifact upload and no particular runner.
+    runs-on: runs-on=${{ github.run_id }}-pages/runner=universe-hosted/cpu=2+8/env=production
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: bitcoinuniverseio/universe-ci-actions/universe-node-env@8e24bc760556caa5ec8c7c497baaad2e9adcc912 # v1
+
+      - name: Runner policy
+        run: node scripts/check-runners.mjs
+
+      - name: Install
+        run: npm ci
+
+      - name: Gates that must hold on the deployed commit
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Internal links, page metadata, and mobile reflow
+        run: npm run check:site
+
+      # GitHub Pages serves this branch directly. Without .nojekyll it would
+      # run Jekyll over the output, and Jekyll drops directories whose names
+      # begin with an underscore, which is where Astro puts its assets.
+      - name: Mark the output as not-Jekyll
+        run: touch dist/.nojekyll
+
+      - name: Publish to the gh-pages branch
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin gh-pages
+          publish_dir="${RUNNER_TEMP}/docs-stampdex-pages"
+          git worktree add -B gh-pages "$publish_dir" origin/gh-pages
+          find "$publish_dir" -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -a dist/. "$publish_dir/"
+          git -C "$publish_dir" add -A
+          if git -C "$publish_dir" diff --cached --quiet; then
+            echo "The published files did not change."
+            exit 0
+          fi
+          git -C "$publish_dir" commit -q -m "Deploy ${GITHUB_SHA} from ${GITHUB_REF_NAME}"
+          git -C "$publish_dir" push -q origin gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
