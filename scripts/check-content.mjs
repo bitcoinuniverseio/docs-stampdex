@@ -93,6 +93,29 @@ for (const { file, text, fm, id } of pages) {
   }
 }
 
+// Freshness gate (project/page-freshness): a high-risk page past its review
+// window must not be promoted. The windows mirror TrustStrip.astro so the
+// visible state and this gate can never disagree.
+const WINDOWS = [
+  ['guides/', 30], ['tutorials/', 30],
+  ['concepts/custody', 30], ['concepts/recovery', 30],
+  ['concepts/order-lifecycle', 30], ['concepts/settlement-lifecycle', 30],
+  ['reference/fees', 30], ['reference/wallets', 30],
+  ['reference/capability-matrix', 30], ['reference/order-states', 30],
+];
+for (const { file, fm, id } of pages) {
+  if (!fm.match(/^riskLevel:s*high/m)) continue;
+  const verified = fm.match(/^s{2}verified:s*"(d{4}-d{2}-d{2})"/m)?.[1];
+  if (!verified) continue;
+  const win = (WINDOWS.find(([prefix]) => id.startsWith(prefix)) ?? [null, 90])[1];
+  const ageDays = (Date.now() - Date.parse(verified)) / 86400000;
+  if (ageDays > win) {
+    findings.push(
+      `${file.slice(ROOT.length + 1).replace(/\\/g, '/')}: high-risk page verified ${verified} is past its ${win}-day review window. Re-verify against the product and update the source record.`,
+    );
+  }
+}
+
 if (findings.length > 0) {
   console.error('Content structure findings:');
   console.error(findings.map((line) => `  ${line}`).join('\n'));
