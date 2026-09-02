@@ -12,11 +12,19 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  route:
+    uses: ./.github/workflows/route.yml
+    secrets: inherit
+    with:
+      plan: '{"check":"light"}'
+      config_ref: 1dd19289af21f4f6be01f874390a180b3af8bb38
+
   check:
+    needs: route
     # This repository is public, so pull request jobs run through the shared
     # capacity router. A fork pull request must not reach organisation-owned
     # infrastructure.
-    runs-on: runs-on=${{ github.run_id }}-check/runner=universe-hosted/cpu=2+8/env=production
+    runs-on: ${{ fromJSON(needs.route.outputs.targets).check }}
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
