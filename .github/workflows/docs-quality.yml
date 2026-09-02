@@ -57,6 +57,9 @@ jobs:
       - name: Visual regression against the committed baselines
         run: npm run check:visual
 
+      - name: MCP tool contract tests
+        run: npm run test:mcp
+
       - name: Internal links and anchors
         run: npm run check:links
 

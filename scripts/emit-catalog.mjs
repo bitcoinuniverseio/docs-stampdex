@@ -2,6 +2,7 @@
 // discovery document for the public API surfaces. The GitHub Pages base path
 // applies, so the served URL is /docs-stampdex/.well-known/api-catalog.
 import { writeFileSync, mkdirSync, readFileSync, existsSync } from 'node:fs';
+import { dirname } from 'node:path';
 import { join, resolve } from 'node:path';
 
 const ROOT = resolve(process.cwd());
@@ -38,3 +39,21 @@ const catalog = {
 };
 writeFileSync(join(DIST, '.well-known', 'api-catalog'), JSON.stringify(catalog, null, 2) + '\n');
 console.log('Wrote dist/.well-known/api-catalog');
+
+// Machine-readable inputs the MCP server and agents read from the built site.
+const filesToPublish = [
+  ['src/data/registry.json', 'registry.json'],
+  ['screenshots.manifest.json', 'screens.manifest.json'],
+  ['src/data/release.json', 'generated/release-state.json'],
+  ['src/generated/wallet-matrix.json', 'generated/wallet-matrix.json'],
+  ['src/generated/order-states.json', 'generated/order-states.json'],
+  ['src/generated/fee-policy.json', 'generated/fee-policy.json'],
+];
+for (const [from, to] of filesToPublish) {
+  const src = join(ROOT, from);
+  if (existsSync(src)) {
+    mkdirSync(dirname(join(DIST, to)), { recursive: true });
+    writeFileSync(join(DIST, to), readFileSync(src));
+    console.log(`Published dist/${to}`);
+  }
+}

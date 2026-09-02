@@ -2,6 +2,7 @@
 import Default from '@astrojs/starlight/components/PageTitle.astro';
 import TrustStrip from './TrustStrip.astro';
 import ScreenshotLightbox from './screens/ScreenshotLightbox.astro';
+import PageActions from './PageActions.astro';
 
 const route = Astro.locals.starlightRoute;
 const data = route.entry.data as any;
@@ -14,6 +15,8 @@ const editUrl = `https://github.com/bitcoinuniverseio/docs-stampdex/edit/develop
 <Default><slot /></Default>
 
 <TrustStrip source={source} pageId={id} />
+
+<PageActions />
 
 <ScreenshotLightbox />
 

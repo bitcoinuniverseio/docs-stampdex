@@ -1,0 +1,13 @@
+{
+  "name": "@bitcoinuniverse/stampdex-docs-mcp",
+  "version": "1.0.0",
+  "description": "Read-only MCP server for the StampDEX public documentation: search pages, read pages and sections, inspect API operations, releases, capabilities, wallet support, and screenshot evidence.",
+  "type": "module",
+  "license": "CC-BY-4.0",
+  "bin": { "stampdex-docs-mcp": "index.mjs" },
+  "files": ["index.mjs", "README.md"],
+  "engines": { "node": ">=22" },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.13.0"
+  }
+}

@@ -36,7 +36,8 @@
     "visual:update": "playwright test --config playwright.config.mjs --update-snapshots",
     "check:content": "node scripts/check-content.mjs",
     "gen:truth": "node scripts/gen-truth.mjs",
-    "gen:openapi": "node scripts/gen-openapi.mjs"
+    "gen:openapi": "node scripts/gen-openapi.mjs",
+    "test:mcp": "node packages/stampdex-docs-mcp/test.mjs"
   },
   "devDependencies": {
     "@astrojs/starlight": "0.41.11",
