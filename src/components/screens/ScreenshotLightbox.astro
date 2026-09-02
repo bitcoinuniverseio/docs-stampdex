@@ -1,0 +1,81 @@
+---
+/**
+ * The screenshot lightbox. One per page; ProductShot's zoom buttons open it.
+ * A native <dialog> gives the keyboard behaviour for free: Escape closes,
+ * focus is trapped while open and restored to the invoker on close. Without
+ * JavaScript the buttons do nothing and the screenshots are simply there,
+ * at their natural size, as before.
+ */
+---
+
+<dialog class="sd-lightbox" data-sd-lightbox closedby="any" aria-label="Screenshot, enlarged">
+  <img src="" alt="" decoding="async" />
+  <button type="button" class="sd-lightbox-close" aria-label="Close the enlarged screenshot">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M5.7 4.3a1 1 0 0 0-1.4 1.4L10.58 12l-6.3 6.3a1 1 0 1 0 1.42 1.4L12 13.4l6.3 6.3a1 1 0 0 0 1.4-1.42L13.4 12l6.3-6.3a1 1 0 0 0-1.42-1.4L12 10.58Z" />
+    </svg>
+  </button>
+</dialog>
+
+<style>
+  dialog.sd-lightbox {
+    border: 0;
+    padding: 0;
+    background: none;
+    max-width: min(96rem, 96vw);
+    max-height: 96vh;
+  }
+  dialog.sd-lightbox img {
+    display: block;
+    max-width: 96vw;
+    max-height: 88vh;
+    border-radius: var(--sd-r-md);
+    border: 1px solid var(--sd-rule-strong);
+    background: var(--sd-code-bg);
+  }
+  .sd-lightbox-close {
+    position: fixed;
+    top: 1rem;
+    inset-inline-end: 1rem;
+    background: var(--sd-panel);
+    color: var(--sd-ink);
+    border: 1px solid var(--sd-rule-strong);
+    border-radius: 50%;
+    width: 2.6rem;
+    height: 2.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .sd-lightbox-close:hover {
+    border-color: var(--sd-muted-inverse);
+  }
+  .sd-lightbox-close:focus-visible {
+    outline: 2px solid var(--sd-brand-accent);
+    outline-offset: 2px;
+  }
+  dialog.sd-lightbox::backdrop {
+    background: rgba(7, 9, 13, 0.92);
+  }
+</style>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('[data-sd-lightbox]');
+  const img = dialog?.querySelector('img');
+
+  document.addEventListener('click', (event) => {
+    const target = event.target as HTMLElement | null;
+    const trigger = target?.closest<HTMLElement>('[data-sd-lightbox-trigger]');
+    if (!dialog || !img || !trigger) return;
+    img.src = trigger.dataset.fullsrc ?? '';
+    img.alt = trigger.dataset.alt ?? '';
+    if (typeof dialog.showModal === 'function') dialog.showModal();
+  });
+
+  dialog?.querySelector('button')?.addEventListener('click', () => dialog.close());
+  // Clicks on the backdrop area outside the image also close.
+  dialog?.addEventListener('click', (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+</script>

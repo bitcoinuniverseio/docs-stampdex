@@ -45,8 +45,17 @@ jobs:
       - name: Documentation manifest is valid
         run: npm run check:manifest
 
+      - name: Screenshot manifest, freshness, variants, and secret scan
+        run: npm run check:screens
+
+      - name: Install Playwright browsers
+        run: npx playwright install --only-shell chromium
+
       - name: Build
         run: npm run build
+
+      - name: Visual regression against the committed baselines
+        run: npm run check:visual
 
       - name: Internal links and anchors
         run: npm run check:links
@@ -75,3 +84,12 @@ jobs:
             exit 1
           fi
           echo "Every image is within budget."
+
+      - name: Upload visual baselines for review and commit
+        if: github.event_name == 'push'
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-baselines-${{ github.run_id }}
+          path: tests/visual-baselines/
+          retention-days: 14
+          if-no-files-found: ignore

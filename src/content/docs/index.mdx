@@ -17,7 +17,7 @@ hero:
       icon: external
 ---
 
-import Shot from '../../components/Shot.astro';
+import ProductShot from '../../components/screens/ProductShot.astro';
 import TaskLauncher from '../../components/home/TaskLauncher.astro';
 import AudiencePaths from '../../components/home/AudiencePaths.astro';
 import ProtocolMap from '../../components/home/ProtocolMap.astro';
@@ -45,32 +45,14 @@ against, and what the venue cannot do.
 <div class="sd-venue">
   <div class="sd-venue-main">
 
-<Shot
-  src="home-dark-desktop.webp"
-  width={1400}
-  height={875}
-  alt="The StampDEX market page in the dark theme: an SRC-20 token table with per-token source labels, floor prices, volume, and holders. Missing values show as dashes, not zeros."
-  caption="The market board. Every row carries the deployment transaction that identifies the token, and a source label for each figure."
-/>
+<ProductShot id="market-desktop-dark" />
 
-<Shot
-  src="trade-dark-desktop.webp"
-  width={1400}
-  height={875}
-  alt="A StampDEX SRC-20 token trading page in the dark theme, with the order book, the trade panel, and the deployment identity of the token."
-  caption="A token page. The order book shows signed listings with amount, unit price, and total, and the deployment transaction names the token exactly."
-/>
+<ProductShot id="token-desktop-dark" />
 
   </div>
   <div class="sd-venue-phone">
 
-<Shot
-  src="home-dark-mobile.webp"
-  width={640}
-  height={1318}
-  alt="The StampDEX market page on a phone in the dark theme, with the token table and bottom navigation."
-  caption="The same venue on a phone."
-/>
+<ProductShot id="market-mobile-dark" />
 
   </div>
 </div>
@@ -113,6 +95,7 @@ and the settlement happen at StampDEX.
 | Know what it costs | [Fees](/docs-stampdex/reference/fees/) |
 | Check a number's source | [Data provenance](/docs-stampdex/concepts/data-provenance/) |
 | See what each wallet can do here | [Wallets](/docs-stampdex/reference/wallets/) |
+| See every screenshot with its evidence | [Visual product atlas](/docs-stampdex/product-atlas/) |
 
 ## What changed recently
 

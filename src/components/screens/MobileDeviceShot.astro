@@ -1,0 +1,25 @@
+---
+import ProductShot from './ProductShot.astro';
+
+/** A mobile capture inside a restrained device frame. */
+interface Props {
+  id: string;
+  alt?: string;
+  caption?: string;
+}
+
+const { id, alt, caption } = Astro.props;
+---
+
+<div class="sd-device">
+  <ProductShot id={id} alt={alt} caption={caption} evidence={false} zoom={false} />
+</div>
+
+<style>
+  .sd-device :global(figure.sd-shot) {
+    margin: 0;
+    border: 0;
+    border-radius: 18px;
+    box-shadow: none;
+  }
+</style>
