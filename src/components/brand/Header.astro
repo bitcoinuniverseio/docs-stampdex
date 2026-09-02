@@ -51,6 +51,8 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
         <span class="sd-release-dot" aria-hidden="true"></span>
         <span class="sd-release-label">Release</span>
         <span class="sd-release-value">{RELEASE.shortCommit}</span>
+        <span class="sd-release-live" data-release-live hidden></span>
+        <span class="sd-release-expected" hidden>docs: {RELEASE.shortCommit}</span>
       </a>
 
       <a class="sd-cta" href={STAMPDEX_URL} rel="noopener">
@@ -73,6 +75,37 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
       <LanguageSelect />
     </div>
   </div>
+
+<script>
+  // Live API health: read-only, quick timeout, never blocks rendering,
+  // shows Unknown on any failure, and sleeps while the tab is hidden.
+  const el = document.querySelector("[data-release-live]");
+  if (el) {
+    const set = (t, cls) => { el.hidden = false; el.textContent = t; el.className = "sd-release-live " + cls; };
+    const check = async () => {
+      if (document.hidden) return;
+      try {
+        const res = await fetch("https://stamp.api.bitcoinuniverse.io/api/version", { signal: AbortSignal.timeout(4000) });
+        if (!res.ok) throw new Error(res.status);
+        const body = await res.json();
+        const live = (body.gitCommit ?? "unknown").slice(0, 7);
+        const expected = document.querySelector("[data-release-expected]")?.textContent.replace("docs:", "").trim();
+        if (expected && live === expected) {
+          set(live, "is-ok");
+          el.title = "Production matches the commit this documentation describes";
+        } else {
+          set(live, "is-drift");
+          el.title = "Production has moved past this documentation's commit. The pages describe " + (expected ?? "an earlier build") + ".";
+        }
+      } catch {
+        set("Unknown", "is-unknown");
+        el.title = "The version endpoint did not answer; the documentation stays usable without it";
+      }
+    };
+    check();
+    document.addEventListener("visibilitychange", check);
+  }
+</script>
 </div>
 
 <style>
@@ -162,6 +195,27 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
     }
     .sd-release-value {
       font-family: var(--sd-mono);
+    }
+    .sd-release-live {
+      font-family: var(--sd-mono);
+      margin-left: 0.5rem;
+      padding-left: 0.5rem;
+      border-left: 1px solid var(--sd-rule-strong);
+    }
+    .sd-release-live.is-ok {
+      color: #6fcb80;
+    }
+    .sd-release-live.is-unknown {
+      color: var(--sd-muted-inverse);
+    }
+    .sd-release-live.is-drift {
+      color: var(--sd-brand-accent);
+    }
+    .sd-release-expected[hidden] {
+      display: none;
+    }
+    .sd-release-expected {
+      display: none;
     }
     .sd-cta {
       display: none;
