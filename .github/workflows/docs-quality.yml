@@ -39,6 +39,9 @@ jobs:
       - name: Copy guard (long dash, banned word, marketing phrases, relative links)
         run: npm run check:copy
 
+      - name: Bilingual parity and glossary compliance
+        run: npm run check:translations
+
       - name: Colour contrast meets WCAG 2.2 AA in both themes
         run: npm run check:contrast
 

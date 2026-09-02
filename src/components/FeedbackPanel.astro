@@ -1,0 +1,354 @@
+---
+/**
+ * First-party documentation feedback panel.
+ * Collects page helpfulness ratings and privacy-scrubbed comments, submitting
+ * directly to the StampDEX backend /api/v1/docs/feedback endpoint with offline queueing.
+ */
+interface Props {
+  pageId?: string;
+}
+
+const { pageId } = Astro.props;
+---
+
+<div class="sd-feedback-widget" data-page-id={pageId}>
+  <div class="sd-feedback-prompt" id="sdFeedbackPrompt">
+    <span class="sd-feedback-question">Was this page helpful?</span>
+    <div class="sd-feedback-buttons">
+      <button type="button" class="sd-feedback-btn" data-rating="yes" aria-label="Yes, this page was helpful">
+        <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor" aria-hidden="true">
+          <path d="M8 12.5a.75.75 0 0 1-.53-.22l-4-4a.75.75 0 0 1 1.06-1.06L8 10.69l3.47-3.47a.75.75 0 1 1 1.06 1.06l-4 4a.75.75 0 0 1-.53.22Z" transform="rotate(180 8 8)"/>
+        </svg>
+        Yes
+      </button>
+      <button type="button" class="sd-feedback-btn" data-rating="no" aria-label="No, this page was not helpful">
+        <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor" aria-hidden="true">
+          <path d="M8 12.5a.75.75 0 0 1-.53-.22l-4-4a.75.75 0 0 1 1.06-1.06L8 10.69l3.47-3.47a.75.75 0 1 1 1.06 1.06l-4 4a.75.75 0 0 1-.53.22Z"/>
+        </svg>
+        No
+      </button>
+    </div>
+  </div>
+
+  <div class="sd-feedback-form sl-hidden" id="sdFeedbackForm">
+    <div class="sd-feedback-reason-group">
+      <span class="sd-reason-title">How can we improve it?</span>
+      <div class="sd-reason-chips">
+        <label class="sd-reason-chip">
+          <input type="radio" name="reason" value="inaccurate" />
+          <span>Inaccurate or outdated</span>
+        </label>
+        <label class="sd-reason-chip">
+          <input type="radio" name="reason" value="missing_info" />
+          <span>Missing information</span>
+        </label>
+        <label class="sd-reason-chip">
+          <input type="radio" name="reason" value="code_broken" />
+          <span>Code example does not work</span>
+        </label>
+        <label class="sd-reason-chip">
+          <input type="radio" name="reason" value="hard_to_follow" />
+          <span>Hard to follow</span>
+        </label>
+        <label class="sd-reason-chip">
+          <input type="radio" name="reason" value="other" />
+          <span>Other</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="sd-comment-wrap">
+      <textarea
+        class="sd-feedback-textarea"
+        placeholder="Optional details (max 500 chars). Bitcoin addresses, keys, and tokens are scrubbed client-side."
+        maxlength="500"
+        rows="3"
+        aria-label="Feedback comments"
+      ></textarea>
+      <div class="sd-char-count"><span id="sdCharCount">0</span>/500</div>
+    </div>
+
+    <div class="sd-form-actions">
+      <button type="button" class="sd-btn-submit" id="sdSubmitFeedback">Send feedback</button>
+      <button type="button" class="sd-btn-cancel" id="sdCancelFeedback">Skip</button>
+    </div>
+  </div>
+
+  <div class="sd-feedback-thanks sl-hidden" id="sdFeedbackThanks">
+    <span class="sd-thanks-icon">&check;</span>
+    <span>Thank you for helping improve StampDEX documentation!</span>
+  </div>
+</div>
+
+<script>
+  // Privacy redaction helpers: client-side scrubbing
+  function scrubPrivateData(text: string): string {
+    return text
+      // Bitcoin bech32 / p2tr addresses
+      .replace(/\bbc1[qpzry9x8gf2tvdw0s3jn54khce6mua7l]{20,90}\b/gi, '[REDACTED_BTC_ADDR]')
+      // Legacy / SegWit base58 addresses
+      .replace(/\b[13][a-km-zA-HJ-NP-Z1-9]{25,34}\b/g, '[REDACTED_BTC_ADDR]')
+      // WIF private keys
+      .replace(/\b[5KL][1-9A-HJ-NP-Za-km-z]{50,51}\b/g, '[REDACTED_KEY]')
+      // Tokens and auth headers
+      .replace(/(?:ghp_[a-zA-Z0-9]{36}|Bearer\s+[a-zA-Z0-9_.~+-]+)/gi, '[REDACTED_TOKEN]')
+      // Passwords
+      .replace(/(?:password|secret|seed|mnemonic)\s*[:=]\s*\S+/gi, '[REDACTED_SECRET]');
+  }
+
+  const STORAGE_KEY = 'sd_docs_feedback_queue';
+
+  function queueFeedbackLocally(item: any) {
+    try {
+      const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      if (existing.length >= 10) existing.shift();
+      existing.push(item);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
+    } catch {}
+  }
+
+  async function flushFeedbackQueue() {
+    try {
+      const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      if (!existing.length) return;
+      const unhandled: any[] = [];
+      for (const item of existing) {
+        try {
+          const res = await fetch('/api/v1/docs/feedback', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(item),
+          });
+          if (!res.ok) unhandled.push(item);
+        } catch {
+          unhandled.push(item);
+        }
+      }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(unhandled));
+    } catch {}
+  }
+
+  document.querySelectorAll<HTMLElement>('.sd-feedback-widget').forEach((widget) => {
+    const pageId = widget.dataset.pageId || window.location.pathname;
+    const prompt = widget.querySelector<HTMLElement>('#sdFeedbackPrompt')!;
+    const form = widget.querySelector<HTMLElement>('#sdFeedbackForm')!;
+    const thanks = widget.querySelector<HTMLElement>('#sdFeedbackThanks')!;
+    const textarea = widget.querySelector<HTMLTextAreaElement>('.sd-feedback-textarea')!;
+    const charCount = widget.querySelector<HTMLElement>('#sdCharCount')!;
+    const submitBtn = widget.querySelector<HTMLButtonElement>('#sdSubmitFeedback')!;
+    const cancelBtn = widget.querySelector<HTMLButtonElement>('#sdCancelFeedback')!;
+    const ratingBtns = widget.querySelectorAll<HTMLButtonElement>('.sd-feedback-btn');
+
+    let currentRating: boolean = true;
+
+    ratingBtns.forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const rating = btn.dataset.rating === 'yes';
+        currentRating = rating;
+
+        if (rating) {
+          // Immediately record positive feedback
+          prompt.classList.add('sl-hidden');
+          thanks.classList.remove('sl-hidden');
+          await sendFeedback(pageId, true, undefined, undefined);
+        } else {
+          // Expand detailed feedback form
+          prompt.classList.add('sl-hidden');
+          form.classList.remove('sl-hidden');
+          textarea.focus();
+        }
+      });
+    });
+
+    textarea?.addEventListener('input', () => {
+      if (charCount) charCount.textContent = String(textarea.value.length);
+    });
+
+    cancelBtn?.addEventListener('click', async () => {
+      form.classList.add('sl-hidden');
+      thanks.classList.remove('sl-hidden');
+      await sendFeedback(pageId, false, undefined, undefined);
+    });
+
+    submitBtn?.addEventListener('click', async () => {
+      const selectedReason = (form.querySelector<HTMLInputElement>('input[name="reason"]:checked'))?.value;
+      const rawComment = textarea.value.trim();
+      const cleanComment = rawComment ? scrubPrivateData(rawComment) : undefined;
+
+      form.classList.add('sl-hidden');
+      thanks.classList.remove('sl-hidden');
+      await sendFeedback(pageId, currentRating, selectedReason, cleanComment);
+    });
+
+    async function sendFeedback(path: string, helpful: boolean, reason?: string, comments?: string) {
+      const payload = {
+        page: path,
+        helpful,
+        reason,
+        comments,
+        timestamp: new Date().toISOString(),
+      };
+
+      try {
+        const res = await fetch('/api/v1/docs/feedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) queueFeedbackLocally(payload);
+      } catch {
+        queueFeedbackLocally(payload);
+      }
+    }
+  });
+
+  // Attempt to flush offline queue on load and online
+  window.addEventListener('load', flushFeedbackQueue);
+  window.addEventListener('online', flushFeedbackQueue);
+</script>
+
+<style>
+  .sd-feedback-widget {
+    margin: 2.5rem 0 1.5rem;
+    padding: 1.25rem 1.5rem;
+    border-radius: var(--sd-r-md);
+    background: var(--sd-panel-2);
+    border: 1px solid var(--sd-rule);
+    font-size: 0.85rem;
+  }
+  .sd-feedback-prompt {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .sd-feedback-question {
+    font-weight: 600;
+    color: var(--sd-ink);
+  }
+  .sd-feedback-buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .sd-feedback-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: var(--sd-r-sm);
+    border: 1px solid var(--sd-rule);
+    background: var(--sd-panel);
+    color: var(--sd-ink);
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: all 0.15s ease;
+  }
+  .sd-feedback-btn:hover {
+    border-color: var(--sd-brand);
+    color: var(--sd-brand);
+  }
+
+  .sd-feedback-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+  .sd-reason-title {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    color: var(--sd-ink);
+  }
+  .sd-reason-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .sd-reason-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.65rem;
+    background: var(--sd-inset);
+    border: 1px solid var(--sd-rule);
+    border-radius: 999px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    color: var(--sd-muted);
+  }
+  .sd-reason-chip:has(input:checked) {
+    background: var(--sd-brand);
+    color: #fff;
+    border-color: var(--sd-brand);
+  }
+  .sd-reason-chip input {
+    position: absolute;
+    opacity: 0;
+  }
+
+  .sd-comment-wrap {
+    position: relative;
+  }
+  .sd-feedback-textarea {
+    width: 100%;
+    box-sizing: border-box;
+    background: var(--sd-inset);
+    border: 1px solid var(--sd-rule);
+    border-radius: var(--sd-r-sm);
+    color: var(--sd-ink);
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+    outline: none;
+    resize: vertical;
+  }
+  .sd-feedback-textarea:focus {
+    border-color: var(--sd-brand);
+  }
+  .sd-char-count {
+    position: absolute;
+    right: 0.5rem;
+    bottom: 0.4rem;
+    font-size: 0.68rem;
+    color: var(--sd-muted);
+  }
+
+  .sd-form-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .sd-btn-submit {
+    padding: 0.35rem 0.9rem;
+    background: var(--sd-brand);
+    color: #fff;
+    border: none;
+    border-radius: var(--sd-r-sm);
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+  .sd-btn-cancel {
+    padding: 0.35rem 0.7rem;
+    background: none;
+    border: none;
+    color: var(--sd-muted);
+    cursor: pointer;
+    font-size: 0.8rem;
+  }
+  .sd-btn-cancel:hover {
+    color: var(--sd-ink);
+  }
+
+  .sd-feedback-thanks {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--sd-ok);
+    font-weight: 500;
+  }
+  .sd-thanks-icon {
+    font-size: 1.1rem;
+  }
+</style>
