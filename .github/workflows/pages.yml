@@ -13,14 +13,21 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  route:
+    uses: bitcoinuniverseio/.github-private/.github/workflows/route.yml@develop
+    secrets: inherit
+    with:
+      plan: '{"build_and_publish":"light"}'
+
   build-and-publish:
+    needs: route
     # Routed through the shared capacity router rather than the self-hosted
     # fleet. The organisation-owned Linux runners do not pick up jobs for this
     # repository, and the RunsOn artifact proxy returns a plain-text endpoint
     # marker to actions/upload-artifact, which breaks the Pages artifact
     # upload. Publishing to a branch avoids both problems: it needs no
     # artifact upload and no particular runner.
-    runs-on: runs-on=${{ github.run_id }}-pages/runner=universe-hosted/cpu=2+8/env=production
+    runs-on: ${{ fromJSON(needs.route.outputs.targets).build_and_publish }}
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
