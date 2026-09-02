@@ -1,0 +1,134 @@
+---
+import orderStates from '../../generated/order-states.json';
+
+/**
+ * The order-state explorer, rendered from src/generated/order-states.json,
+ * which scripts/gen-truth.mjs extracts from the application's OrderStatus
+ * enum. No handwritten second list can drift from the product here: if the
+ * enum changes, the generator refuses to emit until the reader model is
+ * updated, and this component only renders what that file contains.
+ *
+ * Selection is radio-based, so the explorer works with JavaScript disabled;
+ * the complete table at the bottom carries the same facts statically for
+ * search, printing, and screen readers that prefer the whole picture.
+ */
+
+interface StateRow {
+  value: string;
+  label: string;
+  public: boolean;
+  btc: string;
+  asset: string;
+  next: string[];
+  sourceComment?: string;
+}
+
+const states = orderStates.states as StateRow[];
+const visible = states.filter((s) => s.public);
+const uid = 'sd-ose';
+const labelOf = (value: string) => states.find((s) => s.value === value)?.label ?? value;
+---
+
+<section class="sd-explorer-box" aria-label="Interactive order-state explorer">
+  <fieldset class="sd-explorer-picker">
+    <legend>Pick an order state</legend>
+    {
+      visible.map((state, i) => (
+        <label class="sd-explorer-choice" for={`${uid}-${state.value}`}>
+          <input
+            type="radio"
+            id={`${uid}-${state.value}`}
+            name={uid}
+            value={state.value}
+            checked={i === 2}
+          />
+          <span>{state.label}</span>
+        </label>
+      ))
+    }
+  </fieldset>
+
+  <div class="sd-explorer-panels">
+    {
+      visible.map((state) => (
+        <article class="sd-explorer-panel" data-panel={state.value}>
+          <h4>
+            {state.label} <code>{state.value}</code>
+          </h4>
+          <dl class="sd-facts">
+            <div><dt>Where the BTC is</dt><dd>{state.btc}</dd></div>
+            <div><dt>Where the tokens are</dt><dd>{state.asset}</dd></div>
+            <div>
+              <dt>Valid next states</dt>
+              <dd>
+                {state.next.length > 0 ? (
+                  state.next.map((n) => (
+                    <span class="sd-chip" data-side="none">
+                      {labelOf(n)} <code>{n}</code>
+                    </span>
+                  ))
+                ) : (
+                  <span>None. This state is final.</span>
+                )}
+              </dd>
+            </div>
+            {state.value === 'failed' && (
+              <div>
+                <dt>Recovery</dt>
+                <dd>
+                  Escrow released nothing. The recovery flow returns each side its own
+                  value. See <a href="/docs-stampdex/concepts/recovery/">Recovery</a>.
+                </dd>
+              </div>
+            )}
+          </dl>
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<div class="sd-scroll">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">State (API value)</th>
+        <th scope="col">Where the BTC is</th>
+        <th scope="col">Where the tokens are</th>
+        <th scope="col">Next</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        states.map((state) => (
+          <tr>
+            <th scope="row">
+              {state.label} <code>{state.value}</code>
+              {!state.public && <span class="sd-chip" data-side="none">internal</span>}
+            </th>
+            <td>{state.btc}</td>
+            <td>{state.asset}</td>
+            <td>
+              {state.next.map(labelOf).join(', ') || 'final'}
+            </td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>
+
+<style>
+  /* Panel selection: radio-driven, pure CSS, no JavaScript involved. */
+  .sd-explorer-box:has(#sd-ose-draft:checked) [data-panel='draft'],
+  .sd-explorer-box:has(#sd-ose-open:checked) [data-panel='open'],
+  .sd-explorer-box:has(#sd-ose-pending:checked) [data-panel='pending'],
+  .sd-explorer-box:has(#sd-ose-awaiting_tx3:checked) [data-panel='awaiting_tx3'],
+  .sd-explorer-box:has(#sd-ose-awaiting_tx3_confirmation:checked) [data-panel='awaiting_tx3_confirmation'],
+  .sd-explorer-box:has(#sd-ose-filled:checked) [data-panel='filled'],
+  .sd-explorer-box:has(#sd-ose-cancelled:checked) [data-panel='cancelled'],
+  .sd-explorer-box:has(#sd-ose-expired:checked) [data-panel='expired'],
+  .sd-explorer-box:has(#sd-ose-failed:checked) [data-panel='failed'] {
+    display: block;
+  }
+</style>

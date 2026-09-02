@@ -4,6 +4,15 @@ description: What SRC-20 is, how a token is deployed and minted, and how the thr
 source:
   path: src20 marketplace service, src20 PSBT service
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [src20]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
 ---
 
 SRC-20 is a token standard built on Bitcoin Stamps. A token's deploy, its mints, and

@@ -4,6 +4,15 @@ description: "Bitcoin Stamps, collections, dispensers, and wallet holdings from 
 source:
   path: stamps controller, collections controller, stamps market service
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
 ---
 
 Base path: `/api/v1`.

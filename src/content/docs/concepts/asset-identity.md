@@ -4,6 +4,15 @@ description: Which facts identify an SRC-20 token and a Bitcoin Stamp on StampDE
 source:
   path: market aggregation identity fields, stamp detail fields
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [src20, stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
 ---
 
 Two different assets can share a name. This page says which facts identify an asset

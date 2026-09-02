@@ -4,6 +4,15 @@ description: "How to list an SRC-20 token on StampDEX, what signing a listing co
 source:
   path: orders prepare-listing and finalize, listing PSBT fingerprint validation
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [src20]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
 ---
 
 **For:** a holder with a supported wallet.

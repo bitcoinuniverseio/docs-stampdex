@@ -4,6 +4,15 @@ description: "Complete, runnable examples against the StampDEX public read API, 
 source:
   path: public read routes across market, stamps, orders, indexer
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [src20, stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
 ---
 
 Every command here is a public read. None of them need a key, an account, or a

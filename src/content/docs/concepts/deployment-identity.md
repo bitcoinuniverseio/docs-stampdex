@@ -4,6 +4,15 @@ description: How StampDEX resolves an SRC-20 ticker to exactly one deployment be
 source:
   path: deployment resolution, market deployments endpoints
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [src20, stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
 ---
 
 A deployment is the transaction that created an SRC-20 token: its rules, its max

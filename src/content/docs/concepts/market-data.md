@@ -4,6 +4,15 @@ description: What each number on StampDEX means, which source answered it, how i
 source:
   path: market aggregation util, stamps market service, src20 hub map
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [src20, stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
 ---
 
 ## The core numbers

@@ -5,6 +5,15 @@ source:
   repo: bitcoinuniverseio/core registry, with the application surface checked in bitcoinuniverseio/stampdex
   path: MARKETPLACE_PROTOCOL_REGISTRY offer actions, stamp-offers module, release registry
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [src20, stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
 ---
 
 This page exists because the honest answer is more complicated than yes or no, and the
