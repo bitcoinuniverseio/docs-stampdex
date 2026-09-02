@@ -17,7 +17,7 @@ jobs:
     secrets: inherit
     with:
       plan: '{"check":"light"}'
-      config_ref: 1dd19289af21f4f6be01f874390a180b3af8bb38
+      config_ref: 80c58e966e9e30517ae7d891cc4de9db4e2dff23
 
   check:
     needs: route
