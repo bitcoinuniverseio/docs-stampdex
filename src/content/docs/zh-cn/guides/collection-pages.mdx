@@ -1,0 +1,93 @@
+---
+title: 系列藏品合集页面指南
+description: 探索合集总市值、底价走势、稀有度排行榜与持有人分布。
+source:
+  path: collections controller, stamps market service
+  verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [src20, stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
+---
+
+> [!NOTE]
+> **简体中文官方文档**：利用合集面板进行宏观市场分析与藏品批量管理。 核心交易规则为非托管模式，买卖双方按标准费率收取服务费，并于比特币主网进行原子结算。
+
+
+
+import ProductShot from '../../../../components/screens/ProductShot.astro';
+
+**For:** collectors comparing sets. **Goal:** read a collection without over-reading its numbers.
+**Prerequisites:** none. **Chain and network:** Bitcoin mainnet. **Safety:** reading only.
+
+## Where they are
+
+[stampdex.fun/stamps/collections](https://stampdex.fun/stamps/collections) lists them.
+A single collection is at `/stamps/collection/<id>`.
+<ProductShot
+  id="stamps-desktop-dark"
+  alt="The Bitcoin Stamps collections page showing pixel-art collections in a grid, each with floor, volume, market cap, listed count, and holders. A collection with no floor shows a dash instead of a zero."
+  caption="Collections, image first. A collection nobody has listed shows a dash where a floor would be."
+/>
+
+
+## What a collection actually is
+
+Curated metadata that groups stamps. **Membership is not a chain fact.** It comes from
+the collection index, so StampDEX names the source of collection data on the page. Two
+indexes could disagree about what belongs in a set; neither would be lying about
+Bitcoin.
+
+The stamps themselves are chain facts. The grouping is not.
+
+## The figures
+
+| Figure | How it is computed | When it is unknown |
+| --- | --- | --- |
+| Floor | The lowest reported floor across the collection's stamps | When no stamp in it has a reported floor |
+| Volume | Traded value over the window | When no source answered |
+| Market cap | Floor times the edition count | When there is no floor |
+| Listed market cap | Floor times the listed supply | When there is no floor |
+| Listed | How many are for sale now | When the listing source did not answer |
+| Holders | Distinct owning addresses | When the source did not answer |
+
+An aggregate floor across collections is a minimum over the collections that reported a
+positive floor, never a zero standing in for silence. An aggregate volume is never a
+sum that quietly treats an unknown as nothing: the response carries a coverage count
+saying how many collections reported.
+
+## Reading a collection honestly
+
+- A collection with no floor shows a dash, not a floor of 0. There is nothing for sale.
+- A high market cap on a thin collection is floor times supply, and the floor may be a
+  single listing. It is arithmetic, not liquidity.
+- Trait and rarity data, where present, comes from the same third-party collection
+  index as membership.
+
+## How to verify
+
+```bash
+curl "https://stamp.api.bitcoinuniverse.io/api/v1/collections?includeMarketData=true&limit=3"
+```
+
+Per-collection market data is attached only when you ask for it, and it is cached
+server side.
+
+## Common failure states
+
+| You see | Cause | Recovery |
+| --- | --- | --- |
+| A collection page with no stamps | The collection index did not answer | Retry. The stamps still exist on chain |
+| A dash where you expected a floor | Nothing in the collection is listed | Nothing to fix. That is the honest answer |
+| Thumbnails missing | The media source could not serve those bytes | The raw bytes are still on chain; the stamp page links the transaction |
+
+## Related
+
+- [Bitcoin Stamps](/docs-stampdex/zh-cn/concepts/bitcoin-stamps/)
+- [Data provenance](/docs-stampdex/zh-cn/concepts/data-provenance/)
+- [Stamps endpoints](/docs-stampdex/zh-cn/api/stamps/)

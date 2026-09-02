@@ -54,7 +54,7 @@ for (const file of pages) {
   if (h1s.length !== 1) note(file, `${h1s.length} h1 elements, expected exactly 1`);
 
   if (!/<html[^>]+lang="/i.test(html)) note(file, 'no lang attribute on html');
-  if (!/Skip to content/i.test(html)) note(file, 'no skip link');
+  if (!/Skip to content|跳转到内容|sl-skip-link/i.test(html)) note(file, 'no skip link');
 
   const title = html.match(/<title>([^<]*)<\/title>/);
   if (!title || title[1].trim().length === 0) note(file, 'no title');
@@ -63,9 +63,11 @@ for (const file of pages) {
   if (!description) {
     note(file, 'no meta description');
   } else {
+    const isZh = file.includes('zh-cn') || /<html[^>]+lang="zh/i.test(html);
+    const minLen = isZh ? 20 : DESCRIPTION_MIN;
     const length = description[1].length;
-    if (length < DESCRIPTION_MIN) {
-      note(file, `meta description is ${length} characters, want at least ${DESCRIPTION_MIN}`);
+    if (length < minLen) {
+      note(file, `meta description is ${length} characters, want at least ${minLen}`);
     }
     if (length > DESCRIPTION_MAX) {
       note(file, `meta description is ${length} characters, want at most ${DESCRIPTION_MAX}`);

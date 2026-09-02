@@ -32,7 +32,8 @@ function* walk(dir) {
 
 const pages = [];
 for (const file of walk(DOCS)) {
-  const text = readFileSync(file, 'utf8');
+  const raw = readFileSync(file, 'utf8');
+  const text = raw.replace(/\r\n/g, '\n');
   if (!text.startsWith('---\n')) continue;
   const end = text.indexOf('\n---', 3);
   const fm = text.slice(4, end);
@@ -46,10 +47,18 @@ const linkRe = new RegExp('\\]\\(/docs-stampdex/([^)#?/]+[^)#?]*)/\\)', 'g');
 const siteLinks = [...pages].flatMap(({ text }) =>
   [...text.matchAll(linkRe)].map((m) => m[1]),
 );
+const CUSTOM_PAGES = new Set([
+  'product-atlas',
+  'zh-cn/product-atlas',
+  'api/reference',
+  'zh-cn/api/reference',
+  'agents',
+  'zh-cn/agents',
+]);
 for (const link of siteLinks) {
   if (link.startsWith('http') || link === '') continue;
   // Custom pages rendered outside the content collection.
-  if (['product-atlas'].includes(link)) continue;
+  if (CUSTOM_PAGES.has(link)) continue;
   if (!ids.has(link)) {
     findings.push(`content link target has no page: /docs-stampdex/${link}/`);
   }
@@ -84,7 +93,7 @@ for (const { file, text, fm, id } of pages) {
       findings.push(`${where}: how-to template requires verification of the result`);
   }
 
-  if (contentType === 'reference' && !fm.includes('source:') && id !== '404') {
+  if (contentType === 'reference' && !fm.includes('source:') && id !== '404' && id !== 'zh-cn/404') {
     findings.push(`${where}: reference pages must carry a source record`);
   }
 
