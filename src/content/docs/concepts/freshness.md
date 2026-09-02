@@ -4,6 +4,15 @@ description: How far behind live a StampDEX number can be, what the status endpo
 source:
   path: indexer status service, cache key constants
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [src20, stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
 ---
 
 Every number here has an age. This page says how old it can be and how to find out.

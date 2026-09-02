@@ -4,6 +4,15 @@ description: "Plain-word meanings for the terms StampDEX uses, from CPID and dis
 source:
   path: product vocabulary across the marketplace and stamps modules
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [src20, stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
 ---
 
 **Anchor UTXO.** The small marker output a seller's listing spends and returns. 548

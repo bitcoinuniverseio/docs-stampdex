@@ -1,0 +1,220 @@
+---
+/**
+ * Guided learning paths. Each path is a short ordered reading list with a
+ * goal. Progress lives in localStorage only: no account, no wallet, no
+ * analytics, and a reset action. Without JavaScript the paths are plain
+ * link lists, which is all they need to be.
+ */
+const paths = [
+  {
+    id: 'first-src20-purchase',
+    name: 'First SRC-20 purchase',
+    goal: 'Own a token, knowing exactly what you paid and where everything sat on the way.',
+    steps: [
+      { label: 'What StampDEX is', href: '/docs-stampdex/what-is-stampdex/' },
+      { label: 'What you can and cannot do', href: '/docs-stampdex/capabilities/' },
+      { label: 'Where your funds are', href: '/docs-stampdex/concepts/custody/' },
+      { label: 'Fees', href: '/docs-stampdex/reference/fees/' },
+      { label: 'Buy SRC-20', href: '/docs-stampdex/guides/buy-src20/' },
+      { label: 'Review a PSBT before signing', href: '/docs-stampdex/guides/psbt-review/' },
+    ],
+  },
+  {
+    id: 'first-src20-listing',
+    name: 'First SRC-20 listing',
+    goal: 'Put a token up for sale at a price you chose, and know when your BTC arrives.',
+    steps: [
+      { label: 'Where your funds are', href: '/docs-stampdex/concepts/custody/' },
+      { label: 'Order lifecycle', href: '/docs-stampdex/concepts/order-lifecycle/' },
+      { label: 'Fees', href: '/docs-stampdex/reference/fees/' },
+      { label: 'Sell SRC-20', href: '/docs-stampdex/guides/sell-src20/' },
+      { label: 'Cancel a listing', href: '/docs-stampdex/guides/cancel-a-listing/' },
+    ],
+  },
+  {
+    id: 'first-stamp-purchase',
+    name: 'First stamp purchase',
+    goal: 'Buy a Bitcoin Stamp without guessing what you are actually buying.',
+    steps: [
+      { label: 'Bitcoin Stamps', href: '/docs-stampdex/concepts/bitcoin-stamps/' },
+      { label: 'Asset identity', href: '/docs-stampdex/concepts/asset-identity/' },
+      { label: 'Collect Bitcoin Stamps', href: '/docs-stampdex/guides/collect-stamps/' },
+      { label: 'Fees', href: '/docs-stampdex/reference/fees/' },
+    ],
+  },
+  {
+    id: 'understanding-custody',
+    name: 'Understanding custody',
+    goal: 'Be able to say where your BTC and your tokens are at every second of a trade.',
+    steps: [
+      { label: 'Where your funds are', href: '/docs-stampdex/concepts/custody/' },
+      { label: 'Order lifecycle', href: '/docs-stampdex/concepts/order-lifecycle/' },
+      { label: 'Settlement lifecycle', href: '/docs-stampdex/concepts/settlement-lifecycle/' },
+      { label: 'Order states', href: '/docs-stampdex/reference/order-states/' },
+      { label: 'Unknown is not zero', href: '/docs-stampdex/concepts/unknown-is-not-zero/' },
+    ],
+  },
+  {
+    id: 'recovering-an-order',
+    name: 'Recovering an order',
+    goal: 'Know what to do, and what not to touch, when a trade does not complete.',
+    steps: [
+      { label: 'Order lifecycle', href: '/docs-stampdex/concepts/order-lifecycle/' },
+      { label: 'Recovery', href: '/docs-stampdex/concepts/recovery/' },
+      { label: 'Order states', href: '/docs-stampdex/reference/order-states/' },
+      { label: 'Troubleshooting', href: '/docs-stampdex/troubleshooting/' },
+    ],
+  },
+  {
+    id: 'building-with-the-api',
+    name: 'Building with the public API',
+    goal: 'Read the same data the site reads, with no key and no account.',
+    steps: [
+      { label: 'API quick start', href: '/docs-stampdex/api/quickstart/' },
+      { label: 'Status and version', href: '/docs-stampdex/api/status/' },
+      { label: 'Market endpoints', href: '/docs-stampdex/api/market/' },
+      { label: 'Rate limits', href: '/docs-stampdex/api/rate-limits/' },
+      { label: 'Worked examples', href: '/docs-stampdex/api/examples/' },
+    ],
+  },
+] as const;
+---
+
+<ul class="sd-paths">
+  {
+    paths.map((path) => (
+      <li class="sd-path" data-path={path.id}>
+        <h3>{path.name}</h3>
+        <p class="sd-path-goal">{path.goal}</p>
+        <ol class="sd-path-steps">
+          {path.steps.map((step, i) => (
+            <li>
+              <label>
+                <input
+                  type="checkbox"
+                  data-path-step={`${path.id}:${i}`}
+                />
+                <a href={step.href}>{step.label}</a>
+              </label>
+            </li>
+          ))}
+        </ol>
+        <p class="sd-path-progress" data-path-progress aria-live="polite" />
+      </li>
+    ))
+  }
+</ul>
+
+<p>
+  <button type="button" class="sd-btn sd-path-reset" data-path-reset>Reset all progress</button>
+  <span class="sd-footnote"> Progress is kept in this browser only. </span>
+</p>
+
+<style>
+  .sd-paths {
+    list-style: none;
+    margin: 1.4rem 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 0.8rem;
+  }
+  .sd-path {
+    border: 1px solid var(--sd-rule);
+    border-radius: var(--sd-r-md);
+    background: var(--sd-panel);
+    padding: 0.9rem 1rem;
+    box-shadow: var(--sd-shadow-1);
+  }
+  .sd-path h3 {
+    margin: 0 0 0.25rem;
+    font-size: 1rem;
+  }
+  .sd-path-goal {
+    font-size: 0.84rem;
+    color: var(--sd-muted);
+    margin: 0 0 0.5rem;
+  }
+  .sd-path-steps {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+    display: grid;
+    gap: 0.25rem;
+    font-size: 0.88rem;
+  }
+  .sd-path-steps label {
+    display: flex;
+    align-items: baseline;
+    gap: 0.45rem;
+  }
+  .sd-path-steps input {
+    accent-color: var(--sd-brand-text);
+  }
+  :root[data-theme='dark'] .sd-path-steps input {
+    accent-color: var(--sd-brand-accent);
+  }
+  .sd-path-progress {
+    font-family: var(--sd-mono);
+    font-size: 0.72rem;
+    color: var(--sd-muted);
+    margin: 0.5rem 0 0;
+  }
+  .sd-path-reset {
+    border: 1px solid var(--sd-rule-strong);
+    background: none;
+    color: var(--sd-muted);
+    font-size: 0.8rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: var(--sd-r-sm);
+    cursor: pointer;
+  }
+</style>
+
+<script>
+  const KEY = 'stampdex-docs-learning-paths';
+  const boxes = document.querySelectorAll<HTMLInputElement>('[data-path-step]');
+  const progress = document.querySelectorAll<HTMLElement>('[data-path-progress]');
+
+  const read = (): Record<string, boolean> => {
+    try {
+      return JSON.parse(localStorage.getItem(KEY) ?? '{}');
+    } catch {
+      return {};
+    }
+  };
+  const write = (state: Record<string, boolean>) => {
+    try {
+      localStorage.setItem(KEY, JSON.stringify(state));
+    } catch {}
+  };
+
+  const render = () => {
+    for (const el of progress) {
+      const scope = el.closest('.sd-path');
+      if (!scope) continue;
+      const steps = [...scope.querySelectorAll<HTMLInputElement>('[data-path-step]')];
+      const done = steps.filter((s) => s.checked).length;
+      el.textContent = `${done} of ${steps.length} read`;
+    }
+  };
+
+  const saved = read();
+  for (const box of boxes) {
+    box.checked = Boolean(saved[box.dataset.pathStep!]);
+    box.addEventListener('change', () => {
+      const state = read();
+      state[box.dataset.pathStep!] = box.checked;
+      write(state);
+      render();
+    });
+  }
+  render();
+
+  document.querySelector('[data-path-reset]')?.addEventListener('click', () => {
+    write({});
+    for (const box of boxes) box.checked = false;
+    render();
+  });
+</script>

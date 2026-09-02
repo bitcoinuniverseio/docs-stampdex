@@ -4,6 +4,15 @@ description: Reading and creating SRC-20 listings through the StampDEX API, the 
 source:
   path: orders controller, order response shape, wallet action challenge service
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [src20, stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
 ---
 
 Base path: `/api/v1/orders`.

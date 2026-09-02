@@ -4,7 +4,20 @@ description: "What to check in the transaction your wallet shows you before you 
 source:
   path: src20 marketplace service output layout, service fee constants, wallet adapters
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [src20, stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
+
 ---
+
+import TxAnatomy from '../../../components/explainers/TxAnatomy.astro';
+
 
 import ProductShot from '../../../components/screens/ProductShot.astro';
 
@@ -23,6 +36,8 @@ Nothing spends your funds without a signature made in your wallet. So the review
 and the wallet screen must agree, and if they do not, the correct action is to refuse.
 
 ## What to check on a buy
+
+<TxAnatomy />
 
 <ProductShot id="fixture-buy-review" />
 

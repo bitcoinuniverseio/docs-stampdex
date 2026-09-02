@@ -1,0 +1,117 @@
+---
+/**
+ * The transaction anatomy explorer: a controlled example of an SRC-20
+ * settlement transaction, dissected. Choose an output to see what it is for.
+ * The numbers are fixture values, labelled as such; sighash facts are
+ * protocol facts. No signed transaction or reusable signature appears here.
+ */
+const parts = [
+  {
+    id: 'in',
+    name: 'Input: the escrow funding output',
+    kind: 'venue',
+    body: 'The escrow address pays what it holds: the buyer\u2019s payment, locked when the trade started. Only the venue\u2019s escrow key can spend it, which is why neither side can run off with both sides of the trade.',
+  },
+  {
+    id: 'out-seller',
+    name: 'Output: seller payout',
+    kind: 'ask',
+    body: 'The seller\u2019s proceeds: the listing total minus the 1.5% seller service fee. This output pays to an address the seller controls.',
+  },
+  {
+    id: 'out-fee',
+    name: 'Output: service fee',
+    kind: 'venue',
+    body: 'The venue\u2019s 1.5% service fee for this side of the trade, a separate output so it is visible before you sign rather than hidden inside an exchange rate.',
+  },
+  {
+    id: 'out-buyer',
+    name: 'Output: the SRC-20 transfer',
+    kind: 'bid',
+    body: 'A nearly-zero-value output carrying the SRC-20 transfer inscription: the tokens moving from escrow to the buyer. The protocol reads the amount from the inscription, not from the sats.',
+  },
+  {
+    id: 'out-change',
+    name: 'Output: change to escrow, then to recovery',
+    kind: 'chain',
+    body: 'If the escrow overpaid the fee rate, the change returns to the escrow first and is swept to the buyer in the recovery flow. A change output is normal, not a red flag.',
+  },
+] as const;
+
+const uid = 'sd-tx';
+const EXAMPLE = {
+  input: '24,546 sats',
+  seller: '12,000 sats',
+  fee: '180 sats',
+  buyer: '546 sats (carrier output)',
+  change: '1,820 sats',
+};
+---
+
+<section class="sd-explorer-box" aria-label="Transaction anatomy explorer">
+  <fieldset class="sd-explorer-picker">
+    <legend>Inspect a part</legend>
+    {
+      parts.map((part, i) => (
+        <label class="sd-explorer-choice" for={`${uid}-${part.id}`}>
+          <input type="radio" id={`${uid}-${part.id}`} name={uid} value={part.id} checked={i === 1} />
+          <span>{part.name.replace(/^(Input|Output): /, '')}</span>
+        </label>
+      ))
+    }
+  </fieldset>
+
+  {
+    parts.map((part) => (
+      <article class="sd-explorer-panel" data-panel={part.id}>
+        <h4>{part.name}</h4>
+        <p>{part.body}</p>
+        <p class="sd-tx-value">
+          Fixture value:{' '}
+          {EXAMPLE[part.id === 'in' ? 'input' : part.id.replace('out-', '') as keyof typeof EXAMPLE]}
+        </p>
+      </article>
+    ))
+  }
+
+  <div class="sd-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Part</th>
+          <th scope="col">Side of the trade</th>
+          <th scope="col">Fixture value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">Escrow input</th><td><span class="sd-chip" data-side="venue">held by StampDEX</span></td><td class="sd-num">{EXAMPLE.input}</td></tr>
+        <tr><th scope="row">Seller payout</th><td><span class="sd-chip" data-side="ask">seller side</span></td><td class="sd-num">{EXAMPLE.seller}</td></tr>
+        <tr><th scope="row">Service fee</th><td><span class="sd-chip" data-side="venue">held by StampDEX</span></td><td class="sd-num">{EXAMPLE.fee}</td></tr>
+        <tr><th scope="row">SRC-20 transfer output</th><td><span class="sd-chip" data-side="bid">buyer side</span></td><td class="sd-num">{EXAMPLE.buyer}</td></tr>
+        <tr><th scope="row">Change</th><td><span class="sd-chip" data-side="chain">settled on Bitcoin</span></td><td class="sd-num">{EXAMPLE.change}</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="sd-footnote">
+    A controlled example for orientation, not a live or signable transaction.
+    What the review panel shows before your wallet opens is the real
+    transaction; compare it against{' '}
+    <a href="/docs-stampdex/guides/psbt-review/">the checklist</a>.
+  </p>
+</section>
+
+<style>
+  .sd-tx-value {
+    font-family: var(--sd-mono);
+    font-size: 0.8rem;
+    color: var(--sd-muted);
+  }
+  .sd-explorer-box:has(#sd-tx-in:checked) [data-panel='in'],
+  .sd-explorer-box:has(#sd-tx-out-seller:checked) [data-panel='out-seller'],
+  .sd-explorer-box:has(#sd-tx-out-fee:checked) [data-panel='out-fee'],
+  .sd-explorer-box:has(#sd-tx-out-buyer:checked) [data-panel='out-buyer'],
+  .sd-explorer-box:has(#sd-tx-out-change:checked) [data-panel='out-change'] {
+    display: block;
+  }
+</style>

@@ -5,6 +5,15 @@ source:
   repo: bitcoinuniverseio/docs-stampdex
   path: this repository
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [src20, stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
 ---
 
 A page is stale when the surface it describes changes. This table names that surface, so

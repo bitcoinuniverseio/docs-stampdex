@@ -1,0 +1,197 @@
+---
+import Legend from '../Legend.astro';
+
+/**
+ * The interactive custody explorer. Choose a trade kind and a stage; the
+ * panel says where the asset is, where the BTC is, who controls the keys,
+ * and what proves it. Pure radio + CSS, so it works without JavaScript, and
+ * the complete ledger table below carries every stage statically.
+ *
+ * Wording follows concepts/custody, the page of record for these claims.
+ */
+
+const flows = [
+  {
+    id: 'src20',
+    name: 'SRC-20 purchase',
+    stages: [
+      {
+        name: 'Listing opens',
+        asset: 'In listing escrow, locked to this listing',
+        btc: 'With the buyer, not yet committed',
+        keys: 'Escrow keys: StampDEX (server side, encrypted)',
+        status: 'Buyer browsing; nothing signed',
+        proof: 'Listing PSBT signed by the seller',
+      },
+      {
+        name: 'Buyer signs the payment',
+        asset: 'In listing escrow',
+        btc: 'Into the listing escrow address',
+        keys: 'Escrow keys: StampDEX; payment key: the buyer wallet',
+        status: 'Payment broadcast, waiting for confirmations',
+        proof: 'Funding transaction on Bitcoin',
+      },
+      {
+        name: 'Settlement waits for confirmations',
+        asset: 'Transfer transaction broadcast; one confirmation away',
+        btc: 'In listing escrow until the transfer confirms',
+        keys: 'Escrow keys: StampDEX',
+        status: 'Settlement worker watching the chain',
+        proof: 'Transfer transaction id, two confirmations required',
+      },
+      {
+        name: 'Filled',
+        asset: "In the buyer's wallet",
+        btc: 'Paid to the seller, service fee deducted',
+        keys: 'Escrow emptied; nobody holds anything for this trade',
+        status: 'Trade complete on Bitcoin',
+        proof: 'Transfer and payout transactions confirmed',
+      },
+      {
+        name: 'If it fails',
+        asset: 'Held in escrow, recoverable',
+        btc: 'Held in escrow, recoverable',
+        keys: 'Escrow keys: StampDEX until recovery completes',
+        status: 'Failed: escrow released nothing',
+        proof: 'Recovery path in Recovery',
+      },
+    ],
+  },
+  {
+    id: 'stamp',
+    name: 'Stamp dispenser purchase',
+    stages: [
+      {
+        name: 'Dispenser open',
+        asset: "With the seller's dispense address, armed",
+        btc: 'With the buyer, not yet committed',
+        keys: 'Dispenser: the seller; payment: the buyer',
+        status: 'Buyer picks a stamp from the dispenser',
+        proof: 'Dispenser transaction on Bitcoin',
+      },
+      {
+        name: 'Buyer pays the dispenser',
+        asset: 'Released by the protocol in the same transaction',
+        btc: 'Straight to the seller, with the buyer paying the network fee',
+        keys: 'Neither side waits on the venue: the dispenser is atomic',
+        status: 'One transaction, payment and dispense together',
+        proof: 'The single confirmed transaction on Bitcoin',
+      },
+      {
+        name: 'Confirmed',
+        asset: "In the buyer's wallet",
+        btc: "With the seller",
+        keys: 'Nobody holds anything for this trade',
+        status: 'Complete; the venue never touched the funds',
+        proof: 'One confirmation on the payment transaction',
+      },
+    ],
+  },
+] as const;
+
+const uid = 'sd-cust';
+---
+
+<Legend />
+
+<section class="sd-explorer-box" aria-label="Interactive custody explorer">
+  <fieldset class="sd-explorer-picker">
+    <legend>Choose a trade</legend>
+    {
+      flows.map((flow, i) => (
+        <label class="sd-explorer-choice" for={`${uid}-${flow.id}`}>
+          <input type="radio" id={`${uid}-${flow.id}`} name={uid + '-flow'} value={flow.id} checked={i === 0} />
+          <span>{flow.name}</span>
+        </label>
+      ))
+    }
+  </fieldset>
+
+  {
+    flows.map((flow) => (
+      <div class="sd-cust-flow" data-flow={flow.id}>
+        <fieldset class="sd-explorer-picker">
+          <legend>Pick a stage</legend>
+          {flow.stages.map((stage, i) => (
+            <label class="sd-explorer-choice" for={`${uid}-${flow.id}-${i}`}>
+              <input
+                type="radio"
+                id={`${uid}-${flow.id}-${i}`}
+                name={uid + '-stage-' + flow.id}
+                value={String(i)}
+                checked={i === 1}
+              />
+              <span>{stage.name}</span>
+            </label>
+          ))}
+        </fieldset>
+
+        {flow.stages.map((stage, i) => (
+          <article class="sd-explorer-panel" data-stage={flow.id + '-' + i}>
+            <h4>{stage.name}</h4>
+            <dl class="sd-facts">
+              <div><dt>The asset</dt><dd>{stage.asset}</dd></div>
+              <div><dt>The BTC</dt><dd>{stage.btc}</dd></div>
+              <div><dt>Who controls the keys</dt><dd>{stage.keys}</dd></div>
+              <div><dt>Status</dt><dd>{stage.status}</dd></div>
+              <div><dt>What proves it</dt><dd>{stage.proof}</dd></div>
+            </dl>
+          </article>
+        ))}
+      </div>
+    ))
+  }
+
+  <p class="sd-footnote">
+    The complete ledger, including stamp dispenser caveats and atomic stamp
+    purchases when they arrive, is in{' '}
+    <a href="/docs-stampdex/concepts/custody/">Where your funds are</a>.
+  </p>
+</section>
+
+<div class="sd-scroll">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Trade and stage</th>
+        <th scope="col">The asset</th>
+        <th scope="col">The BTC</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        flows.map((flow) =>
+          flow.stages.map((stage) => (
+            <tr>
+              <th scope="row">
+                {flow.name}: {stage.name}
+              </th>
+              <td>{stage.asset}</td>
+              <td>{stage.btc}</td>
+            </tr>
+          )),
+        )
+      }
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .sd-cust-flow {
+    display: none;
+  }
+  .sd-explorer-box:has(#sd-cust-src20:checked) [data-flow='src20'],
+  .sd-explorer-box:has(#sd-cust-stamp:checked) [data-flow='stamp'] {
+    display: block;
+  }
+  .sd-explorer-box:has(#sd-cust-src20-0:checked) [data-stage='src20-0'],
+  .sd-explorer-box:has(#sd-cust-src20-1:checked) [data-stage='src20-1'],
+  .sd-explorer-box:has(#sd-cust-src20-2:checked) [data-stage='src20-2'],
+  .sd-explorer-box:has(#sd-cust-src20-3:checked) [data-stage='src20-3'],
+  .sd-explorer-box:has(#sd-cust-src20-4:checked) [data-stage='src20-4'],
+  .sd-explorer-box:has(#sd-cust-stamp-0:checked) [data-stage='stamp-0'],
+  .sd-explorer-box:has(#sd-cust-stamp-1:checked) [data-stage='stamp-1'],
+  .sd-explorer-box:has(#sd-cust-stamp-2:checked) [data-stage='stamp-2'] {
+    display: block;
+  }
+</style>

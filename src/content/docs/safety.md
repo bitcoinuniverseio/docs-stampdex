@@ -4,6 +4,15 @@ description: What StampDEX can and cannot do with your funds, which claims it re
 source:
   path: legal/custodyClaims, escrow key handling, terms of service copy
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [src20, stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
 ---
 
 ## Your keys stay yours
