@@ -148,6 +148,7 @@ export default defineConfig({
           label: 'API and developers',
           items: [
             { label: 'Quick start', slug: 'api/quickstart' },
+            { label: 'Interactive reference', link: '/api/reference/' },
             { label: 'Rate limits', slug: 'api/rate-limits' },
             { label: 'Market', slug: 'api/market' },
             { label: 'Stamps', slug: 'api/stamps' },
