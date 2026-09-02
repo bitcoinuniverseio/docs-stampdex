@@ -17,5 +17,5 @@ export default defineConfig({
     video: 'off',
     trace: 'off',
   },
-  expect: { toHaveScreenshot: { animations: 'disabled' } },
+  expect: { toHaveScreenshot: { animations: 'disabled', threshold: 0.2 } },
 });

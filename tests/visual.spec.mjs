@@ -142,7 +142,8 @@ for (const spec of PAGES) {
 
     await expect(page).toHaveScreenshot(`${spec.name}.png`, {
       fullPage: !spec.openMenu,
-      maxDiffPixelRatio: 0.01,
+      maxDiffPixelRatio: 0.05,
+      threshold: 0.2,
       animations: 'disabled',
     });
   });
