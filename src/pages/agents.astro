@@ -1,0 +1,140 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+
+/** Agent setup: how machines read this documentation honestly. */
+const base = 'https://bitcoinuniverseio.github.io/docs-stampdex';
+const snippets = [
+  {
+    name: 'llms.txt',
+    body: 'Point an agent at the index of the corpus. It lists every page with its address and purpose.',
+    code: `${base}/llms.txt`,
+  },
+  {
+    name: 'Full corpus',
+    body: 'One Markdown document containing every page, with source verification records preserved.',
+    code: `${base}/llms-full.txt`,
+  },
+  {
+    name: 'Page index (JSON)',
+    body: 'A compact machine index: id, title, description, content type, audience, risk level, and the Markdown address of each page.',
+    code: `${base}/index.json`,
+  },
+  {
+    name: 'Per-page Markdown',
+    body: 'Every page has a clean Markdown representation at /markdown/<id>. The View as Markdown action on each page links to it.',
+    code: `${base}/markdown/concepts/custody`,
+  },
+  {
+    name: 'OpenAPI document',
+    body: 'The public API contract, generated in the application repository and snapshotted here. Discoverable also at /.well-known/api-catalog.',
+    code: `${base}/api/downloads/openapi.json`,
+  },
+];
+const mcp = `{
+  "mcpServers": {
+    "stampdex-docs": {
+      "command": "npx",
+      "args": ["-y", "@bitcoinuniverse/stampdex-docs-mcp"],
+      "env": { "DOCSDIR": "/path/to/docs-stampdex/dist" }
+    }
+  }
+}`;
+const claude = `In Claude Code, add the MCP server with the configuration above, then ask:
+
+  What does StampDEX say about where my BTC sits while an SRC-20 trade settles?
+
+The honest answer comes from stampdex_docs_get_section with id concepts/custody;
+check that every claim the agent makes traces to a page it can cite.`;
+---
+
+<StarlightPage
+  frontmatter={{
+    title: 'Agent setup',
+    description: 'How to point AI agents, coding assistants, and MCP clients at the StampDEX documentation: corpus files, page index, OpenAPI, and the read-only MCP server.',
+  }}
+>
+  <p class="sd-api-lede">
+    Machines get the same facts humans get, in the same shapes, with the same
+    source records. Agents must cite pages, admit when the documentation does
+    not answer, and never present an unreleased feature as live. Nothing here
+    can trade, sign, or move funds: the MCP server is read-only by
+    construction.
+  </p>
+
+  <h2>Corpus files</h2>
+  {
+    snippets.map((snippet) => (
+      <div class="sd-agent-file">
+        <h3>{snippet.name}</h3>
+        <p>{snippet.body}</p>
+        <div class="sd-scroll">
+          <pre><code>{snippet.code}</code></pre>
+        </div>
+      </div>
+    ))
+  }
+
+  <h2>MCP server</h2>
+  <p>
+    <code>@bitcoinuniverse/stampdex-docs-mcp</code> is a versioned, read-only
+    MCP package. Tools:{' '}
+    <code>
+      stampdex_docs_search, stampdex_docs_get_page, stampdex_docs_get_section,
+      stampdex_docs_get_api_operation, stampdex_docs_get_release,
+      stampdex_docs_get_capability, stampdex_docs_get_wallet_support,
+      stampdex_docs_get_screenshot_evidence
+    </code>
+    . It serves a built copy of this site, so the tools answer from the same
+    snapshot a reader sees.
+  </p>
+  <div class="sd-scroll">
+    <pre><code>{mcp}</code></pre>
+  </div>
+
+  <h2>Example: Claude Code</h2>
+  <div class="sd-scroll">
+    <pre><code>{claude}</code></pre>
+  </div>
+
+  <h2>Exact limitations</h2>
+  <ul>
+    <li>The server is read-only. There is no tool that writes, signs, or broadcasts.</li>
+    <li>It serves the built documentation only; private repositories are unreachable.</li>
+    <li>Release claims are only as current as the build it serves; verify with <code>GET /api/version</code>.</li>
+    <li>Prices and predictions are out of scope everywhere on this site, including here.</li>
+  </ul>
+</StarlightPage>
+
+<style>
+  .sd-api-lede {
+    font-size: 1rem;
+    color: var(--sd-muted);
+    max-width: 46rem;
+    line-height: 1.65;
+  }
+  .sd-agent-file {
+    margin: 1.1rem 0;
+  }
+  .sd-agent-file h3 {
+    font-size: 1rem;
+    margin: 0 0 0.2rem;
+  }
+  .sd-agent-file p {
+    margin: 0 0 0.4rem;
+    font-size: 0.88rem;
+    color: var(--sd-muted);
+  }
+  pre {
+    border: 1px solid var(--sd-code-rule);
+    border-radius: var(--sd-r-md);
+    background: var(--sd-code-bg);
+    padding: 0.7rem 0.9rem;
+    overflow-x: auto;
+    font-size: 0.8rem;
+  }
+  code {
+    font-family: var(--sd-mono);
+    font-size: 0.82em;
+    overflow-wrap: anywhere;
+  }
+</style>
