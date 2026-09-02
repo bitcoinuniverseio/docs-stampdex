@@ -1,0 +1,80 @@
+---
+import { getCapture, variantsFor } from '../../lib/screens';
+
+/**
+ * A screenshot pair that follows the reader's theme. Both images are in the
+ * HTML; CSS picks the visible one from Starlight's data-theme attribute, with
+ * a prefers-color-scheme fallback for no-JavaScript readers who have never
+ * toggled anything. No JavaScript participates.
+ */
+interface Props {
+  light: string;
+  dark: string;
+  alt?: string;
+  caption?: string;
+  evidence?: boolean;
+}
+
+const { light, dark, alt, caption, evidence = true } = Astro.props;
+
+const lightCapture = getCapture(light);
+const darkCapture = getCapture(dark);
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+function widest(id: string) {
+  const capture = getCapture(id);
+  const variants = variantsFor(capture);
+  const webp = variants.filter((v) => v.format === 'webp');
+  const best = webp.reduce((a, b) => (b.width > a.width ? b : a));
+  return {
+    src: `${base}/${best.file}`,
+    width: best.width,
+    height: Math.round((best.width * capture.viewport.height) / capture.viewport.width),
+    srcset: webp.map((v) => `${base}/${v.file} ${v.width}w`).join(', '),
+  };
+}
+
+const L = widest(light);
+const D = widest(dark);
+---
+
+<figure class="sd-shot sd-themeshot" data-source={lightCapture.source}>
+  <img class="sd-ts sd-ts-light" src={L.src} srcset={L.srcset} width={L.width} height={L.height} alt={alt ?? lightCapture.alt} loading="lazy" decoding="async" />
+  <img class="sd-ts sd-ts-dark" src={D.src} srcset={D.srcset} width={D.width} height={D.height} alt={alt ?? darkCapture.alt} loading="lazy" decoding="async" />
+  <figcaption>
+    {caption ?? lightCapture.caption}
+    {evidence && (
+      <span class="sd-shot-meta">
+        Captured from production, {lightCapture.capturedAt.slice(0, 10)} · light and dark
+      </span>
+    )}
+  </figcaption>
+</figure>
+
+<style>
+  /* Default (dark, and Starlight's no-data-theme default): show dark. */
+  .sd-ts-light {
+    display: none;
+  }
+  .sd-ts-dark {
+    display: block;
+  }
+  :global([data-theme='light']) .sd-ts-light {
+    display: block;
+  }
+  :global([data-theme='light']) .sd-ts-dark {
+    display: none;
+  }
+  /* No-JavaScript readers who have never toggled a theme still get their
+     own preference, through the same attribute Starlight's inline script
+     would have set. */
+  @media (prefers-color-scheme: light) {
+    :global(html:not([data-theme])) .sd-ts-light {
+      display: block;
+    }
+    :global(html:not([data-theme])) .sd-ts-dark {
+      display: none;
+    }
+  }
+</style>

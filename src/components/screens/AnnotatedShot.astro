@@ -1,0 +1,89 @@
+---
+import { getCapture, variantsFor, bestVariant } from '../../lib/screens';
+
+/**
+ * An annotated screenshot: numbered markers over the image at the manifest's
+ * callout positions, plus the same callouts as a plain textual list. The
+ * instructions are never only inside the image.
+ */
+interface Props {
+  id: string;
+  alt?: string;
+  caption?: string;
+}
+
+const { id, alt, caption } = Astro.props;
+const capture = getCapture(id);
+const callouts = capture.callouts ?? [];
+if (callouts.length === 0) {
+  throw new Error(
+    `[screens] AnnotatedShot requires callouts on "${id}" in screenshots.manifest.json.`,
+  );
+}
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const best = bestVariant(capture);
+const webp = variantsFor(capture).filter((v) => v.format === 'webp');
+const srcset = webp.map((v) => `${base}/${v.file} ${v.width}w`).join(', ');
+const sizes = `(min-width: 60rem) ${best.width * 0.72}px, 100vw`;
+const height = Math.round((best.width * capture.viewport.height) / capture.viewport.width);
+---
+
+<figure class="sd-shot sd-annotated" data-source={capture.source}>
+  <div class="sd-annotated-stage">
+    <img src={`${base}/${best.file}`} srcset={srcset} sizes={sizes} width={best.width} height={height} alt={alt ?? capture.alt} loading="lazy" decoding="async" />
+    {
+      callouts.map((c, i) => (
+        <span
+          class="sd-annotated-marker"
+          style={`left:${c.x}%;top:${c.y}%`}
+          aria-hidden="true"
+        >
+          {i + 1}
+        </span>
+      ))
+    }
+  </div>
+  <figcaption>{caption ?? capture.caption}</figcaption>
+</figure>
+
+<ol class="sd-annotations">
+  {
+    callouts.map((c, i) => (
+      <li>
+        <span class="sd-marker" aria-hidden="true">
+          {i + 1}
+        </span>
+        {c.label}
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .sd-annotated-stage {
+    position: relative;
+  }
+  .sd-annotated-stage img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .sd-annotated-marker {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background: var(--sd-nav);
+    color: var(--sd-brand-accent);
+    border: 1px solid var(--sd-rule-strong);
+    font-family: var(--sd-mono);
+    font-size: 0.78rem;
+    font-weight: 700;
+    box-shadow: var(--sd-shadow-2);
+  }
+</style>
