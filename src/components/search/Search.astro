@@ -1,0 +1,739 @@
+---
+import { Icon } from '@astrojs/starlight/components';
+import project from 'virtual:starlight/project-context';
+
+const pagefindTranslations = {
+  placeholder: Astro.locals.t('search.label') || 'Search StampDEX docs...',
+  ...Object.fromEntries(
+    Object.entries(Astro.locals.t.all())
+      .filter(([key]) => key.startsWith('pagefind.'))
+      .map(([key, value]) => [key.replace('pagefind.', ''), value])
+  ),
+};
+
+const dataAttributes: Record<string, string> = {
+  'data-translations': JSON.stringify(pagefindTranslations),
+  'data-base': import.meta.env.BASE_URL.replace(/\/$/, ''),
+};
+if (project.trailingSlash === 'never') dataAttributes['data-strip-trailing-slash'] = '';
+---
+
+<site-search class={Astro.props.class} {...dataAttributes}>
+  <button
+    data-open-modal
+    disabled
+    aria-label="Search StampDEX docs"
+    aria-keyshortcuts="Control+K"
+    class="sd-search-btn"
+  >
+    <Icon name="magnifier" />
+    <span class="sl-hidden md:sl-block" aria-hidden="true">Search docs...</span>
+    <kbd class="sl-hidden md:sl-flex" style="display: none;">
+      <kbd>Ctrl</kbd><kbd>K</kbd>
+    </kbd>
+  </button>
+
+  <dialog class="sd-search-dialog" aria-label="Search StampDEX documentation">
+    <div class="sd-dialog-frame">
+      <div class="sd-search-header">
+        <div class="sd-search-input-wrap">
+          <Icon name="magnifier" class="sd-search-icon" />
+          <input
+            type="search"
+            class="sd-search-input"
+            placeholder="Search docs, type /ord, /btc, /cust, or ask a question..."
+            aria-label="Search"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button type="button" class="sd-search-clear sl-hidden" aria-label="Clear search">
+            <Icon name="close" />
+          </button>
+        </div>
+        <button data-close-modal class="sd-search-close" aria-label="Close dialog">
+          <kbd>Esc</kbd>
+        </button>
+      </div>
+
+      <!-- Quick filters -->
+      <div class="sd-filter-bar">
+        <span class="sd-filter-label">Filter:</span>
+        <button type="button" class="sd-filter-chip active" data-filter="all">All</button>
+        <button type="button" class="sd-filter-chip" data-filter="guide">Guides</button>
+        <button type="button" class="sd-filter-chip" data-filter="concept">Concepts</button>
+        <button type="button" class="sd-filter-chip" data-filter="api">API</button>
+        <button type="button" class="sd-filter-chip" data-filter="reference">Reference</button>
+      </div>
+
+      <!-- Quick aliases strip -->
+      <div class="sd-aliases-strip">
+        <span class="sd-aliases-label">Shortcuts:</span>
+        <button type="button" class="sd-alias-tag" data-alias="/cust">/cust Custody</button>
+        <button type="button" class="sd-alias-tag" data-alias="/ord">/ord Orders</button>
+        <button type="button" class="sd-alias-tag" data-alias="/btc">/btc Fees</button>
+        <button type="button" class="sd-alias-tag" data-alias="/stat">/stat States</button>
+        <button type="button" class="sd-alias-tag" data-alias="/api">/api Reference</button>
+      </div>
+
+      <!-- Ask StampDEX Answer Card -->
+      <div class="sd-ask-card sl-hidden" id="sdAskCard">
+        <div class="sd-ask-header">
+          <span class="sd-ask-badge">Ask StampDEX</span>
+          <span class="sd-ask-status">Citation-First Extractive Synthesis</span>
+        </div>
+        <div class="sd-ask-body" id="sdAskBody"></div>
+        <div class="sd-ask-citations" id="sdAskCitations"></div>
+      </div>
+
+      <!-- Results container -->
+      <div class="sd-results-container" id="sdResultsContainer">
+        <!-- Initial suggestions or results inserted here -->
+        <div class="sd-results-placeholder">
+          <p class="sd-hint">Type a search term, protocol name (SRC-20, Stamps), API route, or question.</p>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="sd-dialog-footer">
+        <div class="sd-footer-hint">
+          <span><kbd>&uarr;</kbd><kbd>&darr;</kbd> to navigate</span>
+          <span><kbd>&crarr;</kbd> to select</span>
+          <span><kbd>Esc</kbd> to close</span>
+        </div>
+        <div class="sd-footer-links">
+          <a href="/docs-stampdex/api/reference/">API Reference</a>
+          &middot;
+          <a href="/docs-stampdex/product-atlas/">Product Atlas</a>
+          &middot;
+          <a href="/docs-stampdex/agents/">Agent Access</a>
+        </div>
+      </div>
+    </div>
+  </dialog>
+</site-search>
+
+<script is:inline>
+  (() => {
+    const openBtn = document.querySelector('button[data-open-modal]');
+    const shortcut = openBtn?.querySelector('kbd');
+    if (!openBtn || !(shortcut instanceof HTMLElement)) return;
+    const platformKey = shortcut.querySelector('kbd');
+    if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+      platformKey.textContent = '⌘';
+      openBtn.setAttribute('aria-keyshortcuts', 'Meta+K');
+    }
+    shortcut.style.display = '';
+  })();
+</script>
+
+<script>
+  // Aliases mapping
+  const ALIASES: Record<string, string> = {
+    '/ord': '/docs-stampdex/concepts/order-lifecycle/',
+    '/btc': '/docs-stampdex/reference/fees/',
+    '/cust': '/docs-stampdex/concepts/custody/',
+    '/stat': '/docs-stampdex/reference/order-states/',
+    '/prov': '/docs-stampdex/concepts/data-provenance/',
+    '/api': '/docs-stampdex/api/',
+    '/wallet': '/docs-stampdex/reference/wallets/',
+    '/matrix': '/docs-stampdex/reference/capability-matrix/',
+    '/atlas': '/docs-stampdex/product-atlas/',
+  };
+
+  // Exact error code map
+  const ERROR_CODES: Record<string, { title: string; link: string; desc: string }> = {
+    'UNKNOWN_NOT_ZERO': {
+      title: 'Unknown Is Not Zero Principle',
+      link: '/docs-stampdex/concepts/unknown-is-not-zero/',
+      desc: 'When an indexer or API has unrecorded data, it is marked Unknown rather than reporting 0.',
+    },
+    'INSUFFICIENT_FEE': {
+      title: 'Fee and Gas Requirements',
+      link: '/docs-stampdex/reference/fees/',
+      desc: 'Fee breakdown for SRC-20 trades (1.5% min 500 sats) and Bitcoin network transaction fees.',
+    },
+    'ORDER_FAILED': {
+      title: 'Order Settlement and Recovery',
+      link: '/docs-stampdex/concepts/recovery/',
+      desc: 'How failed orders, grace periods (30m), and seller asset recovery operate.',
+    },
+  };
+
+  // Curated Q&A corpus for citation-first Ask StampDEX extractive synthesis
+  const KNOWLEDGE_BASE = [
+    {
+      keywords: ['custody', 'holds funds', 'escrow', 'hold money', 'seller funds', 'buyer funds'],
+      question: 'Who holds funds during a StampDEX trade?',
+      answer: 'StampDEX is non-custodial for user Bitcoin and assets prior to listing. During an active SRC-20 listing, seller tokens reside in dedicated single-trade escrow keys controlled by venue policy until match or cancel. Buyer BTC is sent directly in settlement PSBT and never pools in a shared wallet.',
+      citations: [
+        { label: 'Concepts: Custody', url: '/docs-stampdex/concepts/custody/', release: 'v1.0.0' },
+        { label: 'Order Lifecycle', url: '/docs-stampdex/concepts/order-lifecycle/', release: 'v1.0.0' }
+      ]
+    },
+    {
+      keywords: ['fee', 'fees', 'cost', 'service fee', 'commission', '1.5%'],
+      question: 'What are the fees on StampDEX?',
+      answer: 'SRC-20 trades incur a 1.5% service fee per party (buyer and seller), with a minimum of 500 satoshis each, collected to a dedicated fee address. PSBT mint/deploy/transfer actions require a flat 1,500 satoshi builder fee alongside standard Bitcoin network miner fees.',
+      citations: [
+        { label: 'Reference: Fees', url: '/docs-stampdex/reference/fees/', release: 'v1.0.0' }
+      ]
+    },
+    {
+      keywords: ['wallet', 'wallets', 'unisat', 'xverse', 'okx', 'leather', 'universe wallet'],
+      question: 'Which wallets are supported by StampDEX?',
+      answer: 'StampDEX supports Universe Wallet (native full support), UniSat, Leather, Xverse, and OKX Wallet. Capability varies by action: UniSat, Universe Wallet, and Xverse support SRC-20 buy/sell; check the capability matrix for specific signing modes.',
+      citations: [
+        { label: 'Reference: Wallets', url: '/docs-stampdex/reference/wallets/', release: 'v1.0.0' },
+        { label: 'Capability Matrix', url: '/docs-stampdex/reference/capability-matrix/', release: 'v1.0.0' }
+      ]
+    },
+    {
+      keywords: ['cancel', 'cancellation', 'delist', 'stop listing', 'withdraw'],
+      question: 'How do I cancel a listing?',
+      answer: 'Sellers can cancel an open listing at any time before buyer matching occurs. Cancellation constructs a sweep transaction that returns the escrowed asset directly back to the seller payout address.',
+      citations: [
+        { label: 'Guides: Cancel a Listing', url: '/docs-stampdex/guides/cancel-a-listing/', release: 'v1.0.0' }
+      ]
+    },
+    {
+      keywords: ['relist', 'repricing', 'change price'],
+      question: 'Can I change the price of an existing listing?',
+      answer: 'Direct price editing cancels the existing order and creates a fresh listing at the new price in one coordinated flow. Old orders cannot be amended in-place on Bitcoin.',
+      citations: [
+        { label: 'Guides: Change Listing Price', url: '/docs-stampdex/guides/change-a-listing-price/', release: 'v1.0.0' }
+      ]
+    },
+  ];
+
+  class SiteSearch extends HTMLElement {
+    private pagefind: any = null;
+    private activeFilter: string = 'all';
+
+    constructor() {
+      super();
+      const openBtn = this.querySelector<HTMLButtonElement>('button[data-open-modal]')!;
+      const closeBtn = this.querySelector<HTMLButtonElement>('button[data-close-modal]')!;
+      const dialog = this.querySelector<HTMLDialogElement>('dialog')!;
+      const dialogFrame = this.querySelector<HTMLDivElement>('.sd-dialog-frame')!;
+      const searchInput = this.querySelector<HTMLInputElement>('.sd-search-input')!;
+      const clearBtn = this.querySelector<HTMLButtonElement>('.sd-search-clear')!;
+      const filterChips = this.querySelectorAll<HTMLButtonElement>('.sd-filter-chip');
+      const aliasTags = this.querySelectorAll<HTMLButtonElement>('.sd-alias-tag');
+
+      const onClick = (event: MouseEvent) => {
+        const isLink = (event.target as HTMLElement)?.closest('a');
+        if (isLink || (document.body.contains(event.target as Node) && !dialogFrame.contains(event.target as Node))) {
+          closeModal();
+        }
+      };
+
+      const openModal = (event?: MouseEvent) => {
+        dialog.showModal();
+        document.body.toggleAttribute('data-search-modal-open', true);
+        searchInput.focus();
+        event?.stopPropagation();
+        window.addEventListener('click', onClick);
+        this.initPagefind();
+      };
+
+      const closeModal = () => {
+        dialog.close();
+      };
+
+      openBtn.addEventListener('click', openModal);
+      openBtn.disabled = false;
+      closeBtn.addEventListener('click', closeModal);
+
+      dialog.addEventListener('close', () => {
+        document.body.toggleAttribute('data-search-modal-open', false);
+        window.removeEventListener('click', onClick);
+      });
+
+      // Keyboard shortcut Ctrl+K / Cmd+K / /
+      window.addEventListener('keydown', (e) => {
+        if ((e.metaKey === true || e.ctrlKey === true) && e.key === 'k') {
+          dialog.open ? closeModal() : openModal();
+          e.preventDefault();
+        } else if (e.key === '/' && !dialog.open && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+          openModal();
+          e.preventDefault();
+        }
+      });
+
+      // Search input listener
+      searchInput.addEventListener('input', () => {
+        const val = searchInput.value.trim();
+        clearBtn.classList.toggle('sl-hidden', !val);
+        this.handleSearch(val);
+      });
+
+      clearBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        clearBtn.classList.add('sl-hidden');
+        this.handleSearch('');
+        searchInput.focus();
+      });
+
+      // Filter chips
+      filterChips.forEach((chip) => {
+        chip.addEventListener('click', () => {
+          filterChips.forEach((c) => c.classList.remove('active'));
+          chip.classList.add('active');
+          this.activeFilter = chip.dataset.filter || 'all';
+          this.handleSearch(searchInput.value.trim());
+        });
+      });
+
+      // Alias tags
+      aliasTags.forEach((tag) => {
+        tag.addEventListener('click', () => {
+          const alias = tag.dataset.alias;
+          if (alias && ALIASES[alias]) {
+            window.location.href = ALIASES[alias];
+          }
+        });
+      });
+    }
+
+    private async initPagefind() {
+      if (this.pagefind) return;
+      try {
+        const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+        // @ts-ignore
+        const pf = await import(/* @vite-ignore */ `${basePath}/pagefind/pagefind.js`);
+        await pf.init();
+        this.pagefind = pf;
+      } catch (err) {
+        // Pagefind may not exist in dev server; graceful fallback
+      }
+    }
+
+    private async handleSearch(query: string) {
+      const askCard = this.querySelector<HTMLDivElement>('#sdAskCard')!;
+      const askBody = this.querySelector<HTMLDivElement>('#sdAskBody')!;
+      const askCitations = this.querySelector<HTMLDivElement>('#sdAskCitations')!;
+      const resultsContainer = this.querySelector<HTMLDivElement>('#sdResultsContainer')!;
+
+      if (!query) {
+        askCard.classList.add('sl-hidden');
+        resultsContainer.innerHTML = `
+          <div class="sd-results-placeholder">
+            <p class="sd-hint">Type a search term, protocol name (SRC-20, Stamps), API route, or question.</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Check search aliases
+      const lower = query.toLowerCase();
+      if (ALIASES[lower]) {
+        resultsContainer.innerHTML = `
+          <div class="sd-alias-hit">
+            <span class="sd-hit-badge">Shortcut match</span>
+            <h3><a href="${ALIASES[lower]}">${query} &rarr; Direct navigation</a></h3>
+            <p>Press Enter to visit <span class="sd-code">${ALIASES[lower]}</span></p>
+          </div>
+        `;
+        return;
+      }
+
+      // Check exact error codes
+      if (ERROR_CODES[query.toUpperCase()]) {
+        const err = ERROR_CODES[query.toUpperCase()];
+        resultsContainer.innerHTML = `
+          <div class="sd-alias-hit">
+            <span class="sd-hit-badge error-badge">Error code match</span>
+            <h3><a href="${err.link}">${err.title}</a></h3>
+            <p>${err.desc}</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Check Ask StampDEX extractive matching
+      const qaMatch = KNOWLEDGE_BASE.find((k) =>
+        k.keywords.some((kw) => lower.includes(kw))
+      );
+
+      if (qaMatch) {
+        askCard.classList.remove('sl-hidden');
+        askBody.innerHTML = `<p>${qaMatch.answer}</p>`;
+        askCitations.innerHTML = `
+          <span class="sd-citations-label">Sources:</span>
+          ${qaMatch.citations
+            .map(
+              (c) =>
+                `<a href="${c.url}" class="sd-citation-link">${c.label} <span class="sd-release-tag">${c.release}</span></a>`
+            )
+            .join(' ')}
+        `;
+      } else {
+        askCard.classList.add('sl-hidden');
+      }
+
+      // Perform Pagefind search
+      if (this.pagefind) {
+        try {
+          const searchRes = await this.pagefind.search(query);
+          const rawResults = await Promise.all(searchRes.results.slice(0, 10).map((r: any) => r.data()));
+
+          // Apply active filter
+          const filtered = rawResults.filter((r: any) => {
+            if (this.activeFilter === 'all') return true;
+            return r.url?.includes(`/${this.activeFilter}`);
+          });
+
+          if (filtered.length === 0) {
+            resultsContainer.innerHTML = `
+              <div class="sd-no-results">
+                <p class="sd-no-res-title">No direct matches found for &ldquo;${query}&rdquo;.</p>
+                <div class="sd-zero-suggestions">
+                  <p>Suggested alternatives:</p>
+                  <ul>
+                    <li><a href="/docs-stampdex/guides/buy-src20/">Tutorial: Buy SRC-20 tokens</a></li>
+                    <li><a href="/docs-stampdex/concepts/custody/">Concept: Where are your funds?</a></li>
+                    <li><a href="/docs-stampdex/reference/fees/">Reference: Complete fee schedule</a></li>
+                    <li><a href="/docs-stampdex/api/reference/">Interactive OpenAPI Reference</a></li>
+                  </ul>
+                  <p class="sd-feedback-prompt">Could not find what you were looking for? <a href="/docs-stampdex/contributing/">Let us know in documentation feedback</a>.</p>
+                </div>
+              </div>
+            `;
+            return;
+          }
+
+          resultsContainer.innerHTML = filtered
+            .map((item: any) => {
+              const excerpt = item.excerpt || '';
+              return `
+                <div class="sd-result-item">
+                  <a href="${item.url}" class="sd-result-link">
+                    <div class="sd-result-title">${item.meta?.title || 'Documentation Page'}</div>
+                    <div class="sd-result-excerpt">${excerpt}</div>
+                  </a>
+                </div>
+              `;
+            })
+            .join('');
+        } catch {
+          this.renderStaticFallback(query, resultsContainer);
+        }
+      } else {
+        this.renderStaticFallback(query, resultsContainer);
+      }
+    }
+
+    private renderStaticFallback(query: string, container: HTMLElement) {
+      container.innerHTML = `
+        <div class="sd-static-hit">
+          <p>Results for <strong>&ldquo;${query}&rdquo;</strong>:</p>
+          <ul>
+            <li><a href="/docs-stampdex/start-here/">Start here: Getting started with StampDEX</a></li>
+            <li><a href="/docs-stampdex/guides/buy-src20/">Buy SRC-20 tokens tutorial</a></li>
+            <li><a href="/docs-stampdex/concepts/custody/">Where your funds sit at every stage</a></li>
+            <li><a href="/docs-stampdex/reference/fees/">Trading fee schedule & network miner fees</a></li>
+          </ul>
+        </div>
+      `;
+    }
+  }
+
+  customElements.define('site-search', SiteSearch);
+</script>
+
+<style>
+  site-search {
+    display: contents;
+  }
+  .sd-search-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid var(--sd-rule);
+    border-radius: var(--sd-r-md);
+    padding: 0.35rem 0.75rem;
+    background: var(--sd-panel);
+    color: var(--sd-muted);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+  }
+  .sd-search-btn:hover {
+    border-color: var(--sd-brand);
+    color: var(--sd-ink);
+  }
+  .sd-search-btn kbd {
+    margin-left: auto;
+    font-size: 0.7rem;
+    padding: 0.1rem 0.35rem;
+    background: var(--sd-inset);
+    border: 1px solid var(--sd-rule);
+    border-radius: var(--sd-r-sm);
+  }
+
+  .sd-search-dialog {
+    margin: 4rem auto auto;
+    width: 90%;
+    max-width: 44rem;
+    border-radius: var(--sd-r-lg);
+    background: var(--sd-panel);
+    border: 1px solid var(--sd-rule-strong);
+    color: var(--sd-ink);
+    box-shadow: var(--sd-shadow-elevated);
+    padding: 0;
+  }
+  .sd-search-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(4px);
+  }
+
+  .sd-dialog-frame {
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem;
+    gap: 0.75rem;
+  }
+
+  .sd-search-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .sd-search-input-wrap {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    position: relative;
+    background: var(--sd-inset);
+    border: 1px solid var(--sd-rule);
+    border-radius: var(--sd-r-md);
+    padding: 0.4rem 0.75rem;
+    gap: 0.5rem;
+  }
+  .sd-search-input-wrap:focus-within {
+    border-color: var(--sd-brand);
+  }
+  .sd-search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--sd-ink);
+    font-size: 0.95rem;
+  }
+  .sd-search-clear {
+    background: none;
+    border: none;
+    color: var(--sd-muted);
+    cursor: pointer;
+  }
+  .sd-search-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  .sd-search-close kbd {
+    padding: 0.2rem 0.4rem;
+    background: var(--sd-inset);
+    border: 1px solid var(--sd-rule);
+    border-radius: var(--sd-r-sm);
+    font-size: 0.75rem;
+    color: var(--sd-muted);
+  }
+
+  /* Filters */
+  .sd-filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+    overflow-x: auto;
+  }
+  .sd-filter-label {
+    color: var(--sd-muted);
+    font-weight: 500;
+  }
+  .sd-filter-chip {
+    border: 1px solid var(--sd-rule);
+    background: var(--sd-panel-2);
+    color: var(--sd-muted);
+    border-radius: 999px;
+    padding: 0.15rem 0.6rem;
+    cursor: pointer;
+    font-size: 0.75rem;
+  }
+  .sd-filter-chip.active,
+  .sd-filter-chip:hover {
+    background: var(--sd-brand);
+    color: #fff;
+    border-color: var(--sd-brand);
+  }
+
+  /* Shortcuts */
+  .sd-aliases-strip {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.74rem;
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid var(--sd-rule);
+  }
+  .sd-aliases-label {
+    color: var(--sd-muted);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+  }
+  .sd-alias-tag {
+    background: var(--sd-inset);
+    border: 1px solid var(--sd-rule);
+    color: var(--sd-ink);
+    border-radius: var(--sd-r-sm);
+    padding: 0.1rem 0.4rem;
+    font-family: var(--sd-mono);
+    font-size: 0.7rem;
+    cursor: pointer;
+  }
+  .sd-alias-tag:hover {
+    border-color: var(--sd-info);
+    color: var(--sd-info);
+  }
+
+  /* Ask Card */
+  .sd-ask-card {
+    background: var(--sd-panel-2);
+    border: 1px solid var(--sd-rule-strong);
+    border-left: 3px solid var(--sd-brand);
+    border-radius: var(--sd-r-md);
+    padding: 0.75rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .sd-ask-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .sd-ask-badge {
+    background: var(--sd-brand);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.1rem 0.4rem;
+    border-radius: var(--sd-r-sm);
+    text-transform: uppercase;
+  }
+  .sd-ask-status {
+    font-size: 0.7rem;
+    color: var(--sd-muted);
+  }
+  .sd-ask-body {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    color: var(--sd-ink);
+  }
+  .sd-ask-citations {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+  }
+  .sd-citations-label {
+    color: var(--sd-muted);
+    font-weight: 600;
+  }
+  .sd-citation-link {
+    color: var(--sd-info);
+    text-decoration: underline;
+  }
+  .sd-release-tag {
+    font-family: var(--sd-mono);
+    font-size: 0.65rem;
+    background: var(--sd-inset);
+    padding: 0.05rem 0.3rem;
+    border-radius: var(--sd-r-sm);
+  }
+
+  /* Results */
+  .sd-results-container {
+    max-height: 20rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .sd-results-placeholder {
+    padding: 1.5rem 0;
+    text-align: center;
+    color: var(--sd-muted);
+  }
+  .sd-result-item {
+    border-radius: var(--sd-r-md);
+    padding: 0.6rem 0.75rem;
+    background: var(--sd-panel-2);
+    border: 1px solid var(--sd-rule);
+    transition: background 0.15s ease;
+  }
+  .sd-result-item:hover {
+    background: var(--sd-inset);
+    border-color: var(--sd-rule-strong);
+  }
+  .sd-result-title {
+    font-weight: 600;
+    color: var(--sd-brand);
+    font-size: 0.9rem;
+    margin-bottom: 0.2rem;
+  }
+  .sd-result-excerpt {
+    font-size: 0.78rem;
+    color: var(--sd-muted);
+    line-height: 1.35;
+  }
+
+  .sd-alias-hit {
+    background: var(--sd-panel-2);
+    border: 1px solid var(--sd-brand);
+    border-radius: var(--sd-r-md);
+    padding: 1rem;
+  }
+  .sd-hit-badge {
+    background: var(--sd-brand);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.1rem 0.4rem;
+    border-radius: var(--sd-r-sm);
+    text-transform: uppercase;
+  }
+  .sd-hit-badge.error-badge {
+    background: var(--sd-warn);
+  }
+
+  .sd-dialog-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--sd-rule);
+    font-size: 0.72rem;
+    color: var(--sd-muted);
+  }
+  .sd-footer-hint {
+    display: flex;
+    gap: 0.75rem;
+  }
+  .sd-footer-hint kbd {
+    background: var(--sd-inset);
+    border: 1px solid var(--sd-rule);
+    border-radius: var(--sd-r-sm);
+    padding: 0.1rem 0.3rem;
+  }
+  .sd-footer-links a {
+    color: var(--sd-muted);
+  }
+  .sd-footer-links a:hover {
+    color: var(--sd-ink);
+  }
+</style>

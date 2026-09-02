@@ -50,7 +50,8 @@ jobs:
             '.github/runner-classes.json',
             '.github/scripts/route-runners.mjs',
             '.github/scripts/lib/route-core.mjs',
-            '.github/scripts/lib/route-api.mjs'
+            '.github/scripts/lib/route-api.mjs',
+            '.github/scripts/lib/route-health.mjs'
           )
           $checkout = Join-Path $env:RUNNER_TEMP "router-config-$env:GITHUB_RUN_ID"
           $credential = [Convert]::ToBase64String(
