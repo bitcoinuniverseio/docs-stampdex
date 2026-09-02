@@ -12,11 +12,19 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  route:
+    uses: ./.github/workflows/route.yml
+    secrets: inherit
+    with:
+      plan: '{"check":"light"}'
+      config_ref: 1dd19289af21f4f6be01f874390a180b3af8bb38
+
   check:
-    # A fork must not run its code on an organisation-owned runner. GitHub
-    # evaluates this condition before it assigns the job.
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: [self-hosted, Linux, X64, linux-ultra]
+    needs: route
+    # This repository is public, so pull request jobs run through the shared
+    # capacity router. A fork pull request must not reach organisation-owned
+    # infrastructure.
+    runs-on: ${{ fromJSON(needs.route.outputs.targets).check }}
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
