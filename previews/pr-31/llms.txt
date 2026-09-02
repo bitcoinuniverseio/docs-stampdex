@@ -1,0 +1,108 @@
+# StampDEX documentation
+
+> Public documentation for StampDEX, the marketplace and explorer for Bitcoin
+> Stamps and SRC-20 at https://stampdex.fun. Bitcoin mainnet only. Lifecycle:
+> stable, continuously deployed. Trades execute at StampDEX rather than inside
+> other Bitcoin Universe products.
+
+Two facts shape most of this documentation.
+
+1. An SRC-20 trade routes the buyer payment through escrow addresses StampDEX
+   controls until the tokens reach the buyer. A Bitcoin Stamps purchase does not:
+   it settles in one Bitcoin transaction through a Counterparty dispenser.
+2. Neither protocol supports an in-place listing price update. The ecosystem
+   capability registry records update-listing as unsupported for both, because no
+   atomic listing update is implemented and listings must be cancelled and
+   relisted.
+
+## Home
+
+- [StampDEX documentation](https://bitcoinuniverseio.github.io/docs-stampdex/): How the StampDEX trading venue for Bitcoin Stamps and SRC-20 works, including the order lifecycle, custody at every step, fees, settlement, and the public read API.
+
+## Start
+
+- [What you can and cannot do](https://bitcoinuniverseio.github.io/docs-stampdex/capabilities/): The exact list of marketplace actions StampDEX supports for Bitcoin Stamps and SRC-20, with the recorded reason for every action that is not supported.
+- [Start here](https://bitcoinuniverseio.github.io/docs-stampdex/start-here/): Five minutes from first visit to knowing your way around StampDEX, with no wallet needed until you want to trade, and the three things to know before you do.
+- [What StampDEX is](https://bitcoinuniverseio.github.io/docs-stampdex/what-is-stampdex/): What StampDEX does, what it deliberately does not do, why it does not call itself non-custodial, and where it sits in the Bitcoin Universe ecosystem.
+
+## Protocols
+
+- [Bitcoin Stamps](https://bitcoinuniverseio.github.io/docs-stampdex/concepts/bitcoin-stamps/): What a Bitcoin Stamp is, how it is issued as a Counterparty asset, how StampDEX trades one through a dispenser, and which stamp actions are not supported.
+- [SRC-20](https://bitcoinuniverseio.github.io/docs-stampdex/concepts/src20/): What SRC-20 is, how a token is deployed and minted, and how the three-transaction listing flow makes a trade work on Bitcoin.
+
+## Guides
+
+- [The market board](https://bitcoinuniverseio.github.io/docs-stampdex/guides/browse-the-market/): How to read the StampDEX SRC-20 market board: what each column means, why a total names its coverage, and why an unknown value never sorts as a zero.
+- [Buy SRC-20](https://bitcoinuniverseio.github.io/docs-stampdex/guides/buy-src20/): Every step of buying an SRC-20 token on StampDEX, what to check before you sign, and what each thing that can go wrong actually means.
+- [Cancel a listing](https://bitcoinuniverseio.github.io/docs-stampdex/guides/cancel-a-listing/): How to take an SRC-20 listing off the StampDEX book, why cancelling needs your signature, when it is refused, and what happens to the tokens afterwards.
+- [Change a listing price](https://bitcoinuniverseio.github.io/docs-stampdex/guides/change-a-listing-price/): Why StampDEX has no in-place listing edit, what cancel-and-relist costs you, and how to do it for SRC-20 and for a stamp dispenser.
+- [Collect Bitcoin Stamps](https://bitcoinuniverseio.github.io/docs-stampdex/guides/collect-stamps/): How to find, judge, and buy a Bitcoin Stamp on StampDEX through a Counterparty dispenser, and why no StampDEX-controlled address is involved in the purchase.
+- [Collection pages](https://bitcoinuniverseio.github.io/docs-stampdex/guides/collection-pages/): How StampDEX collection pages work, what their market figures mean, and why collection membership is metadata rather than chain state.
+- [List and unlist a stamp](https://bitcoinuniverseio.github.io/docs-stampdex/guides/list-a-stamp/): How to put a Bitcoin Stamp up for sale through a Counterparty dispenser, how to take it down, and why closing has a cooldown.
+- [Your portfolio](https://bitcoinuniverseio.github.io/docs-stampdex/guides/portfolio/): How to see the SRC-20 balances, stamps, open orders, and activity an address holds on StampDEX, with a connected wallet or with no wallet at all.
+- [Review a PSBT before signing](https://bitcoinuniverseio.github.io/docs-stampdex/guides/psbt-review/): What to check in the transaction your wallet shows you before you sign anything on StampDEX, output by output, including the fixed service fee address.
+- [Sell SRC-20](https://bitcoinuniverseio.github.io/docs-stampdex/guides/sell-src20/): How to list an SRC-20 token on StampDEX, what signing a listing commits, what it costs, how to manage it while it is live, and every way it can be refused.
+- [Token pages](https://bitcoinuniverseio.github.io/docs-stampdex/guides/token-pages/): How a StampDEX token page is addressed, what it shows, and the seven states the deployment gate can be in before it will show you a tradeable market.
+
+## Settlement and custody
+
+- [Where your funds are](https://bitcoinuniverseio.github.io/docs-stampdex/concepts/custody/): A stage-by-stage custody map of a StampDEX trade, showing where the asset is, where the buyer's payment is, where the seller's proceeds are, and what a pending or failed settlement actually means.
+- [Offers](https://bitcoinuniverseio.github.io/docs-stampdex/concepts/offers/): What the ecosystem registry records about offer support on StampDEX, and why an offers surface existing is not the same as offers being a released way to trade.
+- [Order lifecycle](https://bitcoinuniverseio.github.io/docs-stampdex/concepts/order-lifecycle/): The SRC-20 order state machine on StampDEX, every state, every transition, and what each state means for the buyer and the seller.
+- [Recovery](https://bitcoinuniverseio.github.io/docs-stampdex/concepts/recovery/): What to do when a StampDEX trade does not complete: a failed order, a stuck transaction, a listing removed from the book, or a settlement undone by a reorg.
+- [Settlement lifecycle](https://bitcoinuniverseio.github.io/docs-stampdex/concepts/settlement-lifecycle/): What the StampDEX settlement worker checks before it releases funds, how long it waits, and what it does after a Bitcoin reorg.
+
+## Identity and data
+
+- [Asset identity](https://bitcoinuniverseio.github.io/docs-stampdex/concepts/asset-identity/): Which facts identify an SRC-20 token and a Bitcoin Stamp on StampDEX, so a look-alike cannot ride a real asset's reputation.
+- [Data provenance](https://bitcoinuniverseio.github.io/docs-stampdex/concepts/data-provenance/): Which service answers each question on StampDEX, which of them are third parties, what the ecosystem registry records as each source of truth, and how to check it live.
+- [Deployment identity](https://bitcoinuniverseio.github.io/docs-stampdex/concepts/deployment-identity/): How StampDEX resolves an SRC-20 ticker to exactly one deployment before it will show you a market, and the four answers it can give.
+- [Freshness](https://bitcoinuniverseio.github.io/docs-stampdex/concepts/freshness/): How far behind live a StampDEX number can be, what the status endpoint reports, and what Universe does and does not enforce about lag.
+- [Market data](https://bitcoinuniverseio.github.io/docs-stampdex/concepts/market-data/): What each number on StampDEX means, which source answered it, how it is derived, and the guards that stop an absurd figure being repeated.
+- [Unknown is not zero](https://bitcoinuniverseio.github.io/docs-stampdex/concepts/unknown-is-not-zero/): The difference between a source saying nothing and a source saying zero, why StampDEX keeps them apart, and how to read the distinction in the API.
+
+## Reference
+
+- [Capability matrix](https://bitcoinuniverseio.github.io/docs-stampdex/reference/capability-matrix/): The raw ecosystem registry fields for Bitcoin Stamps and SRC-20 on StampDEX, including surfaces, ownership model, and every unsupported action with its reason.
+- [Fees](https://bitcoinuniverseio.github.io/docs-stampdex/reference/fees/): Every fee StampDEX charges, who pays it, how the network fee is estimated, and a worked example including the case where the minimum dominates.
+- [Glossary](https://bitcoinuniverseio.github.io/docs-stampdex/reference/glossary/): Plain-word meanings for the terms StampDEX uses, from CPID and dispenser to the per-listing escrow addresses and the signature type a listing is signed with.
+- [Order states](https://bitcoinuniverseio.github.io/docs-stampdex/reference/order-states/): Every SRC-20 order state on StampDEX, the value the API returns for it, what it means, where the funds are in it, and what ends it.
+- [Wallets](https://bitcoinuniverseio.github.io/docs-stampdex/reference/wallets/): Which wallets work with StampDEX, exactly which actions each one can perform here, and the per-wallet caveats that matter.
+
+## API
+
+- [Worked examples](https://bitcoinuniverseio.github.io/docs-stampdex/api/examples/): Complete, runnable examples against the StampDEX public read API, each stating what it does, what to expect back, and how to read the answer honestly.
+- [Market endpoints](https://bitcoinuniverseio.github.io/docs-stampdex/api/market/): SRC-20 market data from the StampDEX API: token lists, price history, trades, fee rates, the deployment resolution routes, and the source map on every row.
+- [Media endpoints](https://bitcoinuniverseio.github.io/docs-stampdex/api/media/): Stamp artwork and token logos from the StampDEX API, their caching behaviour, and the content policy applied to untrusted stamp files.
+- [Orders endpoints](https://bitcoinuniverseio.github.io/docs-stampdex/api/orders/): Reading and creating SRC-20 listings through the StampDEX API, the wallet challenge every mutation needs, and the fields an order returns.
+- [API quick start](https://bitcoinuniverseio.github.io/docs-stampdex/api/quickstart/): The StampDEX public read API: base URL, first request, what needs no key, what needs a wallet signature, and how CORS affects browser callers.
+- [Rate limits](https://bitcoinuniverseio.github.io/docs-stampdex/api/rate-limits/): The StampDEX API request limits, which routes are limited more tightly than the 300 per minute default, which routes are exempt, and how to stay under them.
+- [Stamps endpoints](https://bitcoinuniverseio.github.io/docs-stampdex/api/stamps/): Bitcoin Stamps, collections, dispensers, and wallet holdings from the StampDEX API, including how to tell nothing for sale apart from could not ask.
+- [Status and version](https://bitcoinuniverseio.github.io/docs-stampdex/api/status/): The StampDEX health, version, index freshness, and per-transaction truth endpoints, what every field means, and how to check which commit is serving you.
+
+## Safety and support
+
+- [Frequently asked questions](https://bitcoinuniverseio.github.io/docs-stampdex/faq/): Short answers to the questions people ask most about StampDEX, from custody and fees to why a listing price cannot be edited, each linking to the full explanation.
+- [Safety and trust](https://bitcoinuniverseio.github.io/docs-stampdex/safety/): What StampDEX can and cannot do with your funds, which claims it refuses to make about itself, and how to check every one of them.
+- [Troubleshooting](https://bitcoinuniverseio.github.io/docs-stampdex/troubleshooting/): The problems people actually hit on StampDEX, what causes each one, and what fixes it, from unknown values and rate limits to a stamp that will not relist.
+
+## Project
+
+- [Changelog](https://bitcoinuniverseio.github.io/docs-stampdex/project/changelog/): What changed in this documentation and in the StampDEX surfaces it describes, newest first, including corrections to facts previously published here.
+- [Contributing](https://bitcoinuniverseio.github.io/docs-stampdex/project/contributing/): How to correct or improve this documentation, the writing and colour rules it holds itself to, and the grounding rule that keeps claims tied to evidence.
+- [Page freshness](https://bitcoinuniverseio.github.io/docs-stampdex/project/page-freshness/): When each page here was last verified, which product surface it was verified against, and what change should trigger a recheck of it.
+- [Release evidence](https://bitcoinuniverseio.github.io/docs-stampdex/project/release-evidence/): How StampDEX records what has been verified, what its release registry said at the last recorded snapshot, and what that means for anything you are about to trade.
+
+## Other
+
+- [Learning paths](https://bitcoinuniverseio.github.io/docs-stampdex/tutorials/learning-paths/): Guided reading paths for the six most common goals on this site, from a first SRC-20 purchase to building against the public API, each with a clear order and a stated outcome.
+
+## Source
+
+- Product: https://stampdex.fun
+- Documentation repository: https://github.com/bitcoinuniverseio/docs-stampdex
+- Application issues: https://github.com/bitcoinuniverseio/stampdex/issues
+- Public API base: https://stamp.api.bitcoinuniverse.io
+- Deployed commit: https://stamp.api.bitcoinuniverse.io/api/version
+- Index freshness: https://stamp.api.bitcoinuniverse.io/api/v1/indexer/status
+- Central platform: https://docs.bitcoinuniverse.io
