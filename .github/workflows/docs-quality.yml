@@ -86,7 +86,7 @@ jobs:
           echo "Every image is within budget."
 
       - name: Upload visual baselines for review and commit
-        if: github.event_name == 'push'
+        if: always() && github.event_name == 'push'
         uses: actions/upload-artifact@v4
         with:
           name: visual-baselines-${{ github.run_id }}
