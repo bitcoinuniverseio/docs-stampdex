@@ -1,0 +1,168 @@
+/* OpenAPI developer hub: the API reference surface, request explorer chrome,
+ * and code example tabs. The hub ships in PR5; these styles are its contract
+ * with the token system.
+ */
+
+.sd-api-shell {
+  font-size: 0.92rem;
+}
+
+.sd-api-method {
+  display: inline-block;
+  font-family: var(--sd-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 0.12rem 0.5rem;
+  border-radius: var(--sd-r-sm);
+  border: 1px solid currentColor;
+}
+
+.sd-api-method[data-method='get'],
+.sd-api-method[data-method='head'] {
+  color: var(--sd-ok);
+  background: var(--sd-ok-wash);
+}
+
+.sd-api-method[data-method='post'] {
+  color: var(--sd-info);
+  background: var(--sd-info-wash);
+}
+
+.sd-api-method[data-method='put'],
+.sd-api-method[data-method='patch'] {
+  color: var(--sd-warn);
+  background: var(--sd-warn-wash);
+}
+
+.sd-api-method[data-method='delete'] {
+  color: var(--sd-err);
+  background: var(--sd-err-wash);
+}
+
+.sd-api-lifecycle {
+  display: inline-block;
+  font-family: var(--sd-mono);
+  font-size: 0.64rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+}
+
+.sd-api-lifecycle[data-lifecycle='experimental'] {
+  color: var(--sd-warn);
+  background: var(--sd-warn-wash);
+}
+
+.sd-api-lifecycle[data-lifecycle='deprecated'] {
+  color: var(--sd-err);
+  background: var(--sd-err-wash);
+}
+
+.sd-api-lifecycle[data-lifecycle='stable'] {
+  color: var(--sd-ok);
+  background: var(--sd-ok-wash);
+}
+
+/* Request explorer: only approved public reads may execute. */
+.sd-explorer {
+  border: 1px solid var(--sd-rule);
+  border-radius: var(--sd-r-md);
+  background: var(--sd-panel);
+  overflow: hidden;
+  margin: 1.4rem 0;
+}
+
+.sd-explorer-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.8rem;
+  background: var(--sd-panel-2);
+  border-bottom: 1px solid var(--sd-rule);
+}
+
+.sd-explorer pre {
+  margin: 0;
+  padding: 0.8rem;
+  overflow-x: auto;
+  background: var(--sd-code-bg);
+  color: var(--sd-code-ink);
+  font-family: var(--sd-mono);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.sd-explorer-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  padding: 0.55rem 0.8rem;
+  border-top: 1px solid var(--sd-rule);
+  background: var(--sd-panel-2);
+  font-family: var(--sd-mono);
+  font-size: 0.72rem;
+  color: var(--sd-muted);
+}
+
+.sd-explorer-foot strong {
+  color: var(--sd-ink);
+}
+
+/* Fixture-only builders never reach production. */
+.sd-explorer[data-mode='fixture'] {
+  border-left: 3px solid var(--sd-warn);
+}
+
+.sd-explorer[data-mode='fixture'] .sd-explorer-head::after {
+  content: 'Example only. No transaction will be created.';
+  margin-inline-start: auto;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--sd-warn);
+}
+
+/* Language tabs for generated examples. */
+.sd-tabs {
+  border: 1px solid var(--sd-rule);
+  border-radius: var(--sd-r-md);
+  overflow: hidden;
+  margin: 1.2rem 0;
+  background: var(--sd-panel);
+}
+
+.sd-tabs [role='tablist'] {
+  display: flex;
+  gap: 0.15rem;
+  padding: 0.35rem 0.5rem 0;
+  background: var(--sd-panel-2);
+  border-bottom: 1px solid var(--sd-rule);
+  overflow-x: auto;
+}
+
+.sd-tabs [role='tab'] {
+  border: 1px solid transparent;
+  border-bottom: 0;
+  border-radius: var(--sd-r-sm) var(--sd-r-sm) 0 0;
+  background: none;
+  color: var(--sd-muted);
+  font-family: var(--sd-mono);
+  font-size: 0.76rem;
+  padding: 0.34rem 0.7rem;
+  cursor: pointer;
+}
+
+.sd-tabs [role='tab'][aria-selected='true'] {
+  background: var(--sd-panel);
+  border-color: var(--sd-rule);
+  color: var(--sd-ink);
+  font-weight: 700;
+}
+
+.sd-tabs [role='tabpanel'] {
+  padding: 0;
+}

@@ -1,0 +1,56 @@
+---
+import BrandIcon from './BrandIcon.astro';
+
+/** Starlight SiteTitle override: the StampDEX Docs wordmark. The icon is the
+ * perforated plate; the name is live text so it scales and translates cleanly.
+ */
+const route = Astro.locals.starlightRoute;
+const { siteTitleHref } = route;
+---
+
+<a href={siteTitleHref} class="sd-brand" aria-label="StampDEX Docs home">
+  <BrandIcon size={26} />
+  <span class="sd-brand-name">
+    StampDEX<span class="sd-brand-docs">&nbsp;Docs</span>
+  </span>
+</a>
+
+<style>
+  .sd-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    text-decoration: none;
+    color: var(--sd-ink-inverse);
+    white-space: nowrap;
+    min-width: 0;
+    padding: 0.25rem;
+    margin: -0.25rem;
+  }
+  .sd-brand :global(svg) {
+    flex: none;
+    display: block;
+  }
+  .sd-brand-name {
+    font-weight: 640;
+    font-size: 1.02rem;
+    letter-spacing: -0.01em;
+    color: var(--sd-ink-inverse);
+  }
+  .sd-brand-docs {
+    color: var(--sd-muted-inverse);
+    font-weight: 480;
+  }
+  .sd-brand:hover .sd-brand-docs {
+    color: var(--sd-brand-accent);
+  }
+  .sd-brand:focus-visible {
+    outline: 2px solid var(--sd-focus);
+    outline-offset: 2px;
+  }
+  @media (max-width: 26rem) {
+    .sd-brand-docs {
+      display: none;
+    }
+  }
+</style>
