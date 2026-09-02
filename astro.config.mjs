@@ -85,6 +85,7 @@ export default defineConfig({
         Hero: './src/components/home/Hero.astro',
         Footer: './src/components/Footer.astro',
         PageTitle: './src/components/PageTitle.astro',
+        Search: './src/components/search/Search.astro',
       },
       sidebar: [
         {
