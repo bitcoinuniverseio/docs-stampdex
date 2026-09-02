@@ -84,3 +84,33 @@ registry's own recorded reason. It is usually the most useful sentence on the pa
 
 - [Page freshness](/docs-stampdex/project/page-freshness/)
 - [Changelog](/docs-stampdex/project/changelog/)
+
+## Screenshot evidence
+
+Product screenshots are not hand-dropped into assets. They are declared in
+screenshots.manifest.json, captured by a runner, and held to that declaration
+by a gate.
+
+To add or refresh a capture:
+
+1. Add or edit its record in scripts/gen-screens-manifest.mjs and run
+   `npm run gen:screens-manifest`. A production capture records the
+   application commit it expects; the runner refuses to capture anything else.
+2. Run `npm run capture:screens`. Production mode opens the public,
+   read-only screen, waits for its heading, masks the volatile regions the
+   manifest declares, and saves the master. Fixture mode records a
+   deterministic page from scripts/fixtures and is always visibly labelled as
+   a controlled recorded state.
+3. Run `npm run make:responsive-screens` to generate the served variants.
+4. Run `npm run check:screens`. It fails on missing masters or variants,
+   images over the size budget, captures past their freshness window,
+   undeclared files, and anything the secret scan dislikes.
+
+Reference a capture in a page with the screenshot components, which read the
+same manifest: `<ProductShot id="market-desktop-dark" />`. The
+[Visual product atlas](/docs-stampdex/product-atlas/) lists every capture with
+its evidence.
+
+The documentation's own look is guarded by visual baselines. A screenshot that
+changed is a review event, never an automatic approval: refresh baselines only
+with `npm run visual:update` and commit the difference.

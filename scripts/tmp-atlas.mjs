@@ -1,0 +1,35 @@
+import { chromium } from 'playwright';
+import { createServer } from 'node:http';
+import { existsSync, readFileSync } from 'node:fs';
+import { extname, join } from 'node:path';
+const TYPES = { '.html':'text/html','.css':'text/css','.js':'text/javascript','.svg':'image/svg+xml','.png':'image/png','.webp':'image/webp','.avif':'image/avif','.woff2':'font/woff2','.json':'application/json','.txt':'text/plain' };
+const server = createServer((req,res)=>{
+  let p = decodeURIComponent(new URL(req.url,'http://x').pathname);
+  if (p.startsWith('/docs-stampdex')) p = p.slice('/docs-stampdex'.length);
+  if (p.endsWith('/')) p += 'index.html';
+  let f = join('dist', p);
+  if (!existsSync(f)) f = join('dist', p, 'index.html');
+  if (!existsSync(f)) { res.writeHead(404).end(); return; }
+  res.writeHead(200, {'content-type': TYPES[extname(f)] ?? 'application/octet-stream'});
+  res.end(readFileSync(f));
+});
+await new Promise(d=>server.listen(4199,d));
+const browser = await chromium.launch();
+const page = await (await browser.newContext({ viewport: { width: 1440, height: 1000 }, colorScheme: 'dark' })).newPage();
+await page.goto('http://localhost:4199/docs-stampdex/product-atlas/', { waitUntil: 'networkidle' });
+await page.screenshot({ path: process.env.TMP + '/pr2-shots/atlas.png' });
+const p2 = await (await browser.newContext({ viewport: { width: 1440, height: 1000 }, colorScheme: 'dark' })).newPage();
+await p2.goto('http://localhost:4199/docs-stampdex/concepts/recovery/', { waitUntil: 'networkidle' });
+await p2.locator('.sd-shot').first().scrollIntoViewIfNeeded();
+await p2.waitForTimeout(300);
+await p2.screenshot({ path: process.env.TMP + '/pr2-shots/recovery-shot.png' });
+await p2.goto('http://localhost:4199/docs-stampdex/guides/psbt-review/', { waitUntil: 'networkidle' });
+await p2.locator('[data-sd-lightbox-trigger]').first().click();
+await p2.waitForTimeout(300);
+const open = await p2.locator('dialog[open]').count();
+await p2.keyboard.press('Escape');
+await p2.waitForTimeout(200);
+const closed = await p2.locator('dialog[open]').count();
+console.log('lightbox open:', open, '| closed after Esc:', closed === 0);
+await browser.close();
+server.close();

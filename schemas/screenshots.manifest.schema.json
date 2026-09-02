@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "stampdex.docs.screenshots.manifest/1",
+  "title": "StampDEX screenshot manifest",
+  "description": "Every product screenshot the documentation serves is declared here. The capture runner reads it, the responsive generator reads it, and scripts/check-screens.mjs holds the committed images to it. Unknown fields and incomplete records are rejected.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "generated", "captures"],
+  "properties": {
+    "schema": { "const": "stampdex.docs.screenshots.manifest/1" },
+    "generated": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["appVersionEndpoint", "docsBranch"],
+      "properties": {
+        "appVersionEndpoint": { "type": "string", "format": "uri" },
+        "docsBranch": { "type": "string", "minLength": 1 }
+      }
+    },
+    "captures": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/capture" }
+    }
+  },
+  "$defs": {
+    "viewport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "width", "height", "deviceScaleFactor"],
+      "properties": {
+        "name": { "enum": ["desktop", "mobile"] },
+        "width": { "type": "integer", "minimum": 320, "maximum": 1920 },
+        "height": { "type": "integer", "minimum": 480, "maximum": 1600 },
+        "deviceScaleFactor": { "enum": [1, 2] }
+      }
+    },
+    "callout": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "label"],
+      "properties": {
+        "x": { "type": "number", "minimum": 0, "maximum": 100 },
+        "y": { "type": "number", "minimum": 0, "maximum": 100 },
+        "label": { "type": "string", "minLength": 3, "maxLength": 200 }
+      }
+    },
+    "maskRegion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "width", "height", "reason"],
+      "properties": {
+        "x": { "type": "number", "minimum": 0, "maximum": 100 },
+        "y": { "type": "number", "minimum": 0, "maximum": 100 },
+        "width": { "type": "number", "minimum": 0, "maximum": 100 },
+        "height": { "type": "number", "minimum": 0, "maximum": 100 },
+        "reason": {
+          "enum": [
+            "timestamp",
+            "live-price",
+            "fee-rate",
+            "block-height",
+            "session-state"
+          ]
+        }
+      }
+    },
+    "capture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "page",
+        "source",
+        "theme",
+        "locale",
+        "viewport",
+        "authenticated",
+        "appCommit",
+        "docsCommit",
+        "capturedAt",
+        "lifecycle",
+        "maxAgeDays",
+        "category",
+        "alt",
+        "caption"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "maxLength": 64
+        },
+        "page": {
+          "type": "string",
+          "description": "The documentation page that owns this capture",
+          "minLength": 1
+        },
+        "guideLink": {
+          "type": "string",
+          "description": "Site-absolute link to the guide that explains the screen"
+        },
+        "productRoute": { "type": "string" },
+        "expectedHeading": { "type": "string" },
+        "source": { "enum": ["production", "controlled-fixture"] },
+        "fixtureId": {
+          "type": "string",
+          "description": "Required when source is controlled-fixture",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "theme": { "enum": ["light", "dark"] },
+        "locale": { "enum": ["en", "zh-cn"] },
+        "viewport": { "$ref": "#/$defs/viewport" },
+        "authenticated": { "type": "boolean" },
+        "appCommit": { "type": "string", "minLength": 7, "maxLength": 40 },
+        "docsCommit": { "type": "string", "minLength": 7, "maxLength": 40 },
+        "capturedAt": { "type": "string", "format": "date-time" },
+        "lifecycle": { "enum": ["current", "historical"] },
+        "maxAgeDays": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 365,
+          "description": "Freshness window. The capture must be retaken before this expires."
+        },
+        "category": {
+          "enum": [
+            "markets",
+            "trade",
+            "stamps",
+            "orders",
+            "portfolio",
+            "desk",
+            "safety",
+            "developer",
+            "mobile",
+            "themes",
+            "language"
+          ]
+        },
+        "mask": { "type": "array", "items": { "$ref": "#/$defs/maskRegion" } },
+        "crop": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["x", "y", "width", "height"],
+          "properties": {
+            "x": { "type": "integer", "minimum": 0 },
+            "y": { "type": "integer", "minimum": 0 },
+            "width": { "type": "integer", "minimum": 1 },
+            "height": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "callouts": { "type": "array", "items": { "$ref": "#/$defs/callout" } },
+        "alt": { "type": "string", "minLength": 20, "maxLength": 400 },
+        "caption": { "type": "string", "minLength": 10, "maxLength": 400 },
+        "variants": {
+          "type": "array",
+          "description": "Responsive files generated from the master, by convention public/screens/<id>.<width>w.<format>",
+          "items": { "type": "string", "pattern": "^[0-9]+w-(avif|webp)$" }
+        },
+        "notes": { "type": "string", "maxLength": 400 }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "source": { "const": "controlled-fixture" } }
+          },
+          "then": { "required": ["fixtureId"] }
+        },
+        {
+          "if": { "properties": { "source": { "const": "production" } } },
+          "then": { "required": ["productRoute", "expectedHeading"] }
+        }
+      ]
+    }
+  }
+}

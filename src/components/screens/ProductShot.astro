@@ -1,0 +1,152 @@
+---
+import {
+  getCapture,
+  variantsFor,
+  captureDate,
+  shortCommit,
+  type Capture,
+} from '../../lib/screens';
+
+/**
+ * The core product screenshot: a manifest-declared capture served through
+ * its responsive variants, with its evidence line (source kind, application
+ * commit, capture date) visible in the caption, and optional accessible
+ * zoom. Everything renders without JavaScript; the lightbox only adds a
+ * larger look when JS is present.
+ */
+interface Props {
+  id: string;
+  /** Override the manifest alt/caption when the surrounding prose needs it. */
+  alt?: string;
+  caption?: string;
+  /** Offer the lightbox. Default true. */
+  zoom?: boolean;
+  /** Show the evidence line. Default true. */
+  evidence?: boolean;
+  /** Render only the image: no frame, no caption. For composition inside
+   * other screenshot components. */
+  bare?: boolean;
+  class?: string;
+}
+
+const {
+  id,
+  alt,
+  caption,
+  zoom = true,
+  evidence = true,
+  bare = false,
+  class: className,
+} = Astro.props;
+
+const capture: Capture = getCapture(id);
+const variants = variantsFor(capture);
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const src = `${base}/${variants[variants.length - 1].file}`;
+
+const widths = [...new Set(variants.map((v) => v.width))].sort((a, b) => a - b);
+const srcsetWebp = variants
+  .filter((v) => v.format === 'webp')
+  .map((v) => `${base}/${v.file} ${v.width}w`)
+  .join(', ');
+const srcsetAvif = variants
+  .filter((v) => v.format === 'avif')
+  .map((v) => `${base}/${v.file} ${v.width}w`)
+  .join(', ');
+const largest = widths[widths.length - 1];
+const sizes = `(min-width: 60rem) ${largest * 0.72}px, 100vw`;
+
+const isFixture = capture.source === 'controlled-fixture';
+---
+
+{
+  bare ? (
+    <picture>
+      {srcsetAvif && <source srcset={srcsetAvif} sizes={sizes} type="image/avif" />}
+      <source srcset={srcsetWebp} sizes={sizes} type="image/webp" />
+      <img
+        src={src}
+        width={largest}
+        height={Math.round(
+          (largest * capture.viewport.height) / capture.viewport.width,
+        )}
+        alt={alt ?? capture.alt}
+        loading="lazy"
+        decoding="async"
+      />
+    </picture>
+  ) : (
+    <figure
+      class:list={['sd-shot', className]}
+      data-source={capture.source}
+      data-screenshot-id={capture.id}
+    >
+      {zoom ? (
+        <button
+          type="button"
+          class="sd-shot-zoom"
+          data-sd-lightbox-trigger
+          data-fullsrc={src}
+          data-alt={alt ?? capture.alt}
+          aria-label="Open this screenshot larger"
+        >
+          <picture>
+            {srcsetAvif && <source srcset={srcsetAvif} sizes={sizes} type="image/avif" />}
+            <source srcset={srcsetWebp} sizes={sizes} type="image/webp" />
+            <img
+              src={src}
+              width={largest}
+              height={Math.round(
+                (largest * capture.viewport.height) / capture.viewport.width,
+              )}
+              alt={alt ?? capture.alt}
+              loading="lazy"
+              decoding="async"
+            />
+          </picture>
+        </button>
+      ) : (
+        <picture>
+          {srcsetAvif && <source srcset={srcsetAvif} sizes={sizes} type="image/avif" />}
+          <source srcset={srcsetWebp} sizes={sizes} type="image/webp" />
+          <img
+            src={src}
+            width={largest}
+            height={Math.round(
+              (largest * capture.viewport.height) / capture.viewport.width,
+            )}
+            alt={alt ?? capture.alt}
+            loading="lazy"
+            decoding="async"
+          />
+        </picture>
+      )}
+      <figcaption>
+        {caption ?? capture.caption}
+        {evidence && (
+          <span class="sd-shot-meta">
+            {isFixture ? 'Controlled recorded state' : 'Captured from production'}
+            {', '}
+            {captureDate(capture)} · app {shortCommit(capture.appCommit)} ·{' '}
+            {capture.theme} {capture.viewport.name}
+          </span>
+        )}
+      </figcaption>
+    </figure>
+  )
+}
+
+<style>
+  /* Zoom affordance visuals live here; frame and caption styles are the
+     shared ones in screenshots.css. */
+  .sd-shot-zoom {
+    cursor: zoom-in;
+  }
+  figure[data-source='controlled-fixture'] figcaption {
+    border-top: 2px solid var(--sd-warn);
+  }
+  figure[data-source='controlled-fixture'] .sd-shot-meta::before {
+    content: '\\26AC ';
+    color: var(--sd-warn);
+  }
+</style>

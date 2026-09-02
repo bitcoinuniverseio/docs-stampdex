@@ -1,0 +1,241 @@
+// Writes screenshots.manifest.json. This generator exists so the manifest is
+// reproducible; edit the capture list here, run it, and commit both files.
+//   node scripts/gen-screens-manifest.mjs
+import { writeFileSync } from 'node:fs';
+import { execSync } from 'node:child_process';
+
+const APP_COMMIT = '38bc2a0e1d7f76f805ca505d53b131ec03fc46f6';
+const DOCS_COMMIT = execSync('git rev-parse --short=7 origin/develop').toString().trim();
+const CAPTURED_AT = '2026-09-02T18:40:00Z';
+
+const cap = (o) =>
+  Object.assign(
+    {
+      appCommit: APP_COMMIT,
+      docsCommit: DOCS_COMMIT,
+      capturedAt: CAPTURED_AT,
+      locale: 'en',
+      authenticated: false,
+      lifecycle: 'current',
+    },
+    o,
+  );
+
+const desk = (w, h, sf) => ({
+  name: w < 500 ? 'mobile' : 'desktop',
+  width: w,
+  height: h,
+  deviceScaleFactor: sf,
+});
+
+const TICKER = [{ x: 0, y: 0, width: 100, height: 7, reason: 'live-price' }];
+const TOKEN_ROUTE =
+  '/trade/src20/DOGE/2600b7771d05e7c88a3da89cfb2bbc7ef9e934399a5e579a632371d911b12a84';
+
+const manifest = {
+  schema: 'stampdex.docs.screenshots.manifest/1',
+  generated: {
+    appVersionEndpoint: 'https://stamp.api.bitcoinuniverse.io/api/version',
+    docsBranch: 'develop',
+  },
+  captures: [
+    cap({
+      id: 'market-desktop-dark',
+      page: 'guides/browse-the-market',
+      guideLink: '/docs-stampdex/guides/browse-the-market/',
+      productRoute: '/',
+      expectedHeading: 'SRC-20 markets',
+      source: 'production',
+      theme: 'dark',
+      viewport: desk(1400, 900, 1),
+      maxAgeDays: 30,
+      category: 'markets',
+      mask: TICKER,
+      alt: 'The StampDEX market board in the dark theme: the SRC-20 token table with floor prices in sats, 24 hour change, volume, holders, and a source label per figure.',
+      caption:
+        'The market board. Every row carries the deployment transaction that identifies the token, and a source label for each figure. The rolling price ticker is masked because it never stops moving.',
+    }),
+    cap({
+      id: 'market-desktop-light',
+      page: 'guides/browse-the-market',
+      guideLink: '/docs-stampdex/guides/browse-the-market/',
+      productRoute: '/',
+      expectedHeading: 'SRC-20 markets',
+      source: 'production',
+      theme: 'light',
+      viewport: desk(1400, 900, 1),
+      maxAgeDays: 30,
+      category: 'themes',
+      mask: TICKER,
+      alt: 'The StampDEX market board in the light theme, same table of SRC-20 tokens with source labels and floor prices.',
+      caption: 'The same market board in the light theme. Theme is a preference, not a different venue.',
+    }),
+    cap({
+      id: 'market-mobile-dark',
+      page: 'guides/browse-the-market',
+      guideLink: '/docs-stampdex/guides/browse-the-market/',
+      productRoute: '/',
+      expectedHeading: 'SRC-20 markets',
+      source: 'production',
+      theme: 'dark',
+      viewport: desk(390, 844, 2),
+      maxAgeDays: 30,
+      category: 'mobile',
+      mask: [{ x: 0, y: 0, width: 100, height: 9, reason: 'live-price' }],
+      alt: 'The StampDEX market board on a phone in the dark theme, with the token table and the bottom navigation bar.',
+      caption: 'The market board on a phone. Browsing needs no wallet and no account.',
+    }),
+    cap({
+      id: 'token-desktop-dark',
+      page: 'guides/token-pages',
+      guideLink: '/docs-stampdex/guides/token-pages/',
+      productRoute: TOKEN_ROUTE,
+      expectedHeading: 'DOGE',
+      source: 'production',
+      theme: 'dark',
+      viewport: desk(1400, 900, 1),
+      maxAgeDays: 30,
+      category: 'trade',
+      mask: TICKER,
+      alt: 'An SRC-20 token trading page for DOGE in the dark theme: what the token is, its reference price with its source, and the order book of signed listings.',
+      caption:
+        'A token page for DOGE. The deployment transaction in the URL names the token exactly; the order book shows signed listings with amount, unit price, and total.',
+    }),
+    cap({
+      id: 'token-desktop-light',
+      page: 'guides/token-pages',
+      guideLink: '/docs-stampdex/guides/token-pages/',
+      productRoute: TOKEN_ROUTE,
+      expectedHeading: 'DOGE',
+      source: 'production',
+      theme: 'light',
+      viewport: desk(1400, 900, 1),
+      maxAgeDays: 30,
+      category: 'themes',
+      mask: TICKER,
+      alt: 'The DOGE token trading page in the light theme.',
+      caption: 'The token page in the light theme. The trade panel states where the BTC goes before the wallet opens.',
+    }),
+    cap({
+      id: 'token-mobile-dark',
+      page: 'guides/token-pages',
+      guideLink: '/docs-stampdex/guides/token-pages/',
+      productRoute: TOKEN_ROUTE,
+      expectedHeading: 'DOGE',
+      source: 'production',
+      theme: 'dark',
+      viewport: desk(390, 844, 2),
+      maxAgeDays: 30,
+      category: 'mobile',
+      mask: [{ x: 0, y: 0, width: 100, height: 9, reason: 'live-price' }],
+      alt: 'The DOGE token page on a phone in the dark theme, with the trade panel and order book stacked vertically.',
+      caption: 'The token page on a phone. Review a trade with the same fields as on desktop.',
+    }),
+    cap({
+      id: 'stamps-desktop-dark',
+      page: 'guides/collect-stamps',
+      guideLink: '/docs-stampdex/guides/collect-stamps/',
+      productRoute: '/stamps',
+      expectedHeading: 'Stamps Collections',
+      source: 'production',
+      theme: 'dark',
+      viewport: desk(1400, 900, 1),
+      maxAgeDays: 30,
+      category: 'stamps',
+      mask: TICKER,
+      alt: 'The StampDEX stamps gallery in the dark theme: a grid of Bitcoin Stamp collections with floor prices.',
+      caption:
+        'The stamps gallery. Collections are what you browse; the stamp detail names the transaction behind each piece.',
+    }),
+    cap({
+      id: 'desk-desktop-light',
+      page: 'start-here',
+      guideLink: '/docs-stampdex/start-here/',
+      productRoute: '/desk',
+      expectedHeading: 'Trading desk',
+      source: 'production',
+      theme: 'light',
+      viewport: desk(1400, 900, 1),
+      maxAgeDays: 30,
+      category: 'desk',
+      mask: TICKER,
+      alt: 'The StampDEX trading desk in the light theme: chain and fee conditions, active SRC-20 markets, and stamp collections on one screen.',
+      caption: 'The desk: chain and fee conditions, active markets, and collections in one view.',
+    }),
+    cap({
+      id: 'vault-desktop-dark',
+      page: 'guides/portfolio',
+      guideLink: '/docs-stampdex/guides/portfolio/',
+      productRoute: '/portfolio',
+      expectedHeading: 'My Vault',
+      source: 'production',
+      theme: 'dark',
+      viewport: desk(1400, 900, 1),
+      maxAgeDays: 30,
+      category: 'portfolio',
+      mask: TICKER,
+      alt: 'The StampDEX vault page in the dark theme with no wallet connected, showing the empty state that asks you to connect a wallet.',
+      caption:
+        'The vault with no wallet connected. Holdings appear only after you connect; browsing never requires one.',
+    }),
+    cap({
+      id: 'fixture-buy-review',
+      page: 'guides/psbt-review',
+      guideLink: '/docs-stampdex/guides/psbt-review/',
+      source: 'controlled-fixture',
+      fixtureId: 'buy-review',
+      theme: 'dark',
+      viewport: desk(1280, 800, 1),
+      maxAgeDays: 180,
+      category: 'trade',
+      alt: 'A controlled recording of the StampDEX buy review panel: token, amount, unit price, trade total, buyer service fee, estimated network fee, and the line saying where the BTC goes.',
+      caption:
+        'The buy review, reproduced as a controlled recorded state with deterministic example numbers. Read the review panel in production before you sign; these numbers are not live.',
+    }),
+    cap({
+      id: 'fixture-failed-order',
+      page: 'concepts/recovery',
+      guideLink: '/docs-stampdex/concepts/recovery/',
+      source: 'controlled-fixture',
+      fixtureId: 'failed-order',
+      theme: 'dark',
+      viewport: desk(1280, 800, 1),
+      maxAgeDays: 180,
+      category: 'safety',
+      alt: 'A controlled recording of a failed order panel: the state marked failed, both the BTC and the tokens marked as held in escrow and recoverable, and the recovery owner named.',
+      caption:
+        'A failed order, reproduced as a controlled recorded state. Failed does not mean lost: escrow released nothing, and recovery returns each side its own value.',
+    }),
+    cap({
+      id: 'fixture-unknown-value',
+      page: 'concepts/unknown-is-not-zero',
+      guideLink: '/docs-stampdex/concepts/unknown-is-not-zero/',
+      source: 'controlled-fixture',
+      fixtureId: 'unknown-value',
+      theme: 'dark',
+      viewport: desk(1280, 800, 1),
+      maxAgeDays: 180,
+      category: 'markets',
+      alt: 'A controlled recording of a market row where floor price and volume show dashes with a source label of none, next to a holders count that does have a source.',
+      caption:
+        'Unknown is not zero, reproduced as a controlled recorded state. A dash means the venue has no number it can prove, and the sources are named per figure.',
+    }),
+    cap({
+      id: 'fixture-wallet-connect',
+      page: 'reference/wallets',
+      guideLink: '/docs-stampdex/reference/wallets/',
+      source: 'controlled-fixture',
+      fixtureId: 'wallet-connect',
+      theme: 'dark',
+      viewport: desk(1280, 800, 1),
+      maxAgeDays: 180,
+      category: 'desk',
+      alt: 'A controlled recording of the wallet connection screen listing Universe Wallet and UniSat as tested for trading, Leather and Xverse for viewing, and OKX Wallet as untested.',
+      caption:
+        'The wallet connection screen, reproduced as a controlled recorded state. Connecting lets StampDEX read addresses and build transactions; nothing moves until you sign.',
+    }),
+  ],
+};
+
+writeFileSync('screenshots.manifest.json', JSON.stringify(manifest, null, 2) + '\n');
+console.log('manifest written with', manifest.captures.length, 'captures; docsCommit', DOCS_COMMIT);
