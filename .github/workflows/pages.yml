@@ -18,7 +18,7 @@ jobs:
     secrets: inherit
     with:
       plan: '{"build_and_publish":"light"}'
-      config_ref: 80c58e966e9e30517ae7d891cc4de9db4e2dff23
+      config_ref: fb59548bbe6f27a7c8a43cf93967f89c99de2795
 
   build-and-publish:
     needs: route
