@@ -6,15 +6,22 @@
  */
 const route = Astro.locals.starlightRoute;
 const id = route.id;
+// Custom pages built outside the content collection have no Markdown route.
+const CUSTOM_PAGES = new Set(['api', 'api/reference', 'product-atlas', 'agents']);
 const markdownPath = `/docs-stampdex/markdown/${id === '' ? 'index' : id}`;
+const showActions = !CUSTOM_PAGES.has(id);
 ---
 
-<div class="sd-page-actions">
-  <a href={markdownPath}>View page as Markdown</a>
-  <button type="button" data-sd-copy-md data-markdown-path={markdownPath}>
-    Copy page as Markdown
-  </button>
-</div>
+{
+  showActions && (
+    <div class="sd-page-actions">
+      <a href={markdownPath}>View page as Markdown</a>
+      <button type="button" data-sd-copy-md data-markdown-path={markdownPath}>
+        Copy page as Markdown
+      </button>
+    </div>
+  )
+}
 
 <style>
   .sd-page-actions {
