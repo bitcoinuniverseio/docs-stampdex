@@ -126,7 +126,9 @@ for (const spec of PAGES) {
         fullPage: !spec.openMenu,
         animations: 'disabled',
       });
-      test.info().annotate('NEW BASELINE', `written for ${spec.name}; review and commit tests/visual-baselines`);
+      console.log(
+        `[visual] NEW BASELINE written for ${spec.name}: ${baseline}. Review and commit tests/visual-baselines.`,
+      );
       return;
     }
 
