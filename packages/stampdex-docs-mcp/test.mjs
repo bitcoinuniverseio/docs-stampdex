@@ -25,7 +25,11 @@ function callTool(payload) {
     timeout: 30000,
     env: { ...process.env, DOCSDIR: DOCS },
   });
-  const lines = proc.stdout.split('\n').filter((l) => l.trim());
+  if (proc.error) throw proc.error;
+  const lines = (proc.stdout ?? '').split('\n').filter((l) => l.trim());
+  if (lines.length === 0) {
+    throw new Error(`MCP server produced no output. Status: ${proc.status}, Stderr: ${proc.stderr}`);
+  }
   return JSON.parse(lines.at(-1));
 }
 
