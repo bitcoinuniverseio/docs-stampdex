@@ -15,6 +15,8 @@ lifecycle: stable
 releaseStatus: live
 lastReviewedBy: docs-stampdex maintainers
 
+---
+
 ## 2026-09-02
 
 The documentation experience release. The facts did not change; everything around
@@ -46,8 +48,6 @@ them did.
 - Release truth: the header compares production against the commit these pages
   describe, pull request previews publish isolated and noindexed, and high-risk
   pages past their review window now fail the build instead of passing quietly.
----
-
 Dates are the dates the change was verified against the product, not the dates it was
 written.
 
