@@ -4,6 +4,15 @@ description: "The StampDEX API request limits, which routes are limited more tig
 source:
   path: throttler configuration and per-route throttle decorators
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [src20, stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
 ---
 
 ## The default

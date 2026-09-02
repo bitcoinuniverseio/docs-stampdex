@@ -6,6 +6,15 @@ sidebar:
 source:
   path: product scope, legal/custodyClaims, terms of service copy
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
 ---
 
 StampDEX is a marketplace and explorer for two Bitcoin protocols, at

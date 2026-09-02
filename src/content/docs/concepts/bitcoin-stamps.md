@@ -4,6 +4,15 @@ description: "What a Bitcoin Stamp is, how it is issued as a Counterparty asset,
 source:
   path: stamps module, stamp trading service, Counterparty compose routes
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
 ---
 
 Bitcoin Stamps store artwork bytes inside Bitcoin transactions. The image does not sit

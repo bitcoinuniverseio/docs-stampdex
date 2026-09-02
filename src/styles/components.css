@@ -516,6 +516,102 @@
   font-weight: 680;
 }
 
+/* Interactive explainers: the shared explorer frame. Selection inside an
+ * explorer is radio-based, so it works with JavaScript disabled. */
+
+.sd-explorer-box {
+  border: 1px solid var(--sd-rule);
+  border-radius: var(--sd-r-md);
+  background: var(--sd-panel);
+  padding: 0.9rem;
+  margin: 1.4rem 0;
+  box-shadow: var(--sd-shadow-1);
+}
+
+.sd-explorer-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  border: 0;
+  padding: 0 0 0.7rem;
+  margin: 0;
+}
+
+.sd-explorer-picker legend {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--sd-muted);
+  font-weight: 660;
+  padding: 0;
+  margin-bottom: 0.4rem;
+}
+
+.sd-explorer-choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 1px solid var(--sd-rule-strong);
+  border-radius: 999px;
+  padding: 0.22rem 0.7rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.sd-explorer-choice:hover {
+  border-color: var(--sd-muted);
+}
+
+.sd-explorer-choice input {
+  accent-color: var(--sd-brand-text);
+  margin: 0;
+}
+
+:root[data-theme='dark'] .sd-explorer-choice input {
+  accent-color: var(--sd-brand-accent);
+}
+
+.sd-explorer-panel {
+  display: none;
+  border-top: 1px solid var(--sd-rule);
+  padding-top: 0.7rem;
+}
+
+.sd-explorer-panel h4 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+
+.sd-facts {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+}
+
+.sd-facts > div {
+  display: grid;
+  grid-template-columns: minmax(9rem, 11rem) 1fr;
+  gap: 0.6rem;
+}
+
+.sd-facts dt {
+  color: var(--sd-muted);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 640;
+  padding-top: 0.1rem;
+}
+
+.sd-facts dd {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.sd-facts .sd-chip {
+  margin: 0.1rem 0.2rem 0.1rem 0;
+}
+
 /* Hero perforation strip (decorative, aria-hidden where used). */
 .sd-perf {
   display: block;

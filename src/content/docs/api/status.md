@@ -4,6 +4,15 @@ description: "The StampDEX health, version, index freshness, and per-transaction
 source:
   path: health controller, version controller, indexer truth service
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [src20, stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
 ---
 
 These endpoints exist so you never have to take a claim about StampDEX on trust.

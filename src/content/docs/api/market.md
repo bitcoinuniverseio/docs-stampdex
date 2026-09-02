@@ -4,6 +4,15 @@ description: "SRC-20 market data from the StampDEX API: token lists, price histo
 source:
   path: market controller and market aggregation util
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [src20, stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
 ---
 
 Base path: `/api/v1/market`.
