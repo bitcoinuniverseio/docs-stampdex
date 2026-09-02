@@ -18,7 +18,10 @@ import { fileURLToPath } from 'node:url';
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = join(ROOT, 'dist');
 const BASE = '/docs-stampdex';
-const PORT = 4173;
+// Port 0 lets the OS assign a free port: warm self-hosted runners can run
+// more than one of these suites at once, so a fixed port would collide.
+const PORT = 0;
+let boundPort;
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -50,7 +53,12 @@ function serve() {
     res.writeHead(200, { 'content-type': TYPES[extname(file)] ?? 'application/octet-stream' });
     res.end(readFileSync(file));
   });
-  return new Promise((done) => server.listen(PORT, () => done(server)));
+  return new Promise((done) => {
+    server.listen(PORT, () => {
+      boundPort = server.address().port;
+      done(server);
+    });
+  });
 }
 
 let server;
@@ -58,7 +66,7 @@ test.beforeAll(async () => {
   server = await serve();
 });
 test.afterAll(async () => {
-  await new Promise((done) => server.close(done));
+  if (server) await new Promise((done) => server.close(done));
 });
 
 test.use({ colorScheme: 'dark' });
@@ -105,7 +113,7 @@ const PAGES = [
 for (const spec of PAGES) {
   test(`visual: ${spec.name}`, async ({ page }) => {
     await page.setViewportSize(spec.viewport);
-    await page.goto(`http://localhost:${PORT}${spec.path}`, { waitUntil: 'networkidle' });
+    await page.goto(`http://localhost:${boundPort}${spec.path}`, { waitUntil: 'networkidle' });
     await page.evaluate((theme) => {
       document.documentElement.dataset.theme = theme;
       localStorage.setItem('starlight-theme', theme);
