@@ -1,0 +1,84 @@
+---
+import { getEntry } from 'astro:content';
+
+/**
+ * The newest changelog entry, read from the changelog page itself at build
+ * time so the homepage cannot drift from it.
+ */
+const changelog = await getEntry('docs', 'project/changelog');
+const raw = changelog?.body ?? '';
+
+// The changelog is organised as `## date` sections, newest first. Take the
+// first heading and the first paragraph or list line under it.
+const sections = raw.split(/^## /m).slice(1);
+const first = (sections[0] ?? '').trim();
+const heading = first.split('\n')[0].trim();
+const bodyLines = first
+  .split('\n')
+  .slice(1)
+  .map((line) => line.trim())
+  .filter(Boolean);
+const summaryLine =
+  bodyLines.find((line) => !line.startsWith('#')) ?? 'See the changelog for details.';
+const summary = summaryLine.length > 240 ? `${summaryLine.slice(0, 237)}...` : summaryLine;
+
+const entries = [
+  { date: heading, summary },
+  ...(sections[1]
+    ? [
+        {
+          date: (sections[1] ?? '').trim().split('\n')[0].trim(),
+          summary: 'Previous entry, with the corrections it recorded.',
+        },
+      ]
+    : []),
+];
+---
+
+<ul class="sd-changes">
+  {
+    entries.map((entry) => (
+      <li>
+        <h3>
+          <a href="/docs-stampdex/project/changelog/">{entry.date}</a>
+        </h3>
+        <p>{entry.summary}</p>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .sd-changes {
+    list-style: none;
+    margin: 1.2rem 0;
+    padding: 0;
+    display: grid;
+    gap: 0.7rem;
+  }
+  .sd-changes li {
+    border: 1px solid var(--sd-rule);
+    border-radius: var(--sd-r-md);
+    background: var(--sd-panel);
+    padding: 0.8rem 0.95rem;
+    box-shadow: var(--sd-shadow-1);
+  }
+  .sd-changes h3 {
+    margin: 0 0 0.25rem;
+    font-size: 0.95rem;
+    font-family: var(--sd-mono);
+  }
+  .sd-changes h3 a {
+    color: var(--sd-info);
+    text-decoration: none;
+  }
+  .sd-changes h3 a:hover {
+    text-decoration: underline;
+  }
+  .sd-changes p {
+    margin: 0;
+    font-size: 0.86rem;
+    color: var(--sd-muted);
+    line-height: 1.5;
+  }
+</style>

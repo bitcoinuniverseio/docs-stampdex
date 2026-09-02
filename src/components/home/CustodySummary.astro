@@ -1,0 +1,86 @@
+---
+import Legend from '../Legend.astro';
+
+/**
+ * The custody summary on the homepage: the four colours and one sentence per
+ * stage, static in the HTML. Wording follows concepts/custody, which is the
+ * page of record for every claim here.
+ */
+const stages = [
+  {
+    name: 'The listing',
+    body: 'Before anyone pays, the seller\u2019s tokens are already in escrow and cannot be spent elsewhere.',
+  },
+  {
+    name: 'You sign',
+    body: 'Your BTC goes to the listing\u2019s escrow address. StampDEX controls that address for the length of this one trade.',
+  },
+  {
+    name: 'Settlement confirms',
+    body: 'The token transfer is broadcast and waits for two confirmations. Your BTC stays in escrow until it does.',
+  },
+  {
+    name: 'The seller is paid',
+    body: 'Escrow releases the BTC to the seller, minus the service fee. Neither side ever held both sides of the trade.',
+  },
+];
+---
+
+<Legend />
+
+<ol class="sd-custody-stages">
+  {
+    stages.map((s) => (
+      <li>
+        <h3>{s.name}</h3>
+        <p>{s.body}</p>
+      </li>
+    ))
+  }
+</ol>
+
+<p>
+  The stage-by-stage ledger, including what happens when a trade fails, is in
+  <a href="/docs-stampdex/concepts/custody/">Where your funds are</a>.
+</p>
+
+<style>
+  .sd-custody-stages {
+    list-style: none;
+    margin: 1.2rem 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 0.8rem;
+    counter-reset: stage;
+  }
+  .sd-custody-stages li {
+    counter-increment: stage;
+    border: 1px solid var(--sd-rule);
+    border-radius: var(--sd-r-md);
+    background: var(--sd-panel);
+    padding: 0.85rem 0.95rem;
+    box-shadow: var(--sd-shadow-1);
+    position: relative;
+  }
+  .sd-custody-stages li::before {
+    content: counter(stage, decimal-leading-zero);
+    font-family: var(--sd-mono);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--sd-muted);
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+  .sd-custody-stages h3 {
+    margin: 0 0 0.25rem;
+    font-size: 0.95rem;
+  }
+  .sd-custody-stages p {
+    margin: 0;
+    font-size: 0.84rem;
+    color: var(--sd-muted);
+    line-height: 1.5;
+  }
+</style>
