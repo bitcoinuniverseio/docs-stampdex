@@ -1,0 +1,67 @@
+---
+import { getCapture, bestVariant } from '../../lib/screens';
+
+/** A grid of captures with their captions and a link to the guide that
+ * explains each screen. Used by the Visual Product Atlas and by long
+ * multi-screenshot pages. */
+interface Props {
+  ids: string[];
+}
+
+const { ids } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const shots = ids.map((id) => {
+  const capture = getCapture(id);
+  const best = bestVariant(capture);
+  return { capture, src: `${base}/${best.file}`, width: best.width };
+});
+---
+
+<ul class="sd-atlas">
+  {
+    shots.map(({ capture, src, width }) => (
+      <li>
+        <img
+          src={src}
+          width={width}
+          height={Math.round((width * capture.viewport.height) / capture.viewport.width)}
+          alt={capture.alt}
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="sd-atlas-body">
+          <h3>{capture.id.replaceAll('-', ' ')}</h3>
+          <p>{capture.caption}</p>
+          {capture.guideLink && (
+            <p>
+              <a href={capture.guideLink}>The guide that explains this screen</a>
+            </p>
+          )}
+          <p class="sd-shot-meta">
+            {capture.source === 'controlled-fixture'
+              ? 'Controlled recorded state'
+              : 'Production'}
+            {' · '}
+            {capture.capturedAt.slice(0, 10)} · {capture.theme} {capture.viewport.name}
+          </p>
+        </div>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .sd-atlas h3 {
+    text-transform: capitalize;
+  }
+  .sd-atlas a {
+    color: var(--sd-info);
+  }
+  .sd-shot-meta {
+    display: block;
+    margin-top: 0.25rem;
+    font-family: var(--sd-mono);
+    font-size: 0.68rem;
+    color: var(--sd-muted);
+  }
+</style>

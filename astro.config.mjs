@@ -175,6 +175,7 @@ export default defineConfig({
           items: [
             { label: 'Changelog', slug: 'project/changelog' },
             { label: 'Release evidence', slug: 'project/release-evidence' },
+            { label: 'Visual product atlas', link: '/product-atlas/' },
             { label: 'Page freshness', slug: 'project/page-freshness' },
             { label: 'Contributing', slug: 'project/contributing' },
           ],
