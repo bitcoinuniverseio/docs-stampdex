@@ -97,7 +97,7 @@ for (const file of files) {
 }
 
 // The wallet capability table.
-const walletsPage = join(ROOT, 'src', 'content', 'docs', 'reference', 'wallets.md');
+const walletsPage = join(ROOT, 'src', 'content', 'docs', 'reference', 'wallets.mdx');
 if (!existsSync(walletsPage)) {
   findings.push('src/content/docs/reference/wallets.md is missing');
 } else {
