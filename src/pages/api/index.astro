@@ -1,0 +1,81 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+
+/** The API hub landing page: every developer path in one place. */
+const entries = [
+  {
+    name: 'Quick start',
+    href: '/docs-stampdex/api/quickstart/',
+    body: 'From zero to a verified public read, with copyable commands.',
+  },
+  {
+    name: 'Interactive reference',
+    href: '/docs-stampdex/api/reference/',
+    body: 'Every public operation, generated from the application source, with an OpenAPI 3.1 download.',
+  },
+  {
+    name: 'Rate limits',
+    href: '/docs-stampdex/api/rate-limits/',
+    body: 'What the limits are and how to stay under them.',
+  },
+  {
+    name: 'Status and version',
+    href: '/docs-stampdex/api/status/',
+    body: 'Which commit is serving you, and how fresh the index is.',
+  },
+  {
+    name: 'Worked examples',
+    href: '/docs-stampdex/api/examples/',
+    body: 'Multi-step reads put together, from token identity to order state.',
+  },
+  {
+    name: 'OpenAPI download',
+    href: '/docs-stampdex/api/downloads/openapi.json',
+    body: 'The same document the reference renders, for your own tooling.',
+  },
+];
+---
+
+<StarlightPage
+  frontmatter={{
+    title: 'API hub',
+    description: 'The StampDEX public read API: quick start, interactive reference, OpenAPI download, rate limits, and the freshness contract, all from one place.',
+  }}
+>
+  <p class="sd-api-lede">
+    The data the site reads is public: no key, no account, no tracking. Start
+    with the quick start, keep the reference open, and treat the version
+    endpoint as the ground truth for which build you are talking to.
+  </p>
+
+  <ul class="sd-cards sd-hub">
+    {
+      entries.map((entry) => (
+        <li class="sd-card">
+          <h3>
+            <a href={entry.href}>{entry.name}</a>
+          </h3>
+          <p>{entry.body}</p>
+        </li>
+      ))
+    }
+  </ul>
+
+  <p class="sd-footnote">
+    Machine discovery: the catalog lives at{' '}
+    <code>/docs-stampdex/.well-known/api-catalog</code>, and the reference
+    advertises the OpenAPI document on every page.
+  </p>
+</StarlightPage>
+
+<style>
+  .sd-api-lede {
+    font-size: 1rem;
+    color: var(--sd-muted);
+    max-width: 46rem;
+    line-height: 1.65;
+  }
+  .sd-hub a {
+    color: var(--sd-info);
+  }
+</style>

@@ -15,7 +15,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/emit-catalog.mjs",
     "preview": "astro preview",
     "check:runners": "node scripts/check-runners.mjs",
     "check:copy": "node scripts/check-docs.mjs",
@@ -35,11 +35,13 @@
     "check:visual": "playwright test --config playwright.config.mjs",
     "visual:update": "playwright test --config playwright.config.mjs --update-snapshots",
     "check:content": "node scripts/check-content.mjs",
-    "gen:truth": "node scripts/gen-truth.mjs"
+    "gen:truth": "node scripts/gen-truth.mjs",
+    "gen:openapi": "node scripts/gen-openapi.mjs"
   },
   "devDependencies": {
     "@astrojs/starlight": "0.41.11",
     "@playwright/test": "1.62.1",
+    "@scalar/api-reference": "1.67.0",
     "ajv": "8.20.0",
     "ajv-formats": "3.0.1",
     "astro": "7.2.10",
