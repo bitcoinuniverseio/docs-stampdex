@@ -8,10 +8,15 @@ import { getCollection } from 'astro:content';
  */
 export async function getStaticPaths() {
   const pages = await getCollection('docs');
-  return pages.map((page) => ({
-    params: { page: page.id === 'index' ? 'index' : page.id },
-    props: { page },
-  }));
+  return pages.map((page) => {
+    let slug = page.id;
+    if (slug === '' || slug === 'index') slug = 'index';
+    else if (slug === 'zh-cn') slug = 'zh-cn/index';
+    return {
+      params: { page: slug },
+      props: { page },
+    };
+  });
 }
 
 export function GET({ props }) {
