@@ -1,0 +1,80 @@
+name: PR preview
+
+# Isolated, no-indexed previews for same-repository pull requests. Fork PRs
+# never reach this workflow, and production credentials do not exist here:
+# the preview publishes static files with the workflow token and nothing else.
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, closed]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pr-preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  route:
+    uses: ./.github/workflows/route.yml
+    secrets: inherit
+    with:
+      plan: '{"check":"light"}'
+      config_ref: 1dd19289af21f4f6be01f874390a180b3af8bb38
+
+  preview:
+    needs: route
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ${{ fromJSON(needs.route.outputs.targets).check }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        if: github.event.action != 'closed'
+      - uses: bitcoinuniverseio/universe-ci-actions/universe-node-env@8e24bc760556caa5ec8c7c497baaad2e9adcc912
+        if: github.event.action != 'closed'
+
+      - name: Install
+        if: github.event.action != 'closed'
+        run: npm ci
+
+      - name: Build
+        if: github.event.action != 'closed'
+        run: npm run build
+
+      - name: Mark the preview noindex and banner it
+        if: github.event.action != 'closed'
+        run: |
+          for f in $(find dist -name '*.html'); do
+            sed -i 's|</title>|</title><meta name="robots" content="noindex">|' "$f"
+            sed -i 's|<body|<body data-pr-preview="true"|' "$f"
+          done
+          cat > dist/preview.html <<HTML
+          <!doctype html><meta charset="utf-8"><title>Preview ${GITHUB_REF_NAME}</title>
+          <p style="font:700 16px sans-serif;padding:1rem;background:#2e2110;color:#f5ce8f">
+            Pull request preview ${GITHUB_REF_NAME}. Not production. <a href="/docs-stampdex/">Back to production</a>.
+          </p>
+          HTML
+
+      - name: Publish or remove the preview directory
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin gh-pages
+          workdir="${RUNNER_TEMP}/preview-pages"
+          git worktree add -B gh-pages "$workdir" origin/gh-pages
+          target="$workdir/previews/pr-${{ github.event.pull_request.number }}"
+          if [ "${{ github.event.action }}" = "closed" ]; then
+            rm -rf "$target"
+          else
+            mkdir -p "$(dirname "$target")"
+            rm -rf "$target"
+            cp -a dist "$target"
+          fi
+          git -C "$workdir" add -A
+          if git -C "$workdir" diff --cached --quiet; then
+            echo "Nothing changed."
+            exit 0
+          fi
+          git -C "$workdir" commit -q -m "Preview ${GITHUB_REF_NAME} of ${GITHUB_SHA}"
+          git -C "$workdir" push -q origin gh-pages
