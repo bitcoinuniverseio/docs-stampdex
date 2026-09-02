@@ -4,12 +4,27 @@ description: Every fee StampDEX charges, who pays it, how the network fee is est
 source:
   path: src20 marketplace service fee constants, src20 PSBT service, mempool fee normalisation
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [src20, stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
+
 ---
+
+import FeeExplorer from '../../../components/explainers/FeeExplorer.astro';
+
 
 Every fee is stated before you sign. There are no hidden fees. There is one fee that
 surprises people, and it is in the second table.
 
 ## SRC-20 marketplace trades
+
+<FeeExplorer />
 
 | Fee | Amount | Who pays |
 | --- | --- | --- |

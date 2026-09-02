@@ -23,7 +23,7 @@
     "check:links": "node scripts/check-links.mjs",
     "make:og": "node scripts/make-og.mjs",
     "make:screens": "node scripts/make-screens.mjs",
-    "test": "npm run check:runners && npm run check:copy && npm run check:contrast && npm run check:manifest",
+    "test": "npm run check:runners && npm run check:copy && npm run check:contrast && npm run check:manifest && npm run check:content",
     "check:contrast": "node scripts/check-contrast.mjs",
     "check:metadata": "node scripts/check-metadata.mjs",
     "check:site": "npm run check:links && npm run check:metadata && npm run check:overflow",
@@ -33,7 +33,9 @@
     "make:responsive-screens": "node scripts/make-responsive-screens.mjs",
     "check:screens": "node scripts/check-screens.mjs",
     "check:visual": "playwright test --config playwright.config.mjs",
-    "visual:update": "playwright test --config playwright.config.mjs --update-snapshots"
+    "visual:update": "playwright test --config playwright.config.mjs --update-snapshots",
+    "check:content": "node scripts/check-content.mjs",
+    "gen:truth": "node scripts/gen-truth.mjs"
   },
   "devDependencies": {
     "@astrojs/starlight": "0.41.11",

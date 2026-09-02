@@ -4,7 +4,20 @@ description: Which wallets work with StampDEX, exactly which actions each one ca
 source:
   path: frontend wallet capabilities table, wallet adapters
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [src20, stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
+
 ---
+
+import WalletExplorer from '../../../components/explainers/WalletExplorer.astro';
+
 
 import ProductShot from '../../../components/screens/ProductShot.astro';
 
@@ -27,6 +40,8 @@ Connect from the wallet button in the header. StampDEX sees your address and ask
 wallet to sign when you act. It never sees your keys.
 
 ## What each wallet can do here
+
+<WalletExplorer />
 
 Connecting a wallet is not the same as being able to do everything with it. This table
 comes from the code that talks to each wallet, so it says what StampDEX actually does

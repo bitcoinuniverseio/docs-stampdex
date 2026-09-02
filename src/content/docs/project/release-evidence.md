@@ -6,6 +6,15 @@ source:
   path: release registry and verifier, GET /api/version
   release: snapshot recorded 2026-08-31
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [src20, stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
 ---
 
 This page exists because "it is on the site" and "it has been verified" are different
