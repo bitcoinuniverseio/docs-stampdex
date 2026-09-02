@@ -1,0 +1,662 @@
+{
+  "schema": "stampdex.docs.openapi-snapshot/1",
+  "provenance": {
+    "repository": "bitcoinuniverseio/stampdex",
+    "sourcePath": "backend/openapi/public.json",
+    "sourceRef": "feat/public-openapi-document",
+    "fetchedAt": "2026-09-02T20:03:43.612Z",
+    "generator": "scripts/gen-openapi.mjs"
+  },
+  "spec": {
+    "openapi": "3.1.0",
+    "info": {
+      "title": "StampDEX public API",
+      "version": "generated at commit 5b98a40",
+      "description": "The public, read-only surface of the StampDEX backend, generated from the registered controllers. Admin and operator endpoints are excluded by construction. Values a page cannot prove read as unrecorded or show an explicit source label; they are never faked.",
+      "license": {
+        "name": "License terms are defined by the repository"
+      }
+    },
+    "servers": [
+      {
+        "url": "https://stamp.api.bitcoinuniverse.io",
+        "description": "Production (public)"
+      },
+      {
+        "url": "http://localhost:3002",
+        "description": "Local development"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Health and version",
+        "description": "Process liveness, readiness, and the release identity of the build serving you."
+      },
+      {
+        "name": "SRC-20 market",
+        "description": "The public market data: tokens, deployments, prices, activity, and fees."
+      },
+      {
+        "name": "Indexer truth",
+        "description": "Index freshness and per-transaction truth: what the index saw and when."
+      }
+    ],
+    "paths": {
+      "/api/health": {
+        "get": {
+          "operationId": "get-apiHealth",
+          "tags": [
+            "Health and version"
+          ],
+          "summary": "Async get Health",
+          "description": "Generated from `src/app.controller.ts`. Also reachable as /api/ready, /health, /ready.",
+          "responses": {
+            "200": {
+              "description": "The answer, with a source label for every figure it carries.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "429": {
+              "description": "Rate limited. Retry after the delay named in the response."
+            },
+            "503": {
+              "description": "An upstream source did not answer. The error says which one."
+            },
+            "4XX": {
+              "$ref": "#/components/responses/PublicError"
+            }
+          }
+        }
+      },
+      "/api/version": {
+        "get": {
+          "operationId": "get-apiVersion",
+          "tags": [
+            "Health and version"
+          ],
+          "summary": "Get Version",
+          "description": "Generated from `src/app.controller.ts`. Also reachable as /version.",
+          "responses": {
+            "200": {
+              "description": "The answer, with a source label for every figure it carries.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "429": {
+              "description": "Rate limited. Retry after the delay named in the response."
+            },
+            "503": {
+              "description": "An upstream source did not answer. The error says which one."
+            },
+            "4XX": {
+              "$ref": "#/components/responses/PublicError"
+            }
+          }
+        }
+      },
+      "/api/health/live": {
+        "get": {
+          "operationId": "get-apiHealthLive",
+          "tags": [
+            "Health and version"
+          ],
+          "summary": "Get Live Health",
+          "description": "Generated from `src/app.controller.ts`. Also reachable as /api/live, /live.",
+          "responses": {
+            "200": {
+              "description": "The answer, with a source label for every figure it carries.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "429": {
+              "description": "Rate limited. Retry after the delay named in the response."
+            },
+            "503": {
+              "description": "An upstream source did not answer. The error says which one."
+            },
+            "4XX": {
+              "$ref": "#/components/responses/PublicError"
+            }
+          }
+        }
+      },
+      "/api/health/deep": {
+        "get": {
+          "operationId": "get-apiHealthDeep",
+          "tags": [
+            "Health and version"
+          ],
+          "summary": "Get Deep Health",
+          "description": "Generated from `src/app.controller.ts`.",
+          "responses": {
+            "200": {
+              "description": "The answer, with a source label for every figure it carries.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "429": {
+              "description": "Rate limited. Retry after the delay named in the response."
+            },
+            "503": {
+              "description": "An upstream source did not answer. The error says which one."
+            },
+            "4XX": {
+              "$ref": "#/components/responses/PublicError"
+            }
+          }
+        }
+      },
+      "/api/v1/market/overview": {
+        "get": {
+          "operationId": "get-apiV1MarketOverview",
+          "tags": [
+            "SRC-20 market"
+          ],
+          "summary": "Get Overview",
+          "description": "Generated from `src/market/market.controller.ts`.",
+          "responses": {
+            "200": {
+              "description": "The answer, with a source label for every figure it carries.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "429": {
+              "description": "Rate limited. Retry after the delay named in the response."
+            },
+            "503": {
+              "description": "An upstream source did not answer. The error says which one."
+            },
+            "4XX": {
+              "$ref": "#/components/responses/PublicError"
+            }
+          }
+        }
+      },
+      "/api/v1/market/tokens/priced": {
+        "get": {
+          "operationId": "get-apiV1MarketTokensPriced",
+          "tags": [
+            "SRC-20 market"
+          ],
+          "summary": "Get Priced Tokens",
+          "description": "Generated from `src/market/market.controller.ts`.",
+          "responses": {
+            "200": {
+              "description": "The answer, with a source label for every figure it carries.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "429": {
+              "description": "Rate limited. Retry after the delay named in the response."
+            },
+            "503": {
+              "description": "An upstream source did not answer. The error says which one."
+            },
+            "4XX": {
+              "$ref": "#/components/responses/PublicError"
+            }
+          }
+        }
+      },
+      "/api/v1/market/tokens": {
+        "get": {
+          "operationId": "get-apiV1MarketTokens",
+          "tags": [
+            "SRC-20 market"
+          ],
+          "summary": "Get Tokens",
+          "description": "Generated from `src/market/market.controller.ts`.",
+          "responses": {
+            "200": {
+              "description": "The answer, with a source label for every figure it carries.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "429": {
+              "description": "Rate limited. Retry after the delay named in the response."
+            },
+            "503": {
+              "description": "An upstream source did not answer. The error says which one."
+            },
+            "4XX": {
+              "$ref": "#/components/responses/PublicError"
+            }
+          }
+        }
+      },
+      "/api/v1/market/tokens/prices": {
+        "post": {
+          "operationId": "post-apiV1MarketTokensPrices",
+          "tags": [
+            "SRC-20 market"
+          ],
+          "summary": "Get Token Price Snapshots",
+          "description": "Generated from `src/market/market.controller.ts`.",
+          "responses": {
+            "200": {
+              "description": "The answer, with a source label for every figure it carries.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "429": {
+              "description": "Rate limited. Retry after the delay named in the response."
+            },
+            "503": {
+              "description": "An upstream source did not answer. The error says which one."
+            },
+            "4XX": {
+              "$ref": "#/components/responses/PublicError"
+            }
+          }
+        }
+      },
+      "/api/v1/market/deployments/{tick}": {
+        "get": {
+          "operationId": "get-apiV1MarketDeploymentsByTick",
+          "tags": [
+            "SRC-20 market"
+          ],
+          "summary": "Get Deployments",
+          "description": "Generated from `src/market/market.controller.ts`.",
+          "responses": {
+            "200": {
+              "description": "The answer, with a source label for every figure it carries.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "429": {
+              "description": "Rate limited. Retry after the delay named in the response."
+            },
+            "503": {
+              "description": "An upstream source did not answer. The error says which one."
+            },
+            "4XX": {
+              "$ref": "#/components/responses/PublicError"
+            }
+          }
+        }
+      },
+      "/api/v1/market/deployments/tx/{deployTx}": {
+        "get": {
+          "operationId": "get-apiV1MarketDeploymentsTxByDeployTx",
+          "tags": [
+            "SRC-20 market"
+          ],
+          "summary": "Get Deployment By Tx",
+          "description": "Generated from `src/market/market.controller.ts`.",
+          "responses": {
+            "200": {
+              "description": "The answer, with a source label for every figure it carries.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "429": {
+              "description": "Rate limited. Retry after the delay named in the response."
+            },
+            "503": {
+              "description": "An upstream source did not answer. The error says which one."
+            },
+            "4XX": {
+              "$ref": "#/components/responses/PublicError"
+            }
+          }
+        }
+      },
+      "/api/v1/market/tokens/{tick}/prices": {
+        "get": {
+          "operationId": "get-apiV1MarketTokensByTickPrices",
+          "tags": [
+            "SRC-20 market"
+          ],
+          "summary": "Get Price History",
+          "description": "Generated from `src/market/market.controller.ts`.",
+          "responses": {
+            "200": {
+              "description": "The answer, with a source label for every figure it carries.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "429": {
+              "description": "Rate limited. Retry after the delay named in the response."
+            },
+            "503": {
+              "description": "An upstream source did not answer. The error says which one."
+            },
+            "4XX": {
+              "$ref": "#/components/responses/PublicError"
+            }
+          }
+        }
+      },
+      "/api/v1/market/tokens/{tick}/context": {
+        "get": {
+          "operationId": "get-apiV1MarketTokensByTickContext",
+          "tags": [
+            "SRC-20 market"
+          ],
+          "summary": "Get Token Context",
+          "description": "Generated from `src/market/market.controller.ts`.",
+          "responses": {
+            "200": {
+              "description": "The answer, with a source label for every figure it carries.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "429": {
+              "description": "Rate limited. Retry after the delay named in the response."
+            },
+            "503": {
+              "description": "An upstream source did not answer. The error says which one."
+            },
+            "4XX": {
+              "$ref": "#/components/responses/PublicError"
+            }
+          }
+        }
+      },
+      "/api/v1/market/tokens/{tick}/activity": {
+        "get": {
+          "operationId": "get-apiV1MarketTokensByTickActivity",
+          "tags": [
+            "SRC-20 market"
+          ],
+          "summary": "Get Token Activity",
+          "description": "Generated from `src/market/market.controller.ts`.",
+          "responses": {
+            "200": {
+              "description": "The answer, with a source label for every figure it carries.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "429": {
+              "description": "Rate limited. Retry after the delay named in the response."
+            },
+            "503": {
+              "description": "An upstream source did not answer. The error says which one."
+            },
+            "4XX": {
+              "$ref": "#/components/responses/PublicError"
+            }
+          }
+        }
+      },
+      "/api/v1/market/tokens/{tick}/trades": {
+        "get": {
+          "operationId": "get-apiV1MarketTokensByTickTrades",
+          "tags": [
+            "SRC-20 market"
+          ],
+          "summary": "Get Token Trades",
+          "description": "Generated from `src/market/market.controller.ts`.",
+          "responses": {
+            "200": {
+              "description": "The answer, with a source label for every figure it carries.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "429": {
+              "description": "Rate limited. Retry after the delay named in the response."
+            },
+            "503": {
+              "description": "An upstream source did not answer. The error says which one."
+            },
+            "4XX": {
+              "$ref": "#/components/responses/PublicError"
+            }
+          }
+        }
+      },
+      "/api/v1/market/tokens/{tick}": {
+        "get": {
+          "operationId": "get-apiV1MarketTokensByTick",
+          "tags": [
+            "SRC-20 market"
+          ],
+          "summary": "Get Token",
+          "description": "Generated from `src/market/market.controller.ts`.",
+          "responses": {
+            "200": {
+              "description": "The answer, with a source label for every figure it carries.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "429": {
+              "description": "Rate limited. Retry after the delay named in the response."
+            },
+            "503": {
+              "description": "An upstream source did not answer. The error says which one."
+            },
+            "4XX": {
+              "$ref": "#/components/responses/PublicError"
+            }
+          }
+        }
+      },
+      "/api/v1/market/fees": {
+        "get": {
+          "operationId": "get-apiV1MarketFees",
+          "tags": [
+            "SRC-20 market"
+          ],
+          "summary": "Get Fees",
+          "description": "Generated from `src/market/market.controller.ts`.",
+          "responses": {
+            "200": {
+              "description": "The answer, with a source label for every figure it carries.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "429": {
+              "description": "Rate limited. Retry after the delay named in the response."
+            },
+            "503": {
+              "description": "An upstream source did not answer. The error says which one."
+            },
+            "4XX": {
+              "$ref": "#/components/responses/PublicError"
+            }
+          }
+        }
+      },
+      "/api/v1/indexer/status": {
+        "get": {
+          "operationId": "get-apiV1IndexerStatus",
+          "tags": [
+            "Indexer truth"
+          ],
+          "summary": "Status",
+          "description": "Generated from `src/indexer-truth/indexer-truth.controller.ts`.",
+          "responses": {
+            "200": {
+              "description": "The answer, with a source label for every figure it carries.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "429": {
+              "description": "Rate limited. Retry after the delay named in the response."
+            },
+            "503": {
+              "description": "An upstream source did not answer. The error says which one."
+            },
+            "4XX": {
+              "$ref": "#/components/responses/PublicError"
+            }
+          }
+        }
+      },
+      "/api/v1/indexer/tx/{txid}": {
+        "get": {
+          "operationId": "get-apiV1IndexerTxByTxid",
+          "tags": [
+            "Indexer truth"
+          ],
+          "summary": "Tx",
+          "description": "Generated from `src/indexer-truth/indexer-truth.controller.ts`.",
+          "responses": {
+            "200": {
+              "description": "The answer, with a source label for every figure it carries.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "429": {
+              "description": "Rate limited. Retry after the delay named in the response."
+            },
+            "503": {
+              "description": "An upstream source did not answer. The error says which one."
+            },
+            "4XX": {
+              "$ref": "#/components/responses/PublicError"
+            }
+          }
+        }
+      },
+      "/api/v1/indexer/orders/{id}": {
+        "get": {
+          "operationId": "get-apiV1IndexerOrdersById",
+          "tags": [
+            "Indexer truth"
+          ],
+          "summary": "Order",
+          "description": "Generated from `src/indexer-truth/indexer-truth.controller.ts`.",
+          "responses": {
+            "200": {
+              "description": "The answer, with a source label for every figure it carries.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "429": {
+              "description": "Rate limited. Retry after the delay named in the response."
+            },
+            "503": {
+              "description": "An upstream source did not answer. The error says which one."
+            },
+            "4XX": {
+              "$ref": "#/components/responses/PublicError"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "responses": {
+        "PublicError": {
+          "description": "The request was rejected. The body names what was wrong.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "statusCode": {
+                    "type": "integer"
+                  },
+                  "message": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "statusCode",
+                  "message"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
