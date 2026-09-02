@@ -1,0 +1,62 @@
+---
+import registry from '../../data/registry.json';
+
+/**
+ * The protocol map, generated from the capability registry so the homepage
+ * cannot drift from the platform record. Actions shown are the ones the
+ * registry records for the StampDEX surface of each protocol.
+ */
+const protocols = Object.values(registry.protocols as Record<string, any>).map((entry) => ({
+  id: entry.id,
+  name: entry.displayName,
+  chain: entry.chain,
+  ownership: entry.ownershipModel,
+  stampdexActions: entry.surfaces.stampdex.actions,
+  mode: entry.marketplace?.mode ?? entry.marketplace?.execution ?? 'external execution',
+  href:
+    entry.id === 'stamps'
+      ? '/docs-stampdex/concepts/bitcoin-stamps/'
+      : '/docs-stampdex/concepts/src20/',
+}));
+---
+
+<div class="sd-scroll">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Protocol</th>
+        <th scope="col">What it is</th>
+        <th scope="col">On StampDEX</th>
+        <th scope="col">Execution</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        protocols.map((p) => (
+          <tr>
+            <th scope="row">
+              <a href={p.href}>{p.name}</a>
+            </th>
+            <td>
+              {p.chain}, {p.ownership} ownership
+            </td>
+            <td>
+              {p.stampdexActions.map((a) => (
+                <span class="sd-chip" data-side="none">
+                  {a}
+                </span>
+              ))}
+            </td>
+            <td>{p.mode}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>
+
+<style>
+  td .sd-chip {
+    margin: 0.1rem 0.15rem 0.1rem 0;
+  }
+</style>

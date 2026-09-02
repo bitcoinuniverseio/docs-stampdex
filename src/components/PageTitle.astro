@@ -1,20 +1,23 @@
 ---
 import Default from '@astrojs/starlight/components/PageTitle.astro';
+import TrustStrip from './TrustStrip.astro';
 
 const route = Astro.locals.starlightRoute;
 const data = route.entry.data as any;
 const source = data.source;
 const id = route.id;
 const file = id === '' || id === 'index' ? 'src/content/docs/index.mdx' : `src/content/docs/${id}.md`;
-const editUrl = `https://github.com/bitcoinuniverseio/docs-stampdex/edit/main/${file}`;
+const editUrl = `https://github.com/bitcoinuniverseio/docs-stampdex/edit/develop/${file}`;
 ---
 
 <Default><slot /></Default>
 
+<TrustStrip source={source} pageId={id} />
+
 {
   source && (
     <details class="sd-source">
-      <summary>Source and verification</summary>
+      <summary>Full source and verification record</summary>
       <dl>
         <dt>Owning repository</dt>
         <dd>{source.repo}</dd>
