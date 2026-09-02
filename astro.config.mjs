@@ -34,6 +34,17 @@ export default defineConfig({
       title: 'StampDEX docs',
       description:
         'How the StampDEX trading venue for Bitcoin Stamps and SRC-20 works: order lifecycle, custody at every step, fees, settlement, and the public read API.',
+      defaultLocale: 'root',
+      locales: {
+        root: {
+          label: 'English',
+          lang: 'en',
+        },
+        'zh-cn': {
+          label: '简体中文',
+          lang: 'zh-CN',
+        },
+      },
       tagline: 'The trading venue for Bitcoin Stamps and SRC-20.',
       favicon: '/favicon.svg',
       customCss: [

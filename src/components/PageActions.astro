@@ -7,8 +7,18 @@
 const route = Astro.locals.starlightRoute;
 const id = route.id;
 // Custom pages built outside the content collection have no Markdown route.
-const CUSTOM_PAGES = new Set(['api', 'api/reference', 'product-atlas', 'agents']);
-const markdownPath = `/docs-stampdex/markdown/${id === '' ? 'index' : id}`;
+const CUSTOM_PAGES = new Set([
+  'api',
+  'api/reference',
+  'product-atlas',
+  'agents',
+  'zh-cn/api',
+  'zh-cn/api/reference',
+  'zh-cn/product-atlas',
+  'zh-cn/agents',
+]);
+const cleanId = id === 'zh-cn' ? 'zh-cn/index' : (id === '' ? 'index' : id);
+const markdownPath = `/docs-stampdex/markdown/${cleanId}`;
 const showActions = !CUSTOM_PAGES.has(id);
 ---
 

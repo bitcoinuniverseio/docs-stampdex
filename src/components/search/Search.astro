@@ -100,6 +100,12 @@ if (project.trailingSlash === 'never') dataAttributes['data-strip-trailing-slash
           <span><kbd>&crarr;</kbd> to select</span>
           <span><kbd>Esc</kbd> to close</span>
         </div>
+        <div class="sd-footer-telemetry">
+          <label class="sd-telemetry-toggle" title="Help improve search relevance (anonymous)">
+            <input type="checkbox" id="sdTelemetryToggle" checked />
+            <span>Search insights</span>
+          </label>
+        </div>
         <div class="sd-footer-links">
           <a href="/docs-stampdex/api/reference/">API Reference</a>
           &middot;
@@ -205,6 +211,41 @@ if (project.trailingSlash === 'never') dataAttributes['data-strip-trailing-slash
     },
   ];
 
+  function scrubSearchQuery(raw: string): string {
+    return raw
+      .replace(/\bbc1[qpzry9x8gf2tvdw0s3jn54khce6mua7l]{20,90}\b/gi, '[ADDR]')
+      .replace(/\b[13][a-km-zA-HJ-NP-Z1-9]{25,34}\b/g, '[ADDR]')
+      .replace(/\b[5KL][1-9A-HJ-NP-Za-km-z]{50,51}\b/g, '[KEY]')
+      .replace(/(?:ghp_[a-zA-Z0-9]{36}|Bearer\s+[a-zA-Z0-9_.~+-]+)/gi, '[TOKEN]');
+  }
+
+  function getDailySessionId(): string {
+    const key = 'sd_search_sess';
+    let sess = sessionStorage.getItem(key);
+    if (!sess) {
+      sess = 'sess_' + Math.random().toString(36).slice(2, 10);
+      sessionStorage.setItem(key, sess);
+    }
+    return sess;
+  }
+
+  async function recordSearchEvent(query: string, resultCount: number, selectedUrl?: string | null) {
+    if (localStorage.getItem('sd_telemetry_optout') === 'true') return;
+    try {
+      await fetch('/api/v1/docs/search-events', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: scrubSearchQuery(query),
+          resultCount,
+          selectedUrl: selectedUrl || null,
+          sessionId: getDailySessionId(),
+          timestamp: new Date().toISOString(),
+        }),
+      });
+    } catch {}
+  }
+
   class SiteSearch extends HTMLElement {
     private pagefind: any = null;
     private activeFilter: string = 'all';
@@ -219,9 +260,24 @@ if (project.trailingSlash === 'never') dataAttributes['data-strip-trailing-slash
       const clearBtn = this.querySelector<HTMLButtonElement>('.sd-search-clear')!;
       const filterChips = this.querySelectorAll<HTMLButtonElement>('.sd-filter-chip');
       const aliasTags = this.querySelectorAll<HTMLButtonElement>('.sd-alias-tag');
+      const telemetryToggle = this.querySelector<HTMLInputElement>('#sdTelemetryToggle');
+
+      if (telemetryToggle) {
+        telemetryToggle.checked = localStorage.getItem('sd_telemetry_optout') !== 'true';
+        telemetryToggle.addEventListener('change', () => {
+          localStorage.setItem('sd_telemetry_optout', telemetryToggle.checked ? 'false' : 'true');
+        });
+      }
 
       const onClick = (event: MouseEvent) => {
         const isLink = (event.target as HTMLElement)?.closest('a');
+        if (isLink) {
+          const href = (isLink as HTMLAnchorElement).getAttribute('href');
+          const currentQuery = searchInput.value.trim();
+          if (currentQuery && href) {
+            recordSearchEvent(currentQuery, 1, href);
+          }
+        }
         if (isLink || (document.body.contains(event.target as Node) && !dialogFrame.contains(event.target as Node))) {
           closeModal();
         }
@@ -382,6 +438,8 @@ if (project.trailingSlash === 'never') dataAttributes['data-strip-trailing-slash
             if (this.activeFilter === 'all') return true;
             return r.url?.includes(`/${this.activeFilter}`);
           });
+
+          recordSearchEvent(query, filtered.length, null);
 
           if (filtered.length === 0) {
             resultsContainer.innerHTML = `
