@@ -1,0 +1,42 @@
+/* Print: keep the words, drop the chrome. */
+
+@media print {
+  header.header,
+  nav.sidebar,
+  .sd-site-footer,
+  .sd-trust,
+  .sd-source,
+  .search-form,
+  starlight-theme-select,
+  starlight-lang-select,
+  .sd-cta,
+  .sd-release-chip,
+  .sd-shot-zoom,
+  .sd-lightbox {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  .sd-ledger,
+  .sd-figure,
+  .sd-shot,
+  .starlight-aside {
+    break-inside: avoid;
+    box-shadow: none;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  .sl-markdown-content a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.75em;
+    color: #444;
+    overflow-wrap: anywhere;
+  }
+}

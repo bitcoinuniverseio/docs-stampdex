@@ -1,0 +1,96 @@
+/* Documentation shell foundation: fonts, the Starlight bridge, and global
+ * chrome rules. Header, footer, and trust strip styling lives scoped inside
+ * the components that render it, under src/components/brand/.
+ */
+
+/* --------------------------------------------------------------- fonts */
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('../assets/fonts/InterVariable.woff2') format('woff2-variations');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../assets/fonts/JetBrainsMono-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../assets/fonts/JetBrainsMono-Bold.woff2') format('woff2');
+}
+
+/* ------------------------------------------------------- Starlight bridge */
+
+/* Chrome (header, sidebar, footer) sits on the dark navigation surface in
+ * both themes, so the reading area is the brightest thing on screen and the
+ * brand band frames it. Content colours stay on the --sd-* tokens. */
+:root {
+  --sl-nav-height: 3.5rem;
+
+  --sl-color-black: var(--sd-nav);
+  --sl-color-white: var(--sd-ink-inverse);  --sl-color-bg: var(--sd-bg);
+  --sl-color-bg-nav: var(--sd-nav);
+  --sl-color-bg-sidebar: var(--sd-nav);
+  --sl-color-bg-accent: var(--sd-inset);
+  --sl-color-hairline: var(--sd-rule);
+  --sl-color-hairline-shade: var(--sd-rule);
+  --sl-color-hairline-light: var(--sd-rule);
+  --sl-color-text: var(--sd-ink);
+  --sl-color-text-accent: var(--sd-brand-accent);
+  --sl-color-text-accent-hover: var(--sd-brand);
+  --sl-color-accent-low: #10243c;
+  --sl-color-accent: #2b5f9e;
+  --sl-color-accent-high: #b9d6f5;
+
+  --sl-color-gray-1: #161b24;
+  --sl-color-gray-2: #1d232e;
+  --sl-color-gray-3: #2a323e;
+  --sl-color-gray-4: #3a4452;
+  --sl-color-gray-5: #4f5b6b;
+  --sl-color-gray-6: #9aa7b8;
+
+  --sl-font-system: var(--sd-sans);
+  --sl-font-mono: var(--sd-mono);
+
+  --sl-shadow-md: var(--sd-shadow-2);
+
+  --sl-content-width: 50rem;
+  --sl-sidebar-width: 18.5rem;
+}
+
+:root[data-theme='light'] {
+  /* Starlight paints headings with --sl-color-white and flips it to dark ink
+   * in the light theme. Follow the same contract with our tokens. */
+  --sl-color-white: var(--sd-ink);
+  --sl-color-text-accent: var(--sd-brand-text);
+  --sl-color-text-accent-hover: var(--sd-brand-text);
+  --sl-color-accent-high: #123b6b;
+}
+
+/* The header and the left sidebar stay on the dark navigation surface in
+ * both themes, so their Starlight text variables keep resolving to light ink
+ * even when the light theme flips them for the reading area. */
+.header,
+.sidebar {
+  --sl-color-white: var(--sd-ink-inverse);
+  --sl-color-text: var(--sd-ink-inverse);
+}
+
+/* Focus is always visible in the shell. */
+.header :focus-visible,
+.sidebar :focus-visible,
+.sd-site-footer :focus-visible,
+.sd-trust :focus-visible {
+  outline: 2px solid var(--sd-focus);
+  outline-offset: 2px;
+}

@@ -1,10 +1,13 @@
-// WCAG 2.2 contrast gate for the palette in src/styles/floor.css.
+// WCAG 2.2 contrast gate for the palette in src/styles/tokens.css.
 //
 // The four semantic colours appear as label text on their own wash inside
-// diagram cells and chips, in both themes. That is the pairing most likely to
-// drift when somebody adjusts a colour, so it is checked here rather than left
-// to a manual audit. Text pairings need 4.5:1; diagram strokes, which carry
-// meaning without carrying words, need 3:1.
+// diagram cells and chips, in both themes. Brand orange appears as text on
+// light and dark surfaces. Status inks appear on panels and on their own
+// washes. Shell text sits on the dark navigation surface in both themes.
+// Those are the pairings most likely to drift when somebody adjusts a
+// colour, so they are checked here rather than left to a manual audit. Text
+// pairings need 4.5:1; strokes and focus rings, which carry meaning without
+// carrying words, need 3:1.
 import { readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 
@@ -12,7 +15,7 @@ const ROOT = resolve(
   dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1')),
   '..',
 );
-const css = readFileSync(join(ROOT, 'src', 'styles', 'floor.css'), 'utf8');
+const css = readFileSync(join(ROOT, 'src', 'styles', 'tokens.css'), 'utf8');
 
 /** The custom properties declared inside one selector block. */
 function tokensIn(selector) {
@@ -54,6 +57,7 @@ const contrast = (a, b) => {
 };
 
 const SIDES = ['bid', 'ask', 'venue', 'chain'];
+const STATUSES = ['ok', 'warn', 'err', 'info'];
 
 const pairs = [];
 for (const [themeName, t] of [
@@ -62,8 +66,44 @@ for (const [themeName, t] of [
 ]) {
   pairs.push(
     [`${themeName}: body text on panel`, t['--sd-ink'], t['--sd-panel'], 4.5],
+    [`${themeName}: body text on canvas`, t['--sd-ink'], t['--sd-bg'], 4.5],
+    [`${themeName}: body text on inset`, t['--sd-ink'], t['--sd-inset'], 4.5],
     [`${themeName}: muted on panel`, t['--sd-muted'], t['--sd-panel'], 4.5],
     [`${themeName}: muted on panel-2`, t['--sd-muted'], t['--sd-panel-2'], 4.5],
+    [`${themeName}: muted on canvas`, t['--sd-muted'], t['--sd-bg'], 4.5],
+    // The navigation surface is dark in both themes.
+    [
+      `${themeName}: shell text on nav`,
+      t['--sd-ink-inverse'],
+      t['--sd-nav'],
+      4.5,
+    ],
+    [
+      `${themeName}: shell muted on nav`,
+      t['--sd-muted-inverse'],
+      t['--sd-nav'],
+      4.5,
+    ],
+    // Brand orange is text on light surfaces, accent on dark surfaces.
+    [
+      `${themeName}: brand text on panel`,
+      t['--sd-brand-text'],
+      t['--sd-panel'],
+      4.5,
+    ],
+    [`${themeName}: brand text on canvas`, t['--sd-brand-text'], t['--sd-bg'], 4.5],
+    [
+      `${themeName}: brand accent on nav`,
+      t['--sd-brand-accent'],
+      t['--sd-nav'],
+      4.5,
+    ],
+    [
+      `${themeName}: focus ring on panel`,
+      t['--sd-focus'],
+      t['--sd-panel'],
+      3,
+    ],
   );
   for (const side of SIDES) {
     pairs.push(
@@ -84,6 +124,22 @@ for (const [themeName, t] of [
         t[`--sd-${side}`],
         t['--sd-panel'],
         3,
+      ],
+    );
+  }
+  for (const status of STATUSES) {
+    pairs.push(
+      [
+        `${themeName}: ${status} ink on panel`,
+        t[`--sd-${status}`],
+        t['--sd-panel'],
+        4.5,
+      ],
+      [
+        `${themeName}: ${status} ink on its wash`,
+        t[`--sd-${status}`],
+        t[`--sd-${status}-wash`],
+        4.5,
       ],
     );
   }

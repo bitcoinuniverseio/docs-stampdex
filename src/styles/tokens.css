@@ -1,0 +1,148 @@
+/* StampDEX documentation design tokens.
+ *
+ * Every colour, shape, and type decision on the site resolves to a token
+ * declared here, in plain hex, so scripts/check-contrast.mjs can hold the
+ * whole palette to WCAG 2.2 AA in both themes.
+ *
+ * Four colours carry transaction meaning, everywhere, without exception:
+ *   --sd-bid   the buyer side, and anything the buyer paid for or received
+ *   --sd-ask   the seller side, and anything the seller listed or received
+ *   --sd-venue held by StampDEX for the duration of one trade
+ *   --sd-chain settled on Bitcoin, final
+ * They are never decoration. Anything else a reader sees is brand or
+ * neutral surface, and never one of these four.
+ */
+
+:root {
+  /* ------------------------------------------------------------- surfaces */
+  --sd-bg: #f6f8fb; /* page canvas, light */
+  --sd-bg-deep: #07090d; /* deepest background: hero band, page footer */
+  --sd-nav: #0b0e13; /* navigation surface, dark in both themes */
+  --sd-panel: #ffffff; /* raised surface, light */
+  --sd-panel-2: #f2f5f8; /* secondary surface, light */
+  --sd-inset: #eef2f6; /* inset surface, light */
+  --sd-code-bg: #0d1117; /* code surface, dark in both themes */
+  --sd-code-ink: #e2e8f1;
+  --sd-code-rule: #2a323e;
+
+  /* ----------------------------------------------------------------- text */
+  --sd-ink: #131820;
+  --sd-muted: #4f5b6b;
+  --sd-ink-inverse: #e2e8f1;
+  --sd-muted-inverse: #9aa7b8;
+
+  /* ---------------------------------------------------------------- rules */
+  --sd-rule: #d3dae3;
+  --sd-rule-strong: #b9c3d0;
+  --sd-grid: rgba(19, 24, 32, 0.08); /* diagram grid lines */
+
+  /* ------------------------------------------- transaction semantics (fixed) */
+  --sd-bid: #0a7278;
+  --sd-bid-ink: #05494e;
+  --sd-bid-wash: #dcf3f4;
+  --sd-ask: #9a5b06;
+  --sd-ask-ink: #6b3f03;
+  --sd-ask-wash: #fbeed8;
+  --sd-venue: #5b4bab;
+  --sd-venue-ink: #3d3183;
+  --sd-venue-wash: #e8e5f8;
+  --sd-chain: #2f6d3a;
+  --sd-chain-ink: #1f4c27;
+  --sd-chain-wash: #dff0e2;
+
+  /* ---------------------------------------------------------------- brand */
+  --sd-brand: #f7931a; /* Bitcoin orange: fills, marks, never body text */
+  --sd-brand-text: #9c3e00; /* accessible orange on light surfaces */
+  --sd-brand-accent: #ffb15c; /* accessible orange on dark surfaces */
+
+  /* --------------------------------------------------------------- status */
+  --sd-ok: #1f5d2f;
+  --sd-ok-wash: #e4f4e8;
+  --sd-warn: #7a4a06;
+  --sd-warn-wash: #fbf0dc;
+  --sd-err: #a02121;
+  --sd-err-wash: #fdecec;
+  --sd-info: #1d4f89;
+  --sd-info-wash: #e3edf8;
+
+  /* ---------------------------------------------------------------- focus */
+  --sd-focus: #2b5f9e;
+
+  /* ----------------------------------------------------------------- type */
+  --sd-sans:
+    'Inter', 'Inter Variable', -apple-system, 'Segoe UI', 'PingFang SC',
+    'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif;
+  --sd-mono:
+    'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, 'Cascadia Mono',
+    'Segoe UI Mono', 'Roboto Mono', Menlo, Consolas, 'Liberation Mono',
+    monospace;
+
+  /* ---------------------------------------------------------------- shape */
+  --sd-r-sm: 7px; /* controls, chips */
+  --sd-r-md: 11px; /* cards, content panels */
+  --sd-r-lg: 16px; /* hero frames, major screenshot frames */
+
+  --sd-shadow-1: 0 1px 2px rgba(7, 9, 13, 0.06);
+  --sd-shadow-2:
+    0 1px 2px rgba(7, 9, 13, 0.05), 0 4px 12px rgba(7, 9, 13, 0.07);
+  --sd-shadow-3:
+    0 1px 2px rgba(7, 9, 13, 0.06), 0 8px 28px rgba(7, 9, 13, 0.12);
+
+  /* ------------------------------------------------------------- measure */
+  --sd-measure: 72ch;
+  --sd-measure-text: 46rem;
+}
+
+:root[data-theme='dark'] {
+  --sd-bg: #07090d;
+  --sd-bg-deep: #050608;
+  --sd-nav: #0b0e13;
+  --sd-panel: #12161d;
+  --sd-panel-2: #0d1117;
+  --sd-inset: #161b24;
+  --sd-code-bg: #0d1117;
+  --sd-code-ink: #e2e8f1;
+  --sd-code-rule: #2a323e;
+
+  --sd-ink: #e2e8f1;
+  --sd-muted: #9aa7b8;
+  --sd-ink-inverse: #f2f5f8;
+  --sd-muted-inverse: #8b98a9;
+
+  --sd-rule: #2a323e;
+  --sd-rule-strong: #3a4452;
+  --sd-grid: rgba(226, 232, 241, 0.09);
+
+  --sd-bid: #4fd6dd;
+  --sd-bid-ink: #a6eff3;
+  --sd-bid-wash: #0b2c2f;
+  --sd-ask: #f0aa4a;
+  --sd-ask-ink: #fbd9a6;
+  --sd-ask-wash: #33230a;
+  --sd-venue: #a99bf5;
+  --sd-venue-ink: #d3ccfb;
+  --sd-venue-wash: #201b3d;
+  --sd-chain: #6fcb80;
+  --sd-chain-ink: #b6e7bf;
+  --sd-chain-wash: #102a16;
+
+  --sd-brand-text: #ffb15c;
+  --sd-brand-accent: #ffb15c;
+
+  --sd-ok: #a4ddb0;
+  --sd-ok-wash: #122716;
+  --sd-warn: #f5ce8f;
+  --sd-warn-wash: #2e2110;
+  --sd-err: #f5a3a3;
+  --sd-err-wash: #2e1414;
+  --sd-info: #a9c9ee;
+  --sd-info-wash: #12233a;
+
+  --sd-focus: #7fb2e8;
+
+  --sd-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --sd-shadow-2:
+    0 1px 2px rgba(0, 0, 0, 0.35), 0 4px 12px rgba(0, 0, 0, 0.45);
+  --sd-shadow-3:
+    0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 28px rgba(0, 0, 0, 0.55);
+}

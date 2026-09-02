@@ -1,0 +1,34 @@
+---
+/** The developer path on the homepage: one real command, one link. */
+const endpoint = 'https://stamp.api.bitcoinuniverse.io/api/version';
+---
+
+<p>
+  The same data the site reads is available as a public JSON API. No key, no
+  account, no tracking. Ask the venue which build is serving you:
+</p>
+
+<div class="sd-scroll">
+  <pre><code>curl -sS {endpoint}</code></pre>
+</div>
+
+<p>
+  The response names the exact application commit behind every number on the
+  site. Continue with the
+  <a href="/docs-stampdex/api/quickstart/">API quick start</a>.
+</p>
+
+<style>
+  pre {
+    border: 1px solid var(--sd-code-rule);
+    border-radius: var(--sd-r-md);
+    background: var(--sd-code-bg);
+    padding: 0.8rem 1rem;
+    overflow-x: auto;
+  }
+  code {
+    font-family: var(--sd-mono);
+    font-size: 0.84rem;
+    color: var(--sd-code-ink);
+  }
+</style>

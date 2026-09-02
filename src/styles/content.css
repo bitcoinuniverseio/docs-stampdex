@@ -1,0 +1,233 @@
+/* Reading surface: prose, headings, links, tables, code, callouts.
+ * The article column keeps a controlled measure and scales type cleanly
+ * from 320 pixels to full desktop.
+ */
+
+html {
+  font-family: var(--sd-sans);
+  scroll-padding-top: calc(var(--sl-nav-height) + 1rem);
+}
+
+body {
+  background: var(--sd-bg);
+  color: var(--sd-ink);
+  font-size: 1rem;
+  line-height: 1.68;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+main {
+  container-type: inline-size;
+}
+
+/* ------------------------------------------------------------- headings */
+
+.sl-markdown-content {
+  max-width: var(--sd-measure);
+}
+
+.sl-markdown-content :is(h1, h2, h3, h4) {
+  font-weight: 680;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+.sl-markdown-content h2 {
+  margin-top: 2.2rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--sd-rule);
+  font-size: 1.34rem;
+}
+
+.sl-markdown-content h3 {
+  margin-top: 1.7rem;
+  font-size: 1.1rem;
+}
+
+.sl-markdown-content p,
+.sl-markdown-content li {
+  text-wrap: pretty;
+}
+
+/* ---------------------------------------------------------------- links */
+
+.sl-markdown-content a {
+  color: var(--sd-info);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
+}
+
+.sl-markdown-content a:hover {
+  color: var(--sd-brand-text);
+}
+
+:root[data-theme='dark'] .sl-markdown-content a {
+  color: #8fbaec;
+}
+
+:root[data-theme='dark'] .sl-markdown-content a:hover {
+  color: var(--sd-brand-accent);
+}
+
+/* ---------------------------------------------------------------- tables */
+
+.sl-markdown-content table {
+  font-size: 0.9rem;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.sl-markdown-content th {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.72rem;
+  color: var(--sd-muted);
+  font-weight: 640;
+  border-bottom: 2px solid var(--sd-rule);
+  text-align: start;
+}
+
+.sl-markdown-content td,
+.sl-markdown-content th {
+  padding: 0.5rem 0.7rem;
+  vertical-align: top;
+}
+
+.sl-markdown-content tbody tr + tr td {
+  border-top: 1px solid var(--sd-rule);
+}
+
+/* Wide tables scroll inside their own box, never the page. */
+.sl-markdown-content .sd-scroll,
+.sl-markdown-content > table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* Numerals that readers compare: prices, sats, heights, hashes. */
+table code,
+table kbd,
+.sd-num,
+.sd-ledger td,
+.sd-ledger th {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1, 'zero' 1;
+}
+
+.sd-num {
+  font-family: var(--sd-mono);
+  white-space: nowrap;
+}
+
+/* A 40 character commit hash has no space, slash, or hyphen, so it can push
+ * a 320 pixel screen sideways. Hashes may wrap anywhere. */
+.sd-ledger code,
+.sl-markdown-content :is(td, th) code {
+  overflow-wrap: anywhere;
+}
+
+/* ------------------------------------------------------------------ code */
+
+.sl-markdown-content code,
+.starlight-aside code,
+.sd-trust code {
+  font-family: var(--sd-mono);
+  font-size: 0.86em;
+}
+
+.sl-markdown-content :not(pre) > code {
+  background: var(--sd-inset);
+  border: 1px solid var(--sd-rule);
+  border-radius: 5px;
+  padding: 0.08em 0.35em;
+}
+
+.sl-markdown-content pre {
+  border: 1px solid var(--sd-code-rule);
+  border-radius: var(--sd-r-md);
+  background: var(--sd-code-bg);
+}
+
+.sl-markdown-content pre code {
+  color: var(--sd-code-ink);
+}
+
+.expressive-code .copy button {
+  border-radius: var(--sd-r-sm);
+}
+
+/* --------------------------------------------------------------- callouts */
+
+/* Starlight asides plus the StampDEX vocabulary. The border colour and the
+ * label carry the meaning; colour is never the only signal. */
+.starlight-aside {
+  border-radius: var(--sd-r-md);
+  border: 1px solid var(--sd-rule);
+  border-inline-start-width: 3px;
+  background: var(--sd-panel-2);
+}
+
+.starlight-aside .starlight-aside-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.72rem;
+  font-weight: 680;
+}
+
+.starlight-aside--note {
+  border-inline-start-color: var(--sd-info);
+}
+
+.starlight-aside--note .starlight-aside-title {
+  color: var(--sd-info);
+}
+
+.starlight-aside--tip {
+  border-inline-start-color: var(--sd-ok);
+}
+
+.starlight-aside--tip .starlight-aside-title {
+  color: var(--sd-ok);
+}
+
+.starlight-aside--caution,
+.starlight-aside--danger {
+  border-inline-start-color: var(--sd-err);
+}
+
+.starlight-aside--caution .starlight-aside-title,
+.starlight-aside--danger .starlight-aside-title {
+  color: var(--sd-err);
+}
+
+/* ----------------------------------------------------------- misc prose */
+
+.sl-markdown-content hr {
+  border: 0;
+  border-top: 1px solid var(--sd-rule);
+}
+
+.sl-markdown-content blockquote {
+  border-inline-start: 3px solid var(--sd-rule-strong);
+  color: var(--sd-muted);
+}
+
+.sd-footnote {
+  font-size: 0.82rem;
+  color: var(--sd-muted);
+}
+
+.sl-markdown-content img {
+  border-radius: var(--sd-r-md);
+}
+
+/* Long heading anchors must not hide under the fixed header. */
+.starlight-anchor {
+  scroll-margin-top: calc(var(--sl-nav-height) + 1rem);
+}
