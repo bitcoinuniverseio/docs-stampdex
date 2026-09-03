@@ -6,7 +6,7 @@ import manifest from '../../screenshots.manifest.json';
 // The build runs from the repository root, and Vite may virtualise module
 // URLs, so resolve the public directory from the working directory.
 const ROOT = process.cwd();
-const WIDTHS = [640, 960, 1400];
+const WIDTHS = [640, 800, 960, 1400];
 
 export interface Capture {
   id: string;
