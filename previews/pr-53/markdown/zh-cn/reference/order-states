@@ -1,0 +1,53 @@
+# 订单状态枚举规格
+
+OrderStatus 完整十状态定义、产生条件、流转方向与前端呈现规范。
+
+> Source: bitcoinuniverseio/stampdex (private application source), OrderStatus enum, orders list filtering, expiry crons. Applicable release continuous deployment, verify with GET /api/version. Last verified 2026-09-01. Chain bitcoin/mainnet.
+
+> [!NOTE]
+> **简体中文官方文档**：供前后端开发者查阅的订单状态机契约规范。 核心交易规则为非托管模式，买卖双方按标准费率收取服务费，并于比特币主网进行原子结算。
+
+
+
+import OrderStateExplorer from '../../../../components/explainers/OrderStateExplorer.astro';
+
+
+The values in the first column are what the API returns in an order's `status` field.
+The friendly names are what the site shows.
+
+<OrderStateExplorer />
+
+## Which states a listing query returns
+
+- With no `status` filter, the open book is returned.
+- `pending` rows are excluded from the public book, so a listing somebody is mid-way
+  through buying does not appear as available inventory.
+- An open row must have its signed listing and its escrow details recorded. An
+  incomplete listing is never shown as inventory.
+- Rows past their expiry are excluded.
+- The public book sorts by unit price ascending, then newest first.
+- Filtering by a wallet address returns that address's orders in `open`,
+  `awaiting_tx3`, `settling_tx3`, `awaiting_tx3_confirmation`, and `filled`, sorted
+  newest first.
+
+## Replacement links
+
+An order created by repricing, splitting, or repairing another carries the link between
+them:
+
+| Field | Meaning |
+| --- | --- |
+| `replacesOrderId` | The order this one was created to replace |
+| `replacedByOrderId` | The order that replaced this one |
+| `replacementGroupId` | The group, when one listing was split into several |
+| `replacementKind` | `price`, `split`, or `repair` |
+
+None of these make a replacement an in-place edit. The old order is cancelled and the
+new one is a new order. See
+[Change a listing price](/docs-stampdex/zh-cn/guides/change-a-listing-price/).
+
+## Related
+
+- [Order lifecycle](/docs-stampdex/zh-cn/concepts/order-lifecycle/)
+- [Where your funds are](/docs-stampdex/zh-cn/concepts/custody/)
+- [Orders endpoints](/docs-stampdex/zh-cn/api/orders/)
