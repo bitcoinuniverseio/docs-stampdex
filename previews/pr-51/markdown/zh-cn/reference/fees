@@ -1,0 +1,114 @@
+# 完整费用费率标准
+
+SRC-20 交易服务费（买卖双方各 1.5%，最低 500 satoshis）与网络矿工费解析。
+
+> Source: bitcoinuniverseio/stampdex (private application source), src20 marketplace 服务费 constants, src20 部分签名的比特币交易 (PSBT) service, mempool fee normalisation. Applicable release continuous deployment, verify with GET /api/version. Last verified 2026-09-01. Chain bitcoin/mainnet.
+
+> [!NOTE]
+> **简体中文官方文档**：完全公开透明的计费公式、收款地址与平台不收取任何隐性费用的保证。 核心交易规则为非托管模式，买卖双方按标准费率收取服务费，并于比特币主网进行原子结算。
+
+
+
+import FeeExplorer from '../../../../components/explainers/FeeExplorer.astro';
+
+
+Every fee is stated before you sign. There are no hidden fees. There is one fee that
+surprises people, and it is in the second table.
+
+## SRC-20 marketplace trades
+
+<FeeExplorer />
+
+| Fee | Amount | Who pays |
+| --- | --- | --- |
+| 服务费 | 1.5% of the trade total, with a 500 sat minimum, **per side** | The buyer pays one, the seller pays one |
+| 网络费用 | Set by the fee rate you choose, in sat/vB | Whoever signs the transaction that pays it |
+
+Both sides pay, so **a trade carries 3% in total**. The seller's side is deducted from
+their payment; the buyer's side is funded by the extra sats the buyer sends. The two
+fees are paid together as a single output in the settlement transaction.
+
+### The minimum dominates on small trades
+
+The 500 sat floor is per side, and the smallest trade StampDEX will list is 2,000 sats.
+
+| Trade total | Buyer fee | Seller fee | Total fee | As a share of the trade |
+| --- | --- | --- | --- | --- |
+| 2,000 sats | 500 | 500 | 1,000 | 50% |
+| 20,000 sats | 500 | 500 | 1,000 | 5% |
+| 33,334 sats | 500 | 500 | 1,000 | 3% |
+| 100,000 sats | 1,500 | 1,500 | 3,000 | 3% |
+| 460,000 sats | 6,900 | 6,900 | 13,800 | 3% |
+
+Above roughly 33,334 sats the percentage takes over and the all-in cost settles at 3%.
+Below it, the floor is what you are paying. This is arithmetic, not a penalty, but it is
+worth knowing before you list something small.
+
+## SRC-20 mint, deploy, and transfer
+
+Every SRC-20 transaction StampDEX builds outside the marketplace, a mint, a deploy, or
+a plain transfer, carries a flat **1,500 sat platform fee**, the same fee the Universe
+Inscribe app charges. It appears as its own output in the transaction your wallet
+shows.
+
+## Bitcoin Stamps
+
+**No StampDEX fee.** A stamp purchase pays the dispenser's asking rate and the Bitcoin
+网络费用. Opening and closing a dispenser pays only the 网络费用.
+
+## Where the 服务费 goes
+
+To a single fixed pay-to-Taproot output:
+
+```
+bc1pl0xdhr5delrk80d6s5h5qa9awsf7qzc45jl8na6ns8vp3e0vv7wqxattxy
+```
+
+It is a constant, not a per-user address, and it is visible on chain in every SRC-20
+settlement and in every deploy, mint, or transfer StampDEX builds. Check it in the
+transaction your wallet shows you. See
+[Review a 部分签名的比特币交易 (PSBT) before signing](/docs-stampdex/zh-cn/guides/psbt-review/).
+
+## Network fees
+
+Bitcoin transactions pay miners by size, not by value.
+
+```bash
+curl https://stamp.api.bitcoinuniverse.io/api/v1/market/fees
+```
+
+You get five tiers: fastest, half hour, hour, economy, and minimum. If any tier is
+missing or is not a number, the whole response is rejected with an error rather than
+served partially.
+
+- The estimate is cached for about 60 seconds.
+- If you do not choose a rate, the half hour tier is used, falling back to 25 sat/vB
+  when no estimate is available.
+- Your chosen rate is applied when you buy, so a seller's listing-time rate is not
+  imposed on you.
+- Nobody can guarantee a confirmation time. The rate buys a position in a queue, not a
+  promise.
+
+## Dust outputs are not fees
+
+An SRC-20 transaction carries several tiny outputs that are protocol structure, not
+charges:
+
+| Output | Value | Goes to |
+| --- | --- | --- |
+| Recipient marker | 330 sats | The buyer, as the output the transfer credits |
+| Data chunk | 330 sats each | The encoded transfer itself |
+| Seller anchor | 548 sats | The seller, returned |
+
+None of them go to StampDEX.
+
+## Browsing is free
+
+Exploring markets, stamps, collections, and the public API costs nothing and needs no
+wallet.
+
+## Related
+
+- [Buy SRC-20](/docs-stampdex/zh-cn/guides/buy-src20/)
+- [Sell SRC-20](/docs-stampdex/zh-cn/guides/sell-src20/)
+- [Review a 部分签名的比特币交易 (PSBT) before signing](/docs-stampdex/zh-cn/guides/psbt-review/)

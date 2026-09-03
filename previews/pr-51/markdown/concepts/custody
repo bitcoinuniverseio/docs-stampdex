@@ -1,0 +1,98 @@
+# Where your funds are
+
+A stage-by-stage custody map of a StampDEX trade, showing where the asset is, where the buyer's payment is, where the seller's proceeds are, and what a pending or failed settlement actually means.
+
+> Source: bitcoinuniverseio/stampdex (private application source), orders module, settlement worker, OrderStatus enum, legal/custodyClaims. Applicable release continuous deployment, verify with GET /api/version. Last verified 2026-09-01. Chain bitcoin/mainnet.
+
+import CustodyExplorer from '../../../components/explainers/CustodyExplorer.astro';
+
+
+import CustodyLedger from '../../../components/CustodyLedger.astro';
+import Legend from '../../../components/Legend.astro';
+
+This is the page to read before you sign anything. A Bitcoin trade is not instant, and
+during the gap your money is somewhere. Somewhere specific, with an address, not
+"in the system".
+
+<Legend />
+
+## SRC-20: your BTC passes through StampDEX
+
+<CustodyExplorer />
+
+An SRC-20 trade uses the three-transaction listing flow. The seller signs the tokens
+into escrow addresses created for that one listing. The buyer pays the exact total to
+that listing's payment address. When the payment confirms and the token balance checks
+out, the settlement worker broadcasts the transfer that delivers the tokens, and the
+seller is paid.
+
+That design means there is a window where your BTC has left your wallet and has not
+reached the seller. StampDEX says so on the buy panel before you sign, not afterwards.
+
+<CustodyLedger variant="src20" />
+
+### Who holds the escrow keys
+
+StampDEX generates the per-listing escrow keys server side and holds them encrypted for
+the length of that trade. They are never sent to a browser. Those escrow addresses are
+the only funds StampDEX ever operates, and they exist for one listing at a time.
+
+Your own wallet keys never leave your wallet. Every transaction that spends from your
+address is a PSBT your wallet displays and signs. See
+[Review a PSBT before signing](/docs-stampdex/guides/psbt-review/).
+
+### What each side risks, plainly
+
+| | The buyer | The seller |
+| --- | --- | --- |
+| Before payment | Nothing committed | Tokens are in escrow and cannot be spent elsewhere |
+| Payment broadcast, not confirmed | BTC is in the listing escrow, tokens not yet received | Tokens still in escrow, no proceeds yet |
+| Settlement broadcast | Tokens are in a Bitcoin transaction | BTC is in escrow, released on confirmation |
+| Filled | Holds the tokens | Holds the proceeds, less the seller fee |
+| Failed | BTC held in escrow, recoverable | Tokens held in escrow, recoverable |
+
+Neither side is ever holding both. That is the point of the escrow: the tokens are
+committed before a buyer is asked for money, and the money is committed before the
+tokens are released.
+
+## Bitcoin Stamps: your BTC never passes through StampDEX
+
+A stamp sale is a Counterparty dispenser. The seller opens a dispenser holding the
+stamp. The buyer sends the asking price to the dispenser address in a Bitcoin
+transaction StampDEX composes and the buyer's wallet signs. When that transaction
+confirms, the dispense and the payment happen together.
+
+<CustodyLedger variant="stamps" />
+
+The registry records this directly: for Bitcoin Stamps, StampDEX has no settle
+authority and no reconcile authority on the marketplace surface. There is nothing to
+settle, because the Bitcoin transaction is the settlement. See
+[What you can and cannot do](/docs-stampdex/capabilities/).
+
+## The sentence that stops the panic
+
+If an SRC-20 order shows **Awaiting transfer**, **Settling**, **Awaiting confirmation**,
+or **Failed**, your BTC is in the listing's escrow address. Not spent, not swept, not
+in a queue. You can open the order page, copy the address and the transaction ids, and
+look at them in any block explorer without asking anybody.
+
+Failed means the payment confirmed but the expected token balance could not be verified
+in time. The order stops there deliberately rather than releasing money against an
+unverified balance. An operator resolves it. See
+[Recovery](/docs-stampdex/concepts/recovery/).
+
+## What StampDEX cannot do to your funds
+
+- It cannot spend from your wallet. It has no key of yours.
+- It cannot change a transaction after your wallet signed it. Change one byte and the
+  signature is void.
+- It cannot move a stamp you own. A stamp only moves when a transaction you signed, or
+  a dispenser you opened, moves it.
+- It cannot make a Bitcoin transaction confirm faster than the fee rate you chose buys.
+
+## Related
+
+- [Order lifecycle](/docs-stampdex/concepts/order-lifecycle/)
+- [Settlement lifecycle](/docs-stampdex/concepts/settlement-lifecycle/)
+- [Recovery](/docs-stampdex/concepts/recovery/)
+- [Safety and trust](/docs-stampdex/safety/)
