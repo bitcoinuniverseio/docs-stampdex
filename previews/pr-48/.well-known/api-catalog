@@ -1,0 +1,19 @@
+{
+  "catalog": "https://spec.openapis.org/api-catalog/v1/schema.json#",
+  "apis": [
+    {
+      "name": "StampDEX public API",
+      "description": "The public, read-only surface of the StampDEX backend, generated from the registered public controllers.",
+      "entrypointUrl": "https://bitcoinuniverseio.github.io/docs-stampdex/api/",
+      "openapi": "https://bitcoinuniverseio.github.io/docs-stampdex/api/downloads/openapi.json",
+      "version": "generated at commit 5b98a40"
+    }
+  ],
+  "documentation": [
+    {
+      "name": "StampDEX documentation",
+      "url": "https://bitcoinuniverseio.github.io/docs-stampdex/",
+      "description": "How a trade is built, where funds sit at every stage, and what the venue can and cannot do."
+    }
+  ]
+}
