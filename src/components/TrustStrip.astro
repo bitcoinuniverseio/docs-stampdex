@@ -131,11 +131,10 @@ const verified = source?.verified ?? 'unknown';
 
 <style>
   .sd-trust {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.3rem 0.4rem;
-    align-items: stretch;
-    margin: 0.4rem 0 1.4rem;
+    display: grid;
+    grid-template-columns: max-content max-content minmax(0, 1fr) max-content;
+    gap: 0;
+    margin: 0.35rem 0 1rem;
     padding: 0;
     border: 1px solid var(--sd-rule);
     border-radius: var(--sd-r-md);
@@ -145,20 +144,22 @@ const verified = source?.verified ?? 'unknown';
   }
   .sd-trust-item {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 0.05rem;
-    padding: 0.38rem 0.7rem;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.42rem 0.65rem;
     min-width: 0;
     max-width: 100%;
-    flex: 0 1 auto;
+  }
+  .sd-trust-item:nth-child(6) {
+    grid-column: span 2;
   }
   .sd-trust-item + .sd-trust-item {
     border-inline-start: 1px solid var(--sd-rule);
   }
   .sd-trust-item dt {
     margin: 0;
-    font-size: 0.6rem;
+    flex: none;
+    font-size: 0.58rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     font-weight: 660;
@@ -166,6 +167,7 @@ const verified = source?.verified ?? 'unknown';
   }
   .sd-trust-item dd {
     margin: 0;
+    min-width: 0;
     font-weight: 580;
     color: var(--sd-ink);
     overflow-wrap: anywhere;
@@ -217,5 +219,14 @@ const verified = source?.verified ?? 'unknown';
   .sd-trust-state[data-state='unknown'] {
     color: var(--sd-muted);
     background: var(--sd-inset);
+  }
+  @media (max-width: 50rem) {
+    .sd-trust {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .sd-trust-item:nth-child(3),
+    .sd-trust-item:nth-child(6) {
+      grid-column: span 2;
+    }
   }
 </style>
