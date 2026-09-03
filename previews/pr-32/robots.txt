@@ -1,5 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://bitcoinuniverseio.github.io/docs-stampdex/sitemap.xml
-Sitemap: https://bitcoinuniverseio.github.io/docs-stampdex/sitemap-index.xml
