@@ -1,0 +1,101 @@
+# 购买 SRC-20 代币指南
+
+从选定价格、连接钱包、审查部分签名的比特币交易 (PSBT) 到完成支付的全流程。
+
+> Source: bitcoinuniverseio/stampdex (private application source), orders module, src20 marketplace service, buy panel. Applicable release continuous deployment, verify with GET /api/version. Last verified 2026-09-01. Chain bitcoin/mainnet.
+
+> [!NOTE]
+> **简体中文官方文档**：step-by-step 引导您安全完成第一次代币购买并确认入账。 核心交易规则为非托管模式，买卖双方按标准费率收取服务费，并于比特币主网进行原子结算。
+
+
+
+import ProductShot from '../../../../components/screens/ProductShot.astro';
+
+**For:** a trader with a supported wallet.
+**Goal:** own an amount of an SRC-20 token, having paid a known total.
+**Chain and network:** Bitcoin mainnet. **Version:** continuous, verify with
+[`GET /api/version`](/docs-stampdex/zh-cn/api/status/).
+
+**Safety:** your BTC leaves your wallet before the tokens arrive, and sits in a
+StampDEX-controlled escrow in between. Read
+[Where your funds are](/docs-stampdex/zh-cn/concepts/custody/) first. It is the single most
+important thing to understand about buying here.
+
+## Prerequisites
+
+- A [supported wallet](/docs-stampdex/zh-cn/reference/wallets/) that can sign a Bitcoin
+  payment here. Universe Wallet and UniSat are the two where buying has been run end to
+  end.
+- Enough BTC for the trade total, the 1.5% buyer 服务费 with its 500 sat minimum,
+  and the 网络费用. See [Fees](/docs-stampdex/zh-cn/reference/fees/).
+- The token's identity, not just its ticker. See
+  [Asset identity](/docs-stampdex/zh-cn/concepts/asset-identity/).
+
+## Steps
+
+1. **Open the token page.** From the market board, or directly at
+   `stampdex.fun/trade/src20/<ticker>/<deploy transaction>`. Confirm the deployment
+   transaction and block match the token you researched.
+2. **Pick a listing.** The book shows real signed listings with amount, unit price in
+   sats per token, and total. Unit price times amount always equals the total.
+3. **Review the trade.** Before your wallet opens, StampDEX shows the token, the
+   amount, the unit price, the total, the 服务费, the 网络费用 rate, and the
+   payment address. The same panel states that your BTC goes to a trade address
+   StampDEX controls and is released to the seller only when the tokens reach you. That
+   line is on the buy panel whether or not you use the review step, so quick trade does
+   not hide it.
+4. **Sign in your wallet.** Your wallet displays the same transaction. Check it against
+   the review panel. See
+   [Review a 部分签名的比特币交易 (PSBT) before signing](/docs-stampdex/zh-cn/guides/psbt-review/). If the numbers
+   differ, refuse and report it.
+5. **Wait.** Your payment confirms, the token balance is verified against the index,
+   and the settlement worker delivers the tokens. The order page names each state and
+   each transaction id.
+
+## Expected result
+
+<ProductShot
+  id="fixture-buy-review"
+  caption="The review panel, reproduced as a controlled recorded state with example numbers. In production the same panel shows your real trade before your wallet opens."
+/>
+
+The order reaches **Filled**. You hold the tokens, the seller holds the total minus
+their 服务费, and the 服务费 appears as its own output in the settlement
+transaction.
+
+## How to verify
+
+- Open your [portfolio](/docs-stampdex/zh-cn/guides/portfolio/) and check the balance.
+- Read the order over the API:
+
+  ```bash
+  curl "https://stamp.api.bitcoinuniverse.io/api/v1/orders/ORDER_ID"
+  ```
+
+- Take the transaction ids from the order page to any block explorer.
+
+## Common failure states
+
+| You see | What happened | What to do |
+| --- | --- | --- |
+| "This item is currently being purchased by another buyer" | Another buyer locked it first | Pick another listing. Your funds never moved |
+| "Purchase session expired" | Your buyer lock passed its 30 minute life | Start again. Nothing moved |
+| "Listing is no longer valid: seller collateral UTXO has been spent" | The seller spent the output backing the listing | The listing is removed automatically. Pick another |
+| "The seller no longer holds ..." | The seller moved the tokens | The listing is removed automatically. Nothing of yours moved |
+| "Could not verify the seller collateral right now" | The index is unreachable. Different from the listing being invalid | Wait a few minutes and retry |
+| The order sits in Awaiting transfer | Bitcoin confirmation times vary with the fee rate | Watch the confirmations. Nothing more is needed from you |
+| The order shows **Failed** | The payment confirmed but the expected token balance was not verified within the grace period | Your BTC is in the listing escrow. See [Recovery](/docs-stampdex/zh-cn/concepts/recovery/) |
+
+## Recovery path
+
+Nothing here needs you to send a second payment. Repeating a payment confirmation with
+the same transaction id is safe: it returns the answer already recorded rather than
+paying twice. A **Failed** order holds your BTC in a named escrow address until an
+operator completes or returns it. See [Recovery](/docs-stampdex/zh-cn/concepts/recovery/).
+
+## Related
+
+- [Where your funds are](/docs-stampdex/zh-cn/concepts/custody/)
+- [Order lifecycle](/docs-stampdex/zh-cn/concepts/order-lifecycle/)
+- [Fees](/docs-stampdex/zh-cn/reference/fees/)
+- [Orders endpoints](/docs-stampdex/zh-cn/api/orders/)
