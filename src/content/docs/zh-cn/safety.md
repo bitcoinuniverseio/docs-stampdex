@@ -77,14 +77,14 @@ report it. See [Review a 部分签名的比特币交易 (PSBT) before signing](/
 
 ## Verify the deployment yourself
 
-```bash
+```bash frame=none
 curl https://stamp.api.bitcoinuniverse.io/api/version
 ```
 
 Returns the exact commit running in production. The code that commit points to is what
 serves you.
 
-```bash
+```bash frame=none
 curl https://stamp.api.bitcoinuniverse.io/api/v1/indexer/status
 ```
 
