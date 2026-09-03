@@ -1,0 +1,86 @@
+# 结算生命周期与原子互换
+
+单笔比特币交易完成资产与资金同步互换的技术原理与防违约保障。
+
+> Source: bitcoinuniverseio/stampdex (private application source), settlement worker, reorg watch, confirmation constants. Applicable release continuous deployment, verify with GET /api/version. Last verified 2026-09-01. Chain bitcoin/mainnet.
+
+> [!NOTE]
+> **简体中文官方文档**：确保要么双方资产同时完成交割，要么资金原路返回，杜绝单边损失风险。 核心交易规则为非托管模式，买卖双方按标准费率收取服务费，并于比特币主网进行原子结算。
+
+
+
+import SettlementFlow from '../../../../components/SettlementFlow.astro';
+
+Settlement is the part of a trade nobody signs. It runs after the buyer's payment
+confirms, and its job is to decide whether the trade is safe to complete.
+
+<SettlementFlow />
+
+## The two checks
+
+**Check one: did the payment confirm?** A payment that is broadcast but never confirms
+leaves the order where it was. Nothing was released, and nothing was taken.
+
+**Check two: did the tokens actually arrive in escrow?** A confirmed Bitcoin
+transaction does not prove that the SRC-20 transfer inside it was valid. The seller's
+balance could have moved between listing and payment. So settlement reads the index and
+looks for the expected balance in the escrow address.
+
+If that balance does not appear within the grace period, the order becomes **Failed**
+and the token transfer is **not** broadcast. The buyer's BTC stays in the escrow
+address. That is the whole reason the check exists.
+
+## The clock
+
+| Wait | Length | What it governs |
+| --- | --- | --- |
+| Unsigned draft | 30 minutes | A prepared listing nobody signed expires, and its escrow keys are discarded |
+| Buyer lock | 30 minutes | A locked listing returns to the book |
+| Index grace period | 30 minutes | How long settlement waits for the expected balance before marking the order Failed |
+| Payment claim lease | 10 minutes | Makes a repeated payment confirmation safe rather than duplicating work |
+| Settlement claim lease | 10 minutes | Stops two workers settling the same order |
+| Confirmation depth | 2 blocks by default | How deep the settlement transaction must be before the order reads Filled. An operator can raise it |
+| Reorg watch window | 24 hours | How far back settled trades are re-checked |
+
+Background passes run on their own schedule: expired locks are released about every
+minute, stale drafts about every minute, settlement about every two minutes, and the
+reorg watch about every ten.
+
+## Confirmation depth
+
+An order does not read **Filled** at the first confirmation. It waits for two blocks of
+depth by default. That depth is operator-configurable and bounded, so it can be raised
+but never set below one, and the ecosystem registry records confirmation policy as
+delegated to StampDEX rather than set at the Universe layer. An unknown chain tip counts as not settled, never as settled: if StampDEX cannot
+read the chain, it does not assume the best case.
+
+## Reorgs
+
+Bitcoin can reorganise. StampDEX records the block hash and height at which a trade
+settled, and re-checks trades settled in the last 24 hours. If the settlement
+transaction has left the chain or moved to a different block, the order returns to
+awaiting confirmation and the normal settlement pass drives it again.
+
+An unreadable chain reverses nothing. Failing to read a block is not treated as
+evidence that the block is gone.
+
+Two honest limits on this:
+
+- The ecosystem registry records that Universe has no local rollback worker for either
+  protocol and relies on StampDEX and Counterparty state. `reconcile` is recorded as an
+  unsupported marketplace action for both.
+- The reorg path is covered by unit tests but has not been exercised end to end against
+  a real reorg. See [Release evidence](/docs-stampdex/zh-cn/project/release-evidence/).
+
+## Retrying is safe
+
+Confirming a payment twice with the same transaction id returns the answer already
+recorded rather than building or broadcasting anything a second time. Confirming with a
+different transaction id on the same order is refused outright. Reads and cancels are
+safe to retry.
+
+## Related
+
+- [Order lifecycle](/docs-stampdex/zh-cn/concepts/order-lifecycle/)
+- [Where your funds are](/docs-stampdex/zh-cn/concepts/custody/)
+- [Recovery](/docs-stampdex/zh-cn/concepts/recovery/)
