@@ -1,0 +1,66 @@
+# What StampDEX is
+
+What StampDEX does, what it deliberately does not do, why it does not call itself non-custodial, and where it sits in the Bitcoin Universe ecosystem.
+
+> Source: bitcoinuniverseio/stampdex (private application source), product scope, legal/custodyClaims, terms of service copy. Applicable release continuous deployment, verify with GET /api/version. Last verified 2026-09-01. Chain bitcoin/mainnet.
+
+StampDEX is a marketplace and explorer for two Bitcoin protocols, at
+[stampdex.fun](https://stampdex.fun).
+
+## What you can do there
+
+- Browse every SRC-20 token with its market data, deployment identity, and mint
+  progress. No wallet needed.
+- Trade SRC-20 tokens against real signed listings, with every number shown before you
+  sign.
+- Explore Bitcoin Stamps and their collections, and buy through Counterparty
+  dispensers.
+- Track a wallet's holdings, open orders, and activity.
+- Read the same data the site reads, from a public API with no key.
+
+## What it is not
+
+**It is not a custodial exchange.** You do not have a StampDEX account, a StampDEX
+balance, or a deposit address. There is nothing to withdraw.
+
+**It is also not fully non-custodial, and StampDEX does not claim to be.** An SRC-20
+purchase routes your payment through an escrow address StampDEX controls until the
+tokens reach you. The application repository carries a test that fails the build if
+product copy calls StampDEX a non-custodial exchange or a trustless marketplace,
+precisely so the claim cannot creep back in. The
+[custody page](/docs-stampdex/concepts/custody/) draws exactly where the money sits at
+every stage.
+
+**It is not a wallet.** It never holds your keys or your recovery phrase, and it never
+asks for either.
+
+**It is not a financial advisor.** It shows identity and market facts and builds
+transactions. The decision is yours.
+
+## What makes it different
+
+- **Named sources.** Every market number names the service it came from, and a live
+  status endpoint reports the index source, its lag behind the Bitcoin tip, and its
+  operator. See [Data provenance](/docs-stampdex/concepts/data-provenance/).
+- **Unknown is never zero.** A number no source answered shows as unknown. See
+  [Unknown is not zero](/docs-stampdex/concepts/unknown-is-not-zero/).
+- **Full identity.** Tokens show their deployment transaction and block. Stamps show
+  their number, asset id, creator, and file hash. A name alone never stands in for
+  identity.
+- **You sign what you see.** Trades are PSBTs your own wallet reviews and signs.
+- **A quiet market looks quiet.** No invented volume, no countdown theatre, no fake
+  urgency.
+
+## Where it sits in Bitcoin Universe
+
+The Bitcoin Universe ecosystem registry records both `stamps` and `src20` as
+marketplace-owned by StampDEX, `availability: enabled`, `mode: external-execution`.
+Other Universe products can display a stamp or a token balance; the order book, the
+matching, and the settlement are StampDEX's. See
+[What you can and cannot do](/docs-stampdex/capabilities/).
+
+## Next
+
+- [Start here](/docs-stampdex/start-here/)
+- [Bitcoin Stamps](/docs-stampdex/concepts/bitcoin-stamps/)
+- [SRC-20](/docs-stampdex/concepts/src20/)
