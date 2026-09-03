@@ -4,6 +4,15 @@ description: "Short answers to the questions people ask most about StampDEX, fro
 source:
   path: across the marketplace, stamps, and market modules
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [src20, stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
 ---
 
 ## Do I need a wallet to use StampDEX?

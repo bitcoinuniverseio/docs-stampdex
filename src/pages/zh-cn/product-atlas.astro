@@ -1,0 +1,102 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import ShotGallery from '../../components/screens/ShotGallery.astro';
+import { SCREENS } from '../../lib/screens';
+
+/**
+ * 视觉产品图册：截屏清单中收录的全部界面实况，
+ * 按产品功能区归类，每张截屏均关联对应的操作指南。
+ */
+
+const CATEGORY_LABELS: Record<string, string> = {
+  markets: '市场行情',
+  trade: '交易流程',
+  stamps: 'Stamps 资产',
+  orders: '订单管理',
+  portfolio: '个人资产',
+  desk: '操作台',
+  safety: '安全与恢复',
+  developer: '开发者中心',
+  mobile: '移动端',
+  themes: '视觉主题',
+  language: '多语言',
+};
+
+const groups = new Map<string, string[]>();
+for (const capture of SCREENS) {
+  if (!groups.has(capture.category)) groups.set(capture.category, []);
+  groups.get(capture.category)!.push(capture.id);
+}
+
+const ordered = [...groups.entries()].sort((a, b) =>
+  (CATEGORY_LABELS[a[0]] ?? a[0]).localeCompare(CATEGORY_LABELS[b[0]] ?? b[0]),
+);
+---
+
+<StarlightPage
+  frontmatter={{
+    title: '视觉产品图册',
+    description:
+      'StampDEX 文档中收录的所有系统全景截屏，按产品功能分区展示，并标注截屏时间戳、分辨率与关联指南。',
+  }}
+>
+  <p class="sd-atlas-lede">
+    每一张截屏均捕获自实际运行中的 StampDEX 界面。截屏在每次生产发布时重新生成并校验，杜绝修图或过时界面遗留。
+  </p>
+
+  <nav class="sd-atlas-nav" aria-label="图册分类导航">
+    {
+      ordered.map(([cat, ids]) => (
+        <a href={`#${cat}`} class="sd-atlas-nav-link">
+          {CATEGORY_LABELS[cat] ?? cat}
+          <span class="sd-pill">{ids.length}</span>
+        </a>
+      ))
+    }
+  </nav>
+
+  {
+    ordered.map(([cat, ids]) => (
+      <section class="sd-atlas-section" id={cat}>
+        <h2>{CATEGORY_LABELS[cat] ?? cat}</h2>
+        <ShotGallery ids={ids} />
+      </section>
+    ))
+  }
+</StarlightPage>
+
+<style>
+  .sd-atlas-lede {
+    font-size: 1.05rem;
+    color: var(--sd-muted);
+    margin-bottom: 1.5rem;
+  }
+  .sd-atlas-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1.5rem 0 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--sd-rule);
+  }
+  .sd-atlas-nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: var(--sd-r-sm);
+    background: var(--sd-panel);
+    border: 1px solid var(--sd-rule);
+    text-decoration: none;
+    color: var(--sd-ink);
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+  .sd-atlas-nav-link:hover {
+    border-color: var(--sd-brand);
+    color: var(--sd-brand);
+  }
+  .sd-atlas-section {
+    margin: 3rem 0;
+  }
+</style>

@@ -6,9 +6,18 @@ sidebar:
 source:
   path: frontend route manifest
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [src20, stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
 ---
 
-import Shot from '../../components/Shot.astro';
+import MobileDeviceShot from '../../components/screens/MobileDeviceShot.astro';
 
 Everything except your own holdings is public. You need a wallet only to buy, sell, or
 see what an address you control holds.
@@ -37,10 +46,8 @@ fee pressure in one place. `/activity` shows recent marketplace events.
 Buying, selling, and seeing your own holdings need a connected wallet. Universe Wallet,
 UniSat, Leather, Xverse, and OKX Wallet are supported, and each can do a different set
 of things here. See [Wallets](/docs-stampdex/reference/wallets/).
-<Shot
-  src="home-dark-mobile.webp"
-  width={780}
-  height={1688}
+<MobileDeviceShot
+  id="market-mobile-dark"
   alt="StampDEX on a phone, dark theme: the market board reflowed into a single column, with each token showing its ticker, floor, and volume stacked."
   caption="The same market on a phone. The board reflows to one column rather than scrolling sideways."
 />

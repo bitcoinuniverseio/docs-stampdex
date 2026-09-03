@@ -1,0 +1,83 @@
+---
+/**
+ * Page actions: the Markdown representation of the current page, viewable
+ * and copyable. Copying needs JavaScript; viewing is a plain link that
+ * works everywhere.
+ */
+const route = Astro.locals.starlightRoute;
+const id = route.id;
+// Custom pages built outside the content collection have no Markdown route.
+const CUSTOM_PAGES = new Set([
+  'api',
+  'api/reference',
+  'product-atlas',
+  'agents',
+  'zh-cn/api',
+  'zh-cn/api/reference',
+  'zh-cn/product-atlas',
+  'zh-cn/agents',
+]);
+const cleanId = id === 'zh-cn' ? 'zh-cn/index' : (id === '' ? 'index' : id);
+const markdownPath = `/docs-stampdex/markdown/${cleanId}`;
+const showActions = !CUSTOM_PAGES.has(id);
+---
+
+{
+  showActions && (
+    <div class="sd-page-actions">
+      <a href={markdownPath}>View page as Markdown</a>
+      <button type="button" data-sd-copy-md data-markdown-path={markdownPath}>
+        Copy page as Markdown
+      </button>
+    </div>
+  )
+}
+
+<style>
+  .sd-page-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.3rem 0.9rem;
+    margin: 0 0 1rem;
+    font-size: 0.78rem;
+  }
+  a {
+    color: var(--sd-info);
+  }
+  button {
+    border: 1px solid var(--sd-rule-strong);
+    background: none;
+    color: var(--sd-muted);
+    border-radius: var(--sd-r-sm);
+    font-size: 0.74rem;
+    padding: 0.16rem 0.55rem;
+    cursor: pointer;
+  }
+  button:hover {
+    color: var(--sd-ink);
+    border-color: var(--sd-muted);
+  }
+  button:focus-visible {
+    outline: 2px solid var(--sd-focus);
+    outline-offset: 1px;
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-sd-copy-md]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const path = btn.dataset.markdownPath ?? '';
+      try {
+        const text = await (await fetch(path)).text();
+        await navigator.clipboard.writeText(text);
+        btn.textContent = 'Copied';
+        setTimeout(() => {
+          btn.textContent = 'Copy page as Markdown';
+        }, 2000);
+      } catch {
+        btn.textContent = 'Copy failed - use View as Markdown';
+      }
+    });
+  });
+</script>

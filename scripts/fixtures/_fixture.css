@@ -1,0 +1,58 @@
+/* Shared chrome for controlled fixture recordings. A fixture never pretends
+ * to be production: the banner is part of the page, not an overlay. */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif;
+  background: #07090d;
+  color: #e2e8f1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.fixture-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #2e2110;
+  color: #f5ce8f;
+  border-bottom: 1px solid #f5ce8f;
+  font: 700 12px/1 ui-monospace, monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.55rem 1rem;
+}
+.fixture-banner::before { content: '\25CF'; font-size: 9px; }
+.fixture-app { flex: 1; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+.panel {
+  width: 100%; max-width: 430px;
+  background: #12161d; border: 1px solid #2a323e; border-radius: 14px;
+  overflow: hidden; box-shadow: 0 8px 28px rgba(0,0,0,0.55);
+}
+.panel-head {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.8rem 1rem; background: #0d1117; border-bottom: 1px solid #2a323e;
+  font: 700 12px/1 ui-monospace, monospace; letter-spacing: 0.08em; text-transform: uppercase; color: #9aa7b8;
+}
+.panel-body { padding: 1rem 1rem 1.2rem; display: grid; gap: 0.7rem; }
+.row { display: flex; justify-content: space-between; gap: 1rem; font-size: 13px; }
+.row .k { color: #9aa7b8; }
+.row .v { font-family: ui-monospace, monospace; text-align: right; overflow-wrap: anywhere; }
+.row .v.bid { color: #4fd6dd; } .row .v.ask { color: #f0aa4a; }
+.row .v.venue { color: #a99bf5; } .row .v.chain { color: #6fcb80; }
+.custody {
+  border: 1px solid #a99bf5; background: #201b3d; color: #d3ccfb;
+  border-radius: 8px; padding: 0.6rem 0.7rem; font-size: 12px; line-height: 1.5;
+}
+.warnbox {
+  border: 1px solid #f5a3a3; background: #2e1414; color: #f5a3a3;
+  border-radius: 8px; padding: 0.6rem 0.7rem; font-size: 12px; line-height: 1.5;
+}
+.actions { display: flex; gap: 0.6rem; padding: 0 1rem 1.1rem; }
+.btn { flex: 1; text-align: center; padding: 0.55rem 0; border-radius: 7px; font: 640 13px 'Inter', sans-serif; }
+.btn-primary { background: #f7931a; color: #07090d; }
+.btn-ghost { border: 1px solid #3a4452; color: #e2e8f1; }
+.btn-danger { border: 1px solid #f5a3a3; color: #f5a3a3; }
+.chip { display: inline-block; font: 700 10px ui-monospace, monospace; letter-spacing: 0.06em; padding: 0.15rem 0.5rem; border-radius: 999px; border: 1px solid currentColor; }
+.chip.failed { color: #f5a3a3; background: #2e1414; }
+.chip.pending { color: #a9c9ee; background: #12233a; }
+.chip.unknown { color: #9aa7b8; background: #161b24; }

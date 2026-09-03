@@ -1,0 +1,254 @@
+---
+import config from 'virtual:starlight/user-config';
+
+import LanguageSelect from 'virtual:starlight/components/LanguageSelect';
+import Search from 'virtual:starlight/components/Search';
+import SocialIcons from 'virtual:starlight/components/SocialIcons';
+import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
+import SiteTitle from 'virtual:starlight/components/SiteTitle';
+
+import { SECTION_LINKS, STAMPDEX_URL, RELEASE } from '../../data/site';
+
+/**
+ * Starlight Header override.
+ *
+ * The desktop header carries the brand, the seven documentation sections,
+ * the visible documentation release state, search, the language and theme
+ * selectors, and the Open StampDEX call to action. Narrow screens drop the
+ * middle first: the section menu button keeps every destination reachable.
+ * Starlight's accessible built-ins (search dialog, theme pickers, focus
+ * behaviour) are reused, not reimplemented.
+ */
+const shouldRenderSearch =
+  config.pagefind || config.components.Search !== '@astrojs/starlight/components/Search.astro';
+
+const currentPath = Astro.url.pathname;
+const isCurrent = (href: string) => currentPath === href || currentPath.startsWith(href);
+---
+
+<div class="header sd-header">
+  <div class="sd-header-row">
+    <div class="title-wrapper sl-flex">
+      <SiteTitle />
+    </div>
+
+    <nav class="sd-nav" aria-label="Documentation sections">
+      {
+        SECTION_LINKS.map((link) => (
+          <a href={link.href} aria-current={isCurrent(link.href) ? 'true' : undefined}>
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="sd-header-end sl-flex print:hidden">
+      <a
+        class="sd-release-chip"
+        href={RELEASE.evidenceHref}
+        title={`Documentation describes StampDEX release ${RELEASE.releaseId}. Open release evidence.`}
+      >
+        <span class="sd-release-dot" aria-hidden="true"></span>
+        <span class="sd-release-label">Release</span>
+        <span class="sd-release-value">{RELEASE.shortCommit}</span>
+        <span class="sd-release-live" data-release-live hidden></span>
+        <span class="sd-release-expected" hidden>docs: {RELEASE.shortCommit}</span>
+      </a>
+
+      <a class="sd-cta" href={STAMPDEX_URL} rel="noopener">
+        Open StampDEX
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path
+            d="M14 3a1 1 0 0 0 0 2h3.6l-8.3 8.3a1 1 0 1 0 1.4 1.4L19 6.4V10a1 1 0 0 0 2 0V4a1 1 0 0 0-1-1h-6ZM5 5h4a1 1 0 0 1 0 2H6v11h11v-3a1 1 0 0 1 2 0v4a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"
+          ></path>
+        </svg>
+      </a>
+
+      <div class="sl-hidden md:sl-flex print:hidden sd-searchwrap">
+        {shouldRenderSearch && <Search />}
+      </div>
+
+      <div class="sl-flex social-icons">
+        <SocialIcons />
+      </div>
+      <ThemeSelect />
+      <LanguageSelect />
+    </div>
+  </div>
+
+<script>
+  // Live API health: read-only, quick timeout, never blocks rendering,
+  // shows Unknown on any failure, and sleeps while the tab is hidden.
+  const el = document.querySelector("[data-release-live]");
+  if (el) {
+    const set = (t, cls) => { el.hidden = false; el.textContent = t; el.className = "sd-release-live " + cls; };
+    const check = async () => {
+      if (document.hidden) return;
+      try {
+        const res = await fetch("https://stamp.api.bitcoinuniverse.io/api/version", { signal: AbortSignal.timeout(4000) });
+        if (!res.ok) throw new Error(res.status);
+        const body = await res.json();
+        const live = (body.gitCommit ?? "unknown").slice(0, 7);
+        const expected = document.querySelector("[data-release-expected]")?.textContent.replace("docs:", "").trim();
+        if (expected && live === expected) {
+          set(live, "is-ok");
+          el.title = "Production matches the commit this documentation describes";
+        } else {
+          set(live, "is-drift");
+          el.title = "Production has moved past this documentation's commit. The pages describe " + (expected ?? "an earlier build") + ".";
+        }
+      } catch {
+        set("Unknown", "is-unknown");
+        el.title = "The version endpoint did not answer; the documentation stays usable without it";
+      }
+    };
+    check();
+    document.addEventListener("visibilitychange", check);
+  }
+</script>
+</div>
+
+<style>
+  @layer starlight.core {
+    .header {
+      background: var(--sd-nav);
+      border-bottom: 1px solid var(--sd-rule-strong);
+    }
+    .sd-header-row {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: 0.9rem;
+      height: 100%;
+      min-width: 0;
+    }
+    .title-wrapper {
+      overflow: clip;
+      padding: 0.25rem;
+      margin: -0.25rem;
+      min-width: 0;
+    }
+    .sd-header-end {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      margin-inline-start: auto;
+      min-width: 0;
+    }
+    .sd-nav {
+      display: none;
+      align-items: center;
+      gap: 0.1rem;
+      min-width: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .sd-nav::-webkit-scrollbar {
+      display: none;
+    }
+    .sd-nav a {
+      display: inline-block;
+      padding: 0.32rem 0.55rem;
+      border-radius: var(--sd-r-sm);
+      font-size: 0.86rem;
+      font-weight: 520;
+      color: var(--sd-muted-inverse);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .sd-nav a:hover {
+      color: var(--sd-ink-inverse);
+      background: rgba(226, 232, 241, 0.08);
+    }
+    .sd-nav a[aria-current='true'] {
+      color: var(--sd-brand-accent);
+      background: rgba(247, 147, 26, 0.12);
+    }
+    .sd-release-chip {
+      display: none;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.72rem;
+      color: var(--sd-muted-inverse);
+      border: 1px solid var(--sd-rule-strong);
+      border-radius: 999px;
+      padding: 0.18rem 0.6rem;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+    .sd-release-chip:hover {
+      border-color: var(--sd-muted-inverse);
+      color: var(--sd-ink-inverse);
+    }
+    .sd-release-dot {
+      width: 0.42rem;
+      height: 0.42rem;
+      border-radius: 50%;
+      background: var(--sd-brand);
+      flex: none;
+    }
+    .sd-release-label {
+      font-weight: 640;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 0.62rem;
+    }
+    .sd-release-value {
+      font-family: var(--sd-mono);
+    }
+    .sd-release-live {
+      font-family: var(--sd-mono);
+      margin-left: 0.5rem;
+      padding-left: 0.5rem;
+      border-left: 1px solid var(--sd-rule-strong);
+    }
+    .sd-release-live.is-ok {
+      color: #6fcb80;
+    }
+    .sd-release-live.is-unknown {
+      color: var(--sd-muted-inverse);
+    }
+    .sd-release-live.is-drift {
+      color: var(--sd-brand-accent);
+    }
+    .sd-release-expected[hidden] {
+      display: none;
+    }
+    .sd-release-expected {
+      display: none;
+    }
+    .sd-cta {
+      display: none;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--sd-brand);
+      color: #07090d;
+      font-size: 0.84rem;
+      font-weight: 660;
+      text-decoration: none;
+      padding: 0.42rem 0.8rem;
+      border-radius: var(--sd-r-sm);
+      white-space: nowrap;
+    }
+    .sd-cta:hover {
+      filter: brightness(1.08);
+    }
+    @media (min-width: 62rem) {
+      .sd-nav {
+        display: flex;
+      }
+      .sd-release-chip {
+        display: inline-flex;
+      }
+    }
+    @media (min-width: 80rem) {
+      .sd-cta {
+        display: inline-flex;
+      }
+    }
+    :focus-visible {
+      outline: 2px solid var(--sd-focus);
+      outline-offset: 2px;
+    }
+  }
+</style>

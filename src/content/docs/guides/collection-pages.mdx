@@ -4,9 +4,18 @@ description: How StampDEX collection pages work, what their market figures mean,
 source:
   path: collections controller, stamps market service
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [src20, stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
 ---
 
-import Shot from '../../../components/Shot.astro';
+import ProductShot from '../../../components/screens/ProductShot.astro';
 
 **For:** collectors comparing sets. **Goal:** read a collection without over-reading its numbers.
 **Prerequisites:** none. **Chain and network:** Bitcoin mainnet. **Safety:** reading only.
@@ -15,10 +24,8 @@ import Shot from '../../../components/Shot.astro';
 
 [stampdex.fun/stamps/collections](https://stampdex.fun/stamps/collections) lists them.
 A single collection is at `/stamps/collection/<id>`.
-<Shot
-  src="stamps-dark-desktop.webp"
-  width={1400}
-  height={875}
+<ProductShot
+  id="stamps-desktop-dark"
   alt="The Bitcoin Stamps collections page showing pixel-art collections in a grid, each with floor, volume, market cap, listed count, and holders. A collection with no floor shows a dash instead of a zero."
   caption="Collections, image first. A collection nobody has listed shows a dash where a floor would be."
 />

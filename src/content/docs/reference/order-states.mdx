@@ -1,0 +1,60 @@
+---
+title: Order states
+description: "Every SRC-20 order state on StampDEX, the value the API returns for it, what it means, where the funds are in it, and what ends it."
+source:
+  path: OrderStatus enum, orders list filtering, expiry crons
+  verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [src20, stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
+
+---
+
+import OrderStateExplorer from '../../../components/explainers/OrderStateExplorer.astro';
+
+
+The values in the first column are what the API returns in an order's `status` field.
+The friendly names are what the site shows.
+
+<OrderStateExplorer />
+
+## Which states a listing query returns
+
+- With no `status` filter, the open book is returned.
+- `pending` rows are excluded from the public book, so a listing somebody is mid-way
+  through buying does not appear as available inventory.
+- An open row must have its signed listing and its escrow details recorded. An
+  incomplete listing is never shown as inventory.
+- Rows past their expiry are excluded.
+- The public book sorts by unit price ascending, then newest first.
+- Filtering by a wallet address returns that address's orders in `open`,
+  `awaiting_tx3`, `settling_tx3`, `awaiting_tx3_confirmation`, and `filled`, sorted
+  newest first.
+
+## Replacement links
+
+An order created by repricing, splitting, or repairing another carries the link between
+them:
+
+| Field | Meaning |
+| --- | --- |
+| `replacesOrderId` | The order this one was created to replace |
+| `replacedByOrderId` | The order that replaced this one |
+| `replacementGroupId` | The group, when one listing was split into several |
+| `replacementKind` | `price`, `split`, or `repair` |
+
+None of these make a replacement an in-place edit. The old order is cancelled and the
+new one is a new order. See
+[Change a listing price](/docs-stampdex/guides/change-a-listing-price/).
+
+## Related
+
+- [Order lifecycle](/docs-stampdex/concepts/order-lifecycle/)
+- [Where your funds are](/docs-stampdex/concepts/custody/)
+- [Orders endpoints](/docs-stampdex/api/orders/)

@@ -4,9 +4,18 @@ description: "How to read the StampDEX SRC-20 market board: what each column mea
 source:
   path: market aggregation, src20 hub map, market controller
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [src20, stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
 ---
 
-import Shot from '../../../components/Shot.astro';
+import ProductShot from '../../../components/screens/ProductShot.astro';
 
 **For:** anyone, with or without a wallet.
 **Goal:** find a token and understand its numbers before you open its page.
@@ -17,10 +26,8 @@ import Shot from '../../../components/Shot.astro';
 
 [stampdex.fun](https://stampdex.fun) opens the board. `/src20` and `/markets` are the
 same view.
-<Shot
-  src="home-light-desktop.webp"
-  width={1400}
-  height={875}
+<ProductShot
+  id="market-desktop-light"
   alt="The StampDEX market board in the light theme: a table of SRC-20 tokens with columns for ticker, deployment transaction, floor, volume, holders, and mint progress. Several rows show a double dash where no source answered, rather than a zero."
   caption="The market board. The deployment transaction sits in its own column beside the ticker, and rows with no reading show a dash."
 />

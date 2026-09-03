@@ -1,0 +1,108 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+
+/** AI 智能体接入配置：如何让自动化程序精准读取 StampDEX 文档。 */
+const base = 'https://bitcoinuniverseio.github.io/docs-stampdex';
+const snippets = [
+  {
+    name: 'llms.txt',
+    body: '将智能体引导至文档全集索引。列出所有页面的 URL 路径与主要功能。',
+    code: `${base}/llms.txt`,
+  },
+  {
+    name: '完整知识库 (llms-full.txt)',
+    body: '包含全部文档页面的单个 Markdown 合集文件，完整保留源码核验与可信溯源记录。',
+    code: `${base}/llms-full.txt`,
+  },
+  {
+    name: '页面索引 (index.json)',
+    body: '紧凑机器索引：包含页面 ID、标题、描述、内容类型、目标受众、风险级别与 Markdown 链接。',
+    code: `${base}/index.json`,
+  },
+  {
+    name: '单页 Markdown 导出',
+    body: '每一篇文档均提供格式纯净的 Markdown 结构，位于 /markdown/<id>。页面右上角操作区可一键直达。',
+    code: `${base}/markdown/concepts/custody`,
+  },
+  {
+    name: 'OpenAPI 接口规范',
+    body: '由应用仓库自动生成的公开 API 契约快照，同时可在 /.well-known/api-catalog 中发现。',
+    code: `${base}/api/downloads/openapi.json`,
+  },
+];
+const mcp = `{
+  "mcpServers": {
+    "stampdex-docs": {
+      "command": "npx",
+      "args": ["-y", "@bitcoinuniverse/stampdex-docs-mcp"],
+      "env": { "DOCSDIR": "/path/to/docs-stampdex/dist" }
+    }
+  }
+}`;
+const claude = `在 Claude Code 或支持 MCP 的客户端中添加上述配置，然后提问：
+
+  在 SRC-20 交易结算期间，StampDEX 文档说明我的 BTC 存放在哪里？
+
+智能体将通过 stampdex_docs_get_section 工具精准读取 concepts/custody 页面，给出具备溯源引用的确凿答案。`;
+---
+
+<StarlightPage
+  frontmatter={{
+    title: '智能体接入指南',
+    description: '指导 AI Agent、编程助手与 MCP 客户端如何读取 StampDEX 技术文档：知识库索引、结构化 JSON、OpenAPI 与只读 MCP 服务。',
+  }}
+>
+  <p class="sd-api-lede">
+    机器读取到的事实与人类完全一致，格式统一，且带有相同的数据源溯源记录。智能体必须引述具体页面，在文档未解答时明确告知，且严禁将未发布特性虚构为已上线。MCP 服务在架构设计上为完全只读，杜绝交易、签名或资金转移。
+  </p>
+
+  <h2>语料库文件清单</h2>
+  {
+    snippets.map((snippet) => (
+      <div class="sd-agent-file">
+        <h3>{snippet.name}</h3>
+        <p>{snippet.body}</p>
+        <div class="sd-scroll">
+          <pre><code>{snippet.code}</code></pre>
+        </div>
+      </div>
+    ))
+  }
+
+  <h2>Model Context Protocol (MCP) 服务器</h2>
+  <p>
+    StampDEX 提供官方只读 MCP 服务器 <code>@bitcoinuniverse/stampdex-docs-mcp</code>，内置 8 项专业文档检索工具，可直接被 Cursor、Claude Code、Windsurf 等开发工具接入：
+  </p>
+  <div class="sd-scroll">
+    <pre><code>{mcp}</code></pre>
+  </div>
+
+  <h2>客户端接入验证示例</h2>
+  <div class="sd-scroll">
+    <pre><code>{claude}</code></pre>
+  </div>
+</StarlightPage>
+
+<style>
+  .sd-api-lede {
+    font-size: 1rem;
+    color: var(--sd-muted);
+    max-width: 46rem;
+    line-height: 1.65;
+  }
+  .sd-agent-file {
+    margin: 1.5rem 0;
+    padding: 1.25rem;
+    background: var(--sd-panel);
+    border: 1px solid var(--sd-rule);
+    border-radius: var(--sd-r-md);
+  }
+  .sd-agent-file h3 {
+    margin-top: 0;
+    font-size: 1.1rem;
+  }
+  pre code {
+    font-family: var(--sd-mono);
+    font-size: 0.85rem;
+  }
+</style>

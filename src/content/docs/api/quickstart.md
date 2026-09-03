@@ -4,6 +4,15 @@ description: "The StampDEX public read API: base URL, first request, what needs 
 source:
   path: backend API surface, app setup, throttler configuration
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [src20, stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
 ---
 
 The StampDEX API serves the same data the site shows. Read routes need no key and no

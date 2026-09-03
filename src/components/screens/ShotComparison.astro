@@ -1,0 +1,50 @@
+---
+import ProductShot from './ProductShot.astro';
+
+/** Two related captures side by side: before and after, or two states that
+ * only make sense next to each other. */
+interface Side {
+  id: string;
+  label?: string;
+}
+interface Props {
+  before: Side;
+  after: Side;
+}
+
+const { before, after } = Astro.props;
+---
+
+<div class="sd-compare">
+  <figure>
+    <ProductShot id={before.id} bare evidence={false} zoom={false} />
+    <figcaption class="sd-compare-label">{before.label}</figcaption>
+  </figure>
+  <figure>
+    <ProductShot id={after.id} bare evidence={false} zoom={false} />
+    <figcaption class="sd-compare-label">{after.label}</figcaption>
+  </figure>
+</div>
+
+<style>
+  figure {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    border: 1px solid var(--sd-rule);
+    border-radius: var(--sd-r-md);
+    background: var(--sd-panel);
+    overflow: hidden;
+  }
+  .sd-compare-label {
+    padding: 0.5rem 0.7rem;
+    font-size: 0.76rem;
+    font-weight: 660;
+    color: var(--sd-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-top: 1px solid var(--sd-rule);
+    background: var(--sd-panel-2);
+  }
+</style>

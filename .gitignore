@@ -4,3 +4,4 @@ dist/
 *.log
 .render/
 .claude/
+test-results/

@@ -1,0 +1,84 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import ShotGallery from '../components/screens/ShotGallery.astro';
+import { SCREENS } from '../lib/screens';
+
+/** The Visual Product Atlas: every capture in the screenshot manifest,
+ * grouped by area, each linking to the guide that explains the screen. */
+
+const CATEGORY_LABELS: Record<string, string> = {
+  markets: 'Markets',
+  trade: 'Trade',
+  stamps: 'Stamps',
+  orders: 'Orders',
+  portfolio: 'Portfolio',
+  desk: 'Desk',
+  safety: 'Safety and recovery',
+  developer: 'Developer surfaces',
+  mobile: 'Mobile',
+  themes: 'Themes',
+  language: 'Language',
+};
+
+const groups = new Map<string, string[]>();
+for (const capture of SCREENS) {
+  if (!groups.has(capture.category)) groups.set(capture.category, []);
+  groups.get(capture.category)!.push(capture.id);
+}
+
+const ordered = [...groups.entries()].sort((a, b) =>
+  (CATEGORY_LABELS[a[0]] ?? a[0]).localeCompare(CATEGORY_LABELS[b[0]] ?? b[0]),
+);
+---
+
+<StarlightPage
+  frontmatter={{
+    title: 'Visual product atlas',
+    description:
+      'Every screenshot in the StampDEX documentation, grouped by area of the product, each with its capture source, date, and the guide that explains the screen.',
+  }}
+>
+  <p class="sd-atlas-lede">
+    Every capture on this site comes from the screenshot manifest: recorded by a
+    runner, checked against the production commit it claims to describe, and
+    regenerated before it can go stale. Screenshots marked as controlled
+    recorded states are deterministic fixtures, never passed off as production.
+  </p>
+
+  {
+    ordered.map(([category, ids]) => (
+      <section>
+        <h2>{CATEGORY_LABELS[category] ?? category}</h2>
+        <ShotGallery ids={ids} />
+      </section>
+    ))
+  }
+
+  <p>
+    Nothing here is a mockup. Where a screen cannot be captured from production
+    without touching real funds, the site records a controlled fixture and says
+    so. See <a href="/docs-stampdex/project/release-evidence/">Release evidence</a>
+    for how claims are grounded, and
+    <a href="/docs-stampdex/project/contributing/">Contributing</a> for how the
+    capture runner is used.
+  </p>
+</StarlightPage>
+
+<style>
+  section {
+    margin-top: 1.8rem;
+  }
+  h2 {
+    font-size: 1.2rem;
+    letter-spacing: -0.01em;
+  }
+</style>
+
+<style is:global>
+  .sd-atlas-lede {
+    font-size: 1.02rem;
+    color: var(--sd-muted);
+    max-width: 46rem;
+    line-height: 1.65;
+  }
+</style>

@@ -1,0 +1,48 @@
+---
+/** The task launcher: six things a reader actually came here to do. */
+const tasks = [
+  {
+    title: 'Buy SRC-20',
+    sub: 'Every step, the fees, and what you are signing.',
+    href: '/docs-stampdex/guides/buy-src20/',
+  },
+  {
+    title: 'Sell SRC-20',
+    sub: 'Listing, escrow, and when your BTC arrives.',
+    href: '/docs-stampdex/guides/sell-src20/',
+  },
+  {
+    title: 'Collect Stamps',
+    sub: 'Identify a stamp beyond its picture, then buy it.',
+    href: '/docs-stampdex/guides/collect-stamps/',
+  },
+  {
+    title: 'Track an order',
+    sub: 'What each order state means and where your funds are.',
+    href: '/docs-stampdex/concepts/order-lifecycle/',
+  },
+  {
+    title: 'Recover from a failed state',
+    sub: 'Stuck trades, timeouts, and who owns what.',
+    href: '/docs-stampdex/concepts/recovery/',
+  },
+  {
+    title: 'Build with the API',
+    sub: 'Public reads, no key, no account.',
+    href: '/docs-stampdex/api/quickstart/',
+  },
+];
+---
+
+<ul class="sd-tasks">
+  {
+    tasks.map((task) => (
+      <li>
+        <a href={task.href}>
+          <span class="sd-task-title">{task.title}</span>
+          <span class="sd-task-sub">{task.sub}</span>
+        </a>
+      </li>
+    ))
+  }
+</ul>

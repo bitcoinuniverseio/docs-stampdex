@@ -1,8 +1,14 @@
 ---
 import Default from '@astrojs/starlight/components/Footer.astro';
+import FeedbackPanel from './FeedbackPanel.astro';
+
+const route = Astro.locals.starlightRoute;
+const id = route?.id;
 ---
 
 <Default><slot /></Default>
+
+<FeedbackPanel pageId={id} />
 
 <div class="sd-site-footer">
   <p>
