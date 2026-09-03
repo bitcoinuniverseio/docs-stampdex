@@ -159,6 +159,23 @@ table kbd,
   border-radius: var(--sd-r-sm);
 }
 
+/* Terminal frames always render a title bar, even when a snippet has no
+ * title. Hide only that empty chrome and return the code panel to its normal
+ * framed shape. Titled terminal examples keep their contextual header. */
+.expressive-code .frame.is-terminal:has(> .header > .title:empty) {
+  --button-spacing: 0.4rem;
+}
+
+.expressive-code .frame.is-terminal > .header:has(> .title:empty) {
+  display: none;
+}
+
+.expressive-code .frame.is-terminal:has(> .header > .title:empty) > pre {
+  border-top: var(--ec-brdWd) solid var(--ec-brdCol);
+  border-top-left-radius: var(--header-border-radius);
+  border-top-right-radius: var(--header-border-radius);
+}
+
 /* --------------------------------------------------------------- callouts */
 
 /* Starlight asides plus the StampDEX vocabulary. The border colour and the
