@@ -386,6 +386,12 @@
       },
       "maxAgeDays": 180,
       "category": "markets",
+      "crop": {
+        "x": 240,
+        "y": 190,
+        "width": 800,
+        "height": 440
+      },
       "alt": "A controlled recording of a market row where floor price and volume show dashes with a source label of none, next to a holders count that does have a source.",
       "caption": "Unknown is not zero, reproduced as a controlled recorded state. A dash means the venue has no number it can prove, and the sources are named per figure."
     },
