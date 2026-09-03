@@ -27,7 +27,7 @@ which number, and the status endpoint for freshness.
 
 ## The site is up but data looks stale
 
-```bash
+```bash frame=none
 curl https://stamp.api.bitcoinuniverse.io/api/v1/indexer/status
 ```
 
@@ -54,7 +54,7 @@ Settlement waits for the payment to confirm, for the token balance to be verifie
 then for two blocks of depth on the settlement transaction. This usually resolves on its
 own within a few blocks. The fastest way to see where it actually is:
 
-```bash
+```bash frame=none
 curl https://stamp.api.bitcoinuniverse.io/api/v1/indexer/orders/ORDER_ID
 ```
 

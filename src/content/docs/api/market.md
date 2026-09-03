@@ -49,7 +49,7 @@ empty result, not an error.
 
 ## Example
 
-```bash
+```bash frame=none
 curl "https://stamp.api.bitcoinuniverse.io/api/v1/market/tokens/KEVIN"
 ```
 
@@ -71,7 +71,7 @@ curl "https://stamp.api.bitcoinuniverse.io/api/v1/market/tokens/KEVIN"
 
 ## Deployment resolution
 
-```bash
+```bash frame=none
 curl "https://stamp.api.bitcoinuniverse.io/api/v1/market/deployments/KEVIN"
 ```
 
@@ -82,7 +82,7 @@ array. Each entry names `tick`, `deploy_tx`, `deploy_block`, `deploy_time`, `cre
 
 Going the other way:
 
-```bash
+```bash frame=none
 curl "https://stamp.api.bitcoinuniverse.io/api/v1/market/deployments/tx/23765f9bc6b87e078b1f93ed213f90b9004998336575f726e46f34ddbea5e5f3"
 ```
 
@@ -91,7 +91,7 @@ HTTP 400 rather than being searched for.
 
 ## Fee rates
 
-```bash
+```bash frame=none
 curl "https://stamp.api.bitcoinuniverse.io/api/v1/market/fees"
 ```
 
