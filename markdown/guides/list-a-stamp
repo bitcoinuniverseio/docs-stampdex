@@ -47,14 +47,14 @@ balance once the cooldown finalizes, which is later.
 
 ## How to verify
 
-```bash
+```bash frame=none
 curl "https://stamp.api.bitcoinuniverse.io/api/v1/stamps/STAMP_ID/dispensers"
 ```
 
 Your dispenser appears with its status and `give_remaining`. You can also read every
 dispenser an address operates:
 
-```bash
+```bash frame=none
 curl "https://stamp.api.bitcoinuniverse.io/api/v1/stamps/wallet/ADDRESS/dispensers"
 ```
 
