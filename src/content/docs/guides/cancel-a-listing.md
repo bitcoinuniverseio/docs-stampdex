@@ -4,6 +4,15 @@ description: "How to take an SRC-20 listing off the StampDEX book, why cancellin
 source:
   path: orders cancel route, wallet action challenge
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [src20, stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
 ---
 
 **For:** a seller with a live listing.

@@ -1,0 +1,112 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import openapi from '../../generated/openapi.json';
+
+/**
+ * The interactive API reference. Scalar runs from the vendored, self-hosted
+ * bundle in public/vendor/scalar - no CDN. The page works without
+ * JavaScript too: the endpoint inventory below is static HTML, and the full
+ * reference is a progressive enhancement on top of it.
+ */
+const spec = openapi.spec;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const tags: Record<string, { path: string; method: string; operationId: string; summary: string }[]> = {};
+for (const [path, methods] of Object.entries(spec.paths as Record<string, any>)) {
+  for (const [method, op] of Object.entries(methods as Record<string, any>)) {
+    const tag = op.tags?.[0] ?? 'Other';
+    tags[tag] ??= [];
+    tags[tag].push({ path, method, operationId: op.operationId, summary: op.summary });
+  }
+}
+const configuration = {
+  spec: { url: `${base}/api/downloads/openapi.json` },
+  theme: { favicon: `${base}/favicon.svg` },
+  hideDownloadButton: false,
+  searchHotKey: '/',
+};
+---
+
+<StarlightPage
+  frontmatter={{
+    title: 'API reference',
+    description: 'The interactive reference for the StampDEX public API: every public endpoint, its parameters, responses, and examples, generated from the application source.',
+  }}
+>
+  <p class="sd-api-lede">
+    This reference is generated from the application's registered public
+    controllers at commit <code>{openapi.provenance.sourceRef.slice(0, 7)}</code>.
+    Admin and operator surfaces are excluded by construction. The same
+    document is downloadable as{' '}
+    <a href="/docs-stampdex/api/downloads/openapi.json">OpenAPI 3.1 JSON</a>.
+  </p>
+
+  <noscript>
+    <p>
+      The interactive reference needs JavaScript. Without it, the full
+      endpoint inventory is below, and every operation is documented in the
+      static pages under API in the navigation.
+    </p>
+  </noscript>
+
+  {
+    Object.entries(tags).map(([tag, operations]) => (
+      <section class="sd-api-group">
+        <h2>{tag}</h2>
+        <div class="sd-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Method</th>
+                <th scope="col">Path</th>
+                <th scope="col">Operation</th>
+              </tr>
+            </thead>
+            <tbody>
+              {operations.map((op) => (
+                <tr>
+                  <td>
+                    <span class="sd-api-method" data-method={op.method}>
+                      {op.method.toUpperCase()}
+                    </span>
+                  </td>
+                  <td><code>{op.path}</code></td>
+                  <td>{op.summary}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    ))
+  }
+
+  <div
+    id="api-reference"
+    data-configuration={JSON.stringify(configuration)}
+  >
+    <p class="sd-footnote">Loading the interactive reference from the local bundle.</p>
+  </div>
+</StarlightPage>
+
+<style>
+  .sd-api-lede {
+    font-size: 1rem;
+    color: var(--sd-muted);
+    max-width: 46rem;
+    line-height: 1.65;
+  }
+  .sd-api-lede code,
+  td code {
+    font-family: var(--sd-mono);
+    font-size: 0.82em;
+    overflow-wrap: anywhere;
+  }
+  .sd-api-group {
+    margin-top: 1.6rem;
+  }
+  .sd-api-group h2 {
+    font-size: 1.2rem;
+  }
+</style>
+
+<script is:inline src="/docs-stampdex/vendor/scalar/standalone.js" defer></script>

@@ -1,0 +1,60 @@
+---
+import RELEASE from '../../data/release.json';
+
+/**
+ * Current release and documentation evidence. Reads src/data/release.json,
+ * which records what GET /api/version reported when the documentation was
+ * last grounded. The truth pipeline turns this into a build-time generated
+ * file with full provenance.
+ */
+const shortCommit = RELEASE.app.gitCommit.slice(0, 7);
+---
+
+<div class="sd-scroll">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Question</th>
+        <th scope="col">Answer</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">Which build is this documentation about</th>
+        <td>
+          <code>{RELEASE.app.applicationVersion}</code>, release{' '}
+          <code>{RELEASE.app.releaseId}</code>, commit <code>{shortCommit}</code>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">When was it verified</th>
+        <td>{RELEASE.capturedAt.slice(0, 10)}, from the production version endpoint</td>
+      </tr>
+      <tr>
+        <th scope="row">What is this documentation's own release model</th>
+        <td>{RELEASE.docs.releaseModel}, published from the <code>develop</code> branch</td>
+      </tr>
+      <tr>
+        <th scope="row">How do I check what is serving me right now</th>
+        <td>
+          <a href="/docs-stampdex/api/status/"><code>GET /api/version</code></a>, and compare
+          the commit
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p>
+  What each claim on this site is grounded in, and which actions carry mainnet
+  evidence, is recorded in{' '}
+  <a href="/docs-stampdex/project/release-evidence/">Release evidence</a>.
+</p>
+
+<style>
+  code {
+    font-family: var(--sd-mono);
+    font-size: 0.82em;
+    overflow-wrap: anywhere;
+  }
+</style>

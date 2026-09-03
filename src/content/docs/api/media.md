@@ -4,6 +4,15 @@ description: Stamp artwork and token logos from the StampDEX API, their caching 
 source:
   path: stamp media cache, media controller, logo resolver
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [src20, stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
 ---
 
 These routes serve bytes, not JSON, and do not count against the API rate limit. They

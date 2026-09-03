@@ -1,0 +1,57 @@
+---
+import { getCapture, captureDate, shortCommit } from '../../lib/screens';
+
+/** The evidence strip for one capture, usable on its own: source kind,
+ * capture date, application commit, theme, and viewport. The same line the
+ * screenshot components show, for pages that compose their own layout. */
+interface Props {
+  id: string;
+}
+
+const { id } = Astro.props;
+const capture = getCapture(id);
+const isFixture = capture.source === 'controlled-fixture';
+---
+
+<p class="sd-evidence" data-source={capture.source}>
+  <span class:list={['sd-evidence-badge', isFixture ? 'is-fixture' : 'is-production']}>
+    {isFixture ? 'Controlled recorded state' : 'Production capture'}
+  </span>
+  <span>{captureDate(capture)}</span>
+  <span>app <code>{shortCommit(capture.appCommit)}</code></span>
+  <span>{capture.theme} {capture.viewport.name}</span>
+  <span>mask: {capture.mask?.length ?? 0} volatile region(s)</span>
+</p>
+
+<style>
+  .sd-evidence {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem 0.9rem;
+    font-family: var(--sd-mono);
+    font-size: 0.72rem;
+    color: var(--sd-muted);
+    margin: 0.4rem 0 1.2rem;
+  }
+  .sd-evidence code {
+    font-size: 0.72rem;
+  }
+  .sd-evidence-badge {
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-size: 0.62rem;
+    padding: 0.12rem 0.5rem;
+    border-radius: 999px;
+    border: 1px solid currentColor;
+  }
+  .is-production {
+    color: var(--sd-ok);
+    background: var(--sd-ok-wash);
+  }
+  .is-fixture {
+    color: var(--sd-warn);
+    background: var(--sd-warn-wash);
+  }
+</style>

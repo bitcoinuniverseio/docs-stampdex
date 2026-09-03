@@ -1,0 +1,171 @@
+---
+import matrix from '../../generated/wallet-matrix.json';
+
+/**
+ * The wallet capability explorer, rendered from
+ * src/generated/wallet-matrix.json, which scripts/gen-truth.mjs extracts
+ * from the application's frontend/src/wallet/capabilities.js. The states
+ * are the product's own: works (supported and tested here), untested, and
+ * no (unavailable). Untested is never displayed as supported.
+ *
+ * The full table is in the HTML; the radio filters narrow it with a few
+ * lines of JavaScript and do nothing worse than nothing without it.
+ */
+interface Wallet {
+  id: string;
+  name: string;
+  nativeAssetDisplay: boolean;
+  actions: Record<string, string>;
+}
+
+const wallets = (matrix.wallets as Wallet[]).map((w) => w.name);
+const allActions = Object.keys((matrix.wallets as Wallet[])[0].actions);
+
+// Display grouping for the union of product actions. An action missing here
+// still renders, under Other, so the table can never silently drop one.
+const GROUPS: [string, string[]][] = [
+  ['Connect and account', ['detect', 'connect', 'reconnect', 'accountRefresh', 'accountChangeEvent', 'networkCheck', 'embeddedMode']],
+  ['Signing', ['signMessage', 'signPsbt', 'signPsbtUnfinalized', 'sendBitcoin']],
+  ['SRC-20 trading', ['src20Buy', 'src20List', 'src20Cancel', 'src20Transfer']],
+  ['Stamps', ['stampDispenserBuy', 'stampDispenserOpen', 'stampDispenserClose', 'mint']],
+];
+const grouped = new Set(GROUPS.flatMap(([, actions]) => actions));
+const other = allActions.filter((a) => !grouped.has(a));
+if (other.length) GROUPS.push(['Other', other]);
+
+const STATE_LABELS: Record<string, string> = {
+  works: 'Supported and tested',
+  untested: 'Untested',
+  no: 'Unavailable',
+};
+
+const uid = 'sd-wallets';
+---
+
+<section class="sd-explorer-box" aria-label="Wallet capability explorer">
+  <fieldset class="sd-explorer-picker">
+    <legend>Show</legend>
+    <label class="sd-explorer-choice">
+      <input type="radio" name={`${uid}-f`} value="all" checked data-wallet-filter="all" />
+      <span>Everything</span>
+    </label>
+    <label class="sd-explorer-choice">
+      <input type="radio" name={`${uid}-f`} value="works" data-wallet-filter="works" />
+      <span>Tested only</span>
+    </label>
+    <label class="sd-explorer-choice">
+      <input type="radio" name={`${uid}-f`} value="untested" data-wallet-filter="untested" />
+      <span>Untested</span>
+    </label>
+    <label class="sd-explorer-choice">
+      <input type="radio" name={`${uid}-f`} value="no" data-wallet-filter="no" />
+      <span>Unavailable</span>
+    </label>
+    <p class="sd-filter-note" data-wallet-note role="status"></p>
+  </fieldset>
+
+  <div class="sd-scroll">
+    <table data-wallet-matrix>
+      <thead>
+        <tr>
+          <th scope="col">Action</th>
+          {wallets.map((name) => (
+            <th scope="col">{name}</th>
+          ))}
+        </tr>
+      </thead>
+      {
+        GROUPS.map(([group, actions]) => (
+          <tbody>
+            <tr class="sd-wallet-group">
+              <th scope="rowgroup" colspan={wallets.length + 1}>{group}</th>
+            </tr>
+            {actions.filter((a) => allActions.includes(a)).map((action) => (
+              <tr data-action={action}>
+                <th scope="row"><code>{action}</code></th>
+                {(matrix.wallets as Wallet[]).map((wallet) => {
+                  const state = wallet.actions[action] ?? 'untested';
+                  return (
+                    <td>
+                      <span class="sd-chip" data-state={state}>{STATE_LABELS[state]}</span>
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        ))
+      }
+    </table>
+  </div>
+
+  <p class="sd-footnote">
+    Untested means the adapter calls the wallet and nobody has recorded the
+    action working here. It is offered with a warning in the product; it is
+    neither a yes nor a no. Generated from the application source at commit{' '}
+    <code>{matrix.provenance.sourceCommit.slice(0, 7)}</code>. The human
+    summary with per-wallet caveats is on{' '}
+    <a href="/docs-stampdex/reference/wallets/">the wallets page</a>.
+  </p>
+</section>
+
+<style>
+  .sd-chip[data-state='works'] {
+    color: var(--sd-ok);
+    background: var(--sd-ok-wash);
+  }
+  .sd-chip[data-state='untested'] {
+    color: var(--sd-warn);
+    background: var(--sd-warn-wash);
+  }
+  .sd-chip[data-state='no'] {
+    color: var(--sd-err);
+    background: var(--sd-err-wash);
+  }
+  tr[data-hidden='true'] {
+    display: none;
+  }
+  .sd-wallet-group th {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--sd-muted);
+    text-align: start;
+    padding-top: 0.8rem;
+  }
+  .sd-filter-note {
+    width: 100%;
+    font-size: 0.78rem;
+    color: var(--sd-muted);
+    margin: 0.2rem 0 0;
+  }
+</style>
+
+<script>
+  const note = document.querySelector<HTMLElement>('[data-wallet-note]');
+  const radios = document.querySelectorAll<HTMLInputElement>('[data-wallet-filter]');
+  const rows = document.querySelectorAll<HTMLTableRowElement>('[data-wallet-matrix] tr[data-action]');
+
+  for (const radio of radios) {
+    radio.addEventListener('change', () => {
+      const want = radio.value;
+      let shown = 0;
+      for (const row of rows) {
+        const cells = [...row.querySelectorAll<HTMLElement>('[data-state]')];
+        const visible = want === 'all' || cells.some((cell) => cell.dataset.state === want);
+        if (visible) {
+          row.removeAttribute('data-hidden');
+          shown++;
+        } else {
+          row.setAttribute('data-hidden', 'true');
+        }
+      }
+      if (note) {
+        note.textContent =
+          want === 'all'
+            ? `Showing all ${rows.length} actions.`
+            : `Showing ${shown} of ${rows.length} actions where at least one wallet is "${want}".`;
+      }
+    });
+  }
+</script>

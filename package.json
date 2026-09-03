@@ -15,7 +15,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/emit-catalog.mjs",
     "preview": "astro preview",
     "check:runners": "node scripts/check-runners.mjs",
     "check:copy": "node scripts/check-docs.mjs",
@@ -23,17 +23,36 @@
     "check:links": "node scripts/check-links.mjs",
     "make:og": "node scripts/make-og.mjs",
     "make:screens": "node scripts/make-screens.mjs",
-    "test": "npm run check:runners && npm run check:copy && npm run check:contrast && npm run check:manifest",
+    "test": "npm run check:runners && npm run check:copy && npm run check:contrast && npm run check:manifest && npm run check:content && npm run check:translations",
+    "check:translations": "node scripts/check-translations.mjs",
     "check:contrast": "node scripts/check-contrast.mjs",
     "check:metadata": "node scripts/check-metadata.mjs",
     "check:site": "npm run check:links && npm run check:metadata && npm run check:overflow",
-    "check:overflow": "node scripts/check-overflow.mjs"
+    "check:overflow": "node scripts/check-overflow.mjs",
+    "capture:screens": "node scripts/capture-screens.mjs",
+    "gen:screens-manifest": "node scripts/gen-screens-manifest.mjs",
+    "make:responsive-screens": "node scripts/make-responsive-screens.mjs",
+    "check:screens": "node scripts/check-screens.mjs",
+    "check:visual": "playwright test --config playwright.config.mjs",
+    "visual:update": "playwright test --config playwright.config.mjs --update-snapshots",
+    "check:content": "node scripts/check-content.mjs",
+    "gen:truth": "node scripts/gen-truth.mjs",
+    "gen:openapi": "node scripts/gen-openapi.mjs",
+    "test:mcp": "node packages/stampdex-docs-mcp/test.mjs"
   },
   "devDependencies": {
-    "@astrojs/starlight": "0.36.1",
-    "ajv": "8.17.1",
+    "@astrojs/starlight": "0.41.11",
+    "@modelcontextprotocol/sdk": "^1.13.0",
+    "@playwright/test": "1.62.1",
+    "@scalar/api-reference": "1.67.0",
+    "ajv": "8.20.0",
     "ajv-formats": "3.0.1",
-    "astro": "5.14.1",
-    "sharp": "0.34.4"
+    "astro": "7.2.10",
+    "playwright": "1.62.1",
+    "sharp": "0.35.4"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "sharp@0.35.4": true
   }
 }

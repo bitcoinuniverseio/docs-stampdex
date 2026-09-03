@@ -4,6 +4,15 @@ description: How to put a Bitcoin Stamp up for sale through a Counterparty dispe
 source:
   path: stamps compose dispenser open and close routes, wallet capability table
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
 ---
 
 **For:** a stamp owner with a supported wallet.

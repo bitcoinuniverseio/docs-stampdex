@@ -1,0 +1,153 @@
+---
+import feePolicy from '../../generated/fee-policy.json';
+
+/**
+ * The fee explorer. Type example numbers, read the arithmetic. Everything is
+ * computed locally in the browser from the checked-in fee snapshot; nothing
+ * is sent anywhere and no live quote exists. The venue's review panel is the
+ * only number that is real for a trade you are about to sign.
+ *
+ * Without JavaScript the table below shows the same arithmetic worked for
+ * example amounts.
+ */
+const rates = feePolicy.networkFeeRatesSatVb;
+const perSide = 0.015; // 1.5% per side
+const minFee = 500; // sats, per side
+
+const examples = [2000, 12000, 100000, 1000000];
+---
+
+<section class="sd-explorer-box sd-fee" aria-label="Interactive fee explorer">
+  <form class="sd-fee-form" data-sd-fee>
+    <label>
+      <span>Listing total (sats)</span>
+      <input type="number" inputmode="numeric" min="2000" step="1000" value="12000" data-fee-total />
+    </label>
+    <label>
+      <span>Assumed payment size (vB)</span>
+      <input type="number" inputmode="numeric" min="100" step="1" value="141" data-fee-vb />
+    </label>
+    <label>
+      <span>Fee rate (sat/vB, half hour tier today)</span>
+      <input type="number" inputmode="numeric" min="1" step="1" value={rates.halfHour} data-fee-rate />
+    </label>
+    <output class="sd-fee-out" data-fee-out aria-live="polite"></output>
+  </form>
+
+  <dl class="sd-tape" data-fee-facts>
+    <div><dt>Buyer service fee</dt><dd>1.5%, 500 sat minimum</dd></div>
+    <div><dt>Seller service fee</dt><dd>1.5%, 500 sat minimum</dd></div>
+    <div><dt>Network fee</dt><dd>set by the fee rate, paid by whoever signs</dd></div>
+    <div>
+      <dt>Source</dt>
+      <dd>
+        fee snapshot, app <code>{feePolicy.provenance.sourceCommit.slice(0, 7)}</code>
+      </dd>
+    </div>
+  </dl>
+
+  <p class="sd-footnote">
+    Estimates only. No quote is requested and none exists here: the review
+    panel in StampDEX is the real arithmetic for a trade you are about to
+    sign. The minimum per-side fee reaches a large share of a trade at the
+    2,000 sat listing floor; see <a href="/docs-stampdex/reference/fees/">Fees</a>.
+  </p>
+</section>
+
+<div class="sd-scroll">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Listing total</th>
+        <th scope="col">Buyer fee</th>
+        <th scope="col">Seller fee</th>
+        <th scope="col">Both sides</th>
+        <th scope="col">Fees as a share</th>
+        <th scope="col">Network fee (141 vB at half hour)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        examples.map((total) => {
+          const fee = Math.max(Math.round(total * perSide), minFee);
+          const net = Math.max(rates.halfHour, rates.minimum) * 141;
+          return (
+            <tr>
+              <td class="sd-num">{total.toLocaleString('en-US')} sats</td>
+              <td class="sd-num">{fee.toLocaleString('en-US')} sats</td>
+              <td class="sd-num">{fee.toLocaleString('en-US')} sats</td>
+              <td class="sd-num">{(fee * 2).toLocaleString('en-US')} sats</td>
+              <td class="sd-num">{((fee * 2 * 100) / total).toFixed(1)}%</td>
+              <td class="sd-num">{net.toLocaleString('en-US')} sats</td>
+            </tr>
+          );
+        })
+      }
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .sd-fee-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem 1rem;
+    align-items: end;
+    padding-bottom: 0.8rem;
+  }
+  .sd-fee-form label {
+    display: grid;
+    gap: 0.2rem;
+    font-size: 0.76rem;
+    color: var(--sd-muted);
+    font-weight: 620;
+  }
+  .sd-fee-form input {
+    border: 1px solid var(--sd-rule-strong);
+    border-radius: var(--sd-r-sm);
+    background: var(--sd-panel-2);
+    color: var(--sd-ink);
+    font-family: var(--sd-mono);
+    font-size: 0.9rem;
+    padding: 0.35rem 0.55rem;
+    width: 9rem;
+  }
+  .sd-fee-form input:focus-visible {
+    outline: 2px solid var(--sd-focus);
+    outline-offset: 1px;
+  }
+  .sd-fee-out {
+    font-family: var(--sd-mono);
+    font-size: 0.84rem;
+    line-height: 1.6;
+    border: 1px dashed var(--sd-rule-strong);
+    border-radius: var(--sd-r-sm);
+    padding: 0.4rem 0.7rem;
+    max-width: 100%;
+    white-space: pre-line;
+  }
+</style>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-sd-fee]');
+  const out = form?.querySelector<HTMLElement>('[data-fee-out]');
+  if (form && out) {
+    const total = form.querySelector<HTMLInputElement>('[data-fee-total]')!;
+    const vb = form.querySelector<HTMLInputElement>('[data-fee-vb]')!;
+    const rate = form.querySelector<HTMLInputElement>('[data-fee-rate]')!;
+    const fmt = (n: number) => Math.round(n).toLocaleString('en-US');
+    const render = () => {
+      const t = Math.max(0, Number(total.value) || 0);
+      const buyer = Math.max(Math.round(t * 0.015), 500);
+      const seller = Math.max(Math.round(t * 0.015), 500);
+      const network = (Math.max(1, Number(rate.value) || 0)) * Math.max(0, Number(vb.value) || 0);
+      out.textContent = [
+        `buyer pays   ${fmt(t + buyer + network)} sats`,
+        `seller gets  ${fmt(Math.max(0, t - seller))} sats`,
+        `fees total   ${fmt(buyer + seller)} sats + network`,
+      ].join('\n');
+    };
+    for (const input of [total, vb, rate]) input.addEventListener('input', render);
+    render();
+  }
+</script>

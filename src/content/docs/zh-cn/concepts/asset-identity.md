@@ -1,0 +1,97 @@
+---
+title: 资产身份识别机制
+description: 比特币 Stamps 与 SRC-20 代币如何在区块链交易中确立唯一身份。
+source:
+  path: market aggregation identity fields, stamp detail fields
+  verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [src20, stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
+---
+
+> [!NOTE]
+> **简体中文官方文档**：阐明 Stamp 编号规则、SRC-20 部署哈希以及如何防止伪造冒名资产。 核心交易规则为非托管模式，买卖双方按标准费率收取服务费，并于比特币主网进行原子结算。
+
+
+
+Two different assets can share a name. This page says which facts identify an asset
+here, so you always know what you are buying.
+
+## SRC-20 tokens
+
+A ticker alone does not identify a token. The deployment does. Every token carries:
+
+- the ticker
+- the deployment transaction hash
+- the deployment block and time
+- the creator address
+- the max supply and minted supply
+- the holder count
+
+The deployment transaction appears in three places, so you never have to take a ticker
+on trust:
+
+- the market board, in its own column beside the ticker
+- every search result
+- the token page, above the price
+
+Before you buy, check the deployment transaction matches the token you researched. A
+copycat deployment has a different transaction hash and block, whatever its ticker says.
+
+Search never merges two deployments that share a ticker. If two exist, you see both
+rows with their own transactions, and you choose. A list of tokens is keyed on the
+ticker plus the deployment transaction, never on the ticker alone, because keying on
+the ticker would drop the second of two deployments as if it were a duplicate.
+
+When no source reported a deployment for a row, the row says so. It does not fall back
+to the ticker. The identity field in the row's source map reads `none`, and the
+deployment transaction is null.
+
+See [Deployment identity](/docs-stampdex/zh-cn/concepts/deployment-identity/) for the URL
+form and the resolution states.
+
+## Bitcoin Stamps
+
+A stamp's identity is a set of on-chain facts:
+
+| Fact | Field |
+| --- | --- |
+| Stamp number | `stamp` |
+| Counterparty asset id | `cpid` |
+| The transaction that created it | transaction hash |
+| Creator address | creator |
+| The exact bytes | file hash and file size |
+| How many exist | supply, and whether issuance is locked |
+| What kind of file | mime type |
+
+The artwork bytes live on the Bitcoin chain. The file hash on the stamp page is the
+hash of those exact bytes, so nobody can swap the image after the fact.
+
+## Looking up a transaction
+
+Paste a 64 character transaction id into search and StampDEX offers both things it
+could be: the stamp with that transaction, and the SRC-20 deployment with that
+transaction. It picks neither for you.
+
+## Collections are metadata
+
+A collection is curated metadata grouping stamps. Membership comes from the collection
+index, not from the chain, so StampDEX names the source of collection data on the page.
+See [Collection pages](/docs-stampdex/zh-cn/guides/collection-pages/).
+
+## The rule behind all of it
+
+Identity facts sit next to price facts, so a look-alike cannot borrow a real asset's
+reputation. When a fact is unavailable, the page says unknown. It never guesses.
+
+## Related
+
+- [Deployment identity](/docs-stampdex/zh-cn/concepts/deployment-identity/)
+- [Unknown is not zero](/docs-stampdex/zh-cn/concepts/unknown-is-not-zero/)
+- [Token pages](/docs-stampdex/zh-cn/guides/token-pages/)

@@ -4,7 +4,20 @@ description: A stage-by-stage custody map of a StampDEX trade, showing where the
 source:
   path: orders module, settlement worker, OrderStatus enum, legal/custodyClaims
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [src20, stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
+
 ---
+
+import CustodyExplorer from '../../../components/explainers/CustodyExplorer.astro';
+
 
 import CustodyLedger from '../../../components/CustodyLedger.astro';
 import Legend from '../../../components/Legend.astro';
@@ -16,6 +29,8 @@ during the gap your money is somewhere. Somewhere specific, with an address, not
 <Legend />
 
 ## SRC-20: your BTC passes through StampDEX
+
+<CustodyExplorer />
 
 An SRC-20 trade uses the three-transaction listing flow. The seller signs the tokens
 into escrow addresses created for that one listing. The buyer pays the exact total to

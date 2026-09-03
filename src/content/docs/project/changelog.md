@@ -5,8 +5,49 @@ source:
   repo: bitcoinuniverseio/docs-stampdex
   path: this repository
   verified: "2026-09-01"
+contentType: reference
+audiences: [traders, collectors, developers]
+products: [src20, stamps]
+protocols: [src20, stamps, bitcoin]
+difficulty: intro
+estimatedMinutes: 5
+lifecycle: stable
+releaseStatus: live
+lastReviewedBy: docs-stampdex maintainers
+
 ---
 
+## 2026-09-02
+
+The documentation experience release. The facts did not change; everything around
+them did.
+
+- A real visual system: design tokens with a 64-pair WCAG 2.2 AA contrast
+  contract in both themes, self-hosted Inter and JetBrains Mono subsets, brand
+  assets built from the perforated-plate mark, a custom header with the
+  documentation sections and a visible release chip, and a trust strip on every
+  material page showing lifecycle, applicable release, last verified date,
+  chain, owning source, and verification state.
+- A screenshot and evidence studio: captures declared in a strict manifest,
+  taken by a runner that verifies the production commit before it shoots,
+  masked for volatile regions, regenerated responsively, held to freshness
+  windows and a secret scan. Production captures at app commit 38bc2a0e, plus
+  controlled fixture recordings that never pass as production. The
+  [Visual product atlas](/docs-stampdex/product-atlas/) indexes all of it.
+- Interactive explainers generated from machine truth: the order-state explorer
+  reads the application's OrderStatus enum, the wallet capability explorer reads
+  the application's capability source, and the fee explorer computes from the
+  released fee snapshot. Learning paths, a custody explorer, and a transaction
+  anatomy explorer complete the set.
+- An API developer hub: the public OpenAPI 3.1 document generated in the
+  application repository, snapshotted here, rendered by a self-hosted Scalar
+  reference, downloadable, and discoverable at /.well-known/api-catalog.
+- Machine and agent access: llms-full.txt, a Markdown representation of every
+  page with view and copy actions, a JSON page index, and the read-only
+  stampdex-docs-mcp server with contract tests.
+- Release truth: the header compares production against the commit these pages
+  describe, pull request previews publish isolated and noindexed, and high-risk
+  pages past their review window now fail the build instead of passing quietly.
 Dates are the dates the change was verified against the product, not the dates it was
 written.
 

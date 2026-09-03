@@ -1,0 +1,221 @@
+---
+/**
+ * The page trust strip: a visible, compact record of where this page's facts
+ * come from and how fresh they are, rendered under the page title so a
+ * reader never has to open a hidden panel to see them.
+ *
+ * State derivation is deterministic:
+ *   no source record          -> Unknown
+ *   lifecycle "historical"    -> Historical
+ *   lifecycle "beta"/"preview"-> Release pending
+ *   verified within window    -> Verified
+ *   verified beyond window    -> Needs review
+ *
+ * Review windows follow project/page-freshness: transaction, custody, fee,
+ * wallet, and recovery pages 30 days; API, protocol, source, and capability
+ * pages 90 days; glossary and contribution pages 180 days.
+ */
+interface Props {
+  source?: {
+    repo?: string;
+    path?: string;
+    release?: string;
+    chain?: string;
+    network?: string;
+    lifecycle?: string;
+    verified?: string;
+  };
+  pageId: string;
+}
+
+const { source, pageId } = Astro.props;
+
+const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
+const NINETY_DAYS = 90 * 24 * 60 * 60 * 1000;
+const HALF_YEAR_DAYS = 180 * 24 * 60 * 60 * 1000;
+
+function windowFor(id: string): { days: number; label: string } {
+  if (id.startsWith('reference/glossary') || id.startsWith('project/contributing')) {
+    return { days: 180, label: '180 days' };
+  }
+  if (
+    id.startsWith('guides/') ||
+    id.startsWith('tutorials/') ||
+    [
+      'concepts/custody',
+      'concepts/recovery',
+      'concepts/order-lifecycle',
+      'concepts/settlement-lifecycle',
+      'reference/fees',
+      'reference/wallets',
+      'reference/capability-matrix',
+      'reference/order-states',
+    ].includes(id)
+  ) {
+    return { days: 30, label: '30 days' };
+  }
+  return { days: 90, label: '90 days' };
+}
+
+function deriveState(
+  src: Props['source'],
+  win: { days: number; label: string },
+): { key: string; label: string } {
+  if (!src || !src.verified) return { key: 'unknown', label: 'Unknown' };
+  if ((src.lifecycle ?? '').toLowerCase() === 'historical') {
+    return { key: 'historical', label: 'Historical' };
+  }
+  if (['beta', 'preview', 'pending'].includes((src.lifecycle ?? '').toLowerCase())) {
+    return { key: 'release-pending', label: 'Release pending' };
+  }
+  const verifiedAt = Date.parse(src.verified);
+  if (Number.isNaN(verifiedAt)) return { key: 'unknown', label: 'Unknown' };
+  const age = Date.now() - verifiedAt;
+  if (age > win.days * 24 * 60 * 60 * 1000) {
+    return { key: 'needs-review', label: 'Needs review' };
+  }
+  return { key: 'verified', label: 'Verified' };
+}
+
+const hasSource = Boolean(source);
+const win = windowFor(pageId);
+const state = deriveState(source, win);
+
+const lifecycle = source?.lifecycle ?? 'unknown';
+const release = source?.release ?? 'unknown';
+const chainNetwork = source ? `${source.chain} / ${source.network}` : 'unknown';
+const owning = source?.path ?? source?.repo ?? 'unknown';
+const verified = source?.verified ?? 'unknown';
+---
+
+{
+  hasSource && (
+    <dl class="sd-trust">
+      <div class="sd-trust-item">
+        <dt>State</dt>
+        <dd>
+          <span class="sd-trust-state" data-state={state.key}>
+            {state.label}
+          </span>
+        </dd>
+      </div>
+      <div class="sd-trust-item">
+        <dt>Lifecycle</dt>
+        <dd>{lifecycle}</dd>
+      </div>
+      <div class="sd-trust-item">
+        <dt>Applies to</dt>
+        <dd class="sd-trust-release">{release}</dd>
+      </div>
+      <div class="sd-trust-item">
+        <dt>Last verified</dt>
+        <dd class="sd-num">{verified}</dd>
+      </div>
+      <div class="sd-trust-item">
+        <dt>Chain</dt>
+        <dd>
+          {chainNetwork}
+        </dd>
+      </div>
+      <div class="sd-trust-item">
+        <dt>Owning source</dt>
+        <dd>{owning}</dd>
+      </div>
+      <div class="sd-trust-item">
+        <dt>Review window</dt>
+        <dd>{win.label}</dd>
+      </div>
+    </dl>
+  )
+}
+
+<style>
+  .sd-trust {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 0.4rem;
+    align-items: stretch;
+    margin: 0.4rem 0 1.4rem;
+    padding: 0;
+    border: 1px solid var(--sd-rule);
+    border-radius: var(--sd-r-md);
+    background: var(--sd-panel-2);
+    overflow: hidden;
+    font-size: 0.74rem;
+  }
+  .sd-trust-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.05rem;
+    padding: 0.38rem 0.7rem;
+    min-width: 0;
+    max-width: 100%;
+    flex: 0 1 auto;
+  }
+  .sd-trust-item + .sd-trust-item {
+    border-inline-start: 1px solid var(--sd-rule);
+  }
+  .sd-trust-item dt {
+    margin: 0;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 660;
+    color: var(--sd-muted);
+  }
+  .sd-trust-item dd {
+    margin: 0;
+    font-weight: 580;
+    color: var(--sd-ink);
+    overflow-wrap: anywhere;
+  }
+  dd.sd-num {
+    font-family: var(--sd-mono);
+    font-size: 0.7rem;
+  }
+  .sd-trust-release {
+    font-family: var(--sd-mono);
+    font-size: 0.7rem;
+  }
+  .sd-trust-state {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: var(--sd-mono);
+    font-size: 0.68rem;
+    font-weight: 660;
+    letter-spacing: 0.02em;
+    padding: 0.06rem 0.45rem;
+    border-radius: 999px;
+    border: 1px solid currentColor;
+  }
+  .sd-trust-state::before {
+    content: '';
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    background: currentColor;
+    flex: none;
+  }
+  .sd-trust-state[data-state='verified'] {
+    color: var(--sd-ok);
+    background: var(--sd-ok-wash);
+  }
+  .sd-trust-state[data-state='needs-review'] {
+    color: var(--sd-warn);
+    background: var(--sd-warn-wash);
+  }
+  .sd-trust-state[data-state='release-pending'] {
+    color: var(--sd-info);
+    background: var(--sd-info-wash);
+  }
+  .sd-trust-state[data-state='historical'] {
+    color: var(--sd-venue);
+    background: var(--sd-venue-wash);
+  }
+  .sd-trust-state[data-state='unknown'] {
+    color: var(--sd-muted);
+    background: var(--sd-inset);
+  }
+</style>

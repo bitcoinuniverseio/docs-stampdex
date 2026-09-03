@@ -1,0 +1,62 @@
+---
+/** Audience paths: where each kind of reader should land first. */
+const audiences = [
+  {
+    who: 'Traders',
+    path: 'Know what a listing really is, what it costs, and what happens between signing and settlement.',
+    links: [
+      { label: 'Buy SRC-20', href: '/docs-stampdex/guides/buy-src20/' },
+      { label: 'Where your funds are', href: '/docs-stampdex/concepts/custody/' },
+    ],
+  },
+  {
+    who: 'Collectors',
+    path: 'Identify a stamp beyond its picture and buy it without guessing.',
+    links: [
+      { label: 'Collect Bitcoin Stamps', href: '/docs-stampdex/guides/collect-stamps/' },
+      { label: 'Asset identity', href: '/docs-stampdex/concepts/asset-identity/' },
+    ],
+  },
+  {
+    who: 'Developers',
+    path: 'Read the same data the site reads, with no key and no account.',
+    links: [
+      { label: 'API quick start', href: '/docs-stampdex/api/quickstart/' },
+      { label: 'Rate limits', href: '/docs-stampdex/api/rate-limits/' },
+    ],
+  },
+  {
+    who: 'Operators and contributors',
+    path: 'How the documentation stays true to the product, and how to change it.',
+    links: [
+      { label: 'Release evidence', href: '/docs-stampdex/project/release-evidence/' },
+      { label: 'Contributing', href: '/docs-stampdex/project/contributing/' },
+    ],
+  },
+];
+---
+
+<ul class="sd-cards sd-audiences">
+  {
+    audiences.map((a) => (
+      <li>
+        <h3>{a.who}</h3>
+        <p class="sd-audience-path">{a.path}</p>
+        <p>
+          {a.links.map((l, i) => (
+            <>
+              {i > 0 && ' · '}
+              <a href={l.href}>{l.label}</a>
+            </>
+          ))}
+        </p>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .sd-audience-path {
+    margin: 0 0 0.5rem;
+  }
+</style>

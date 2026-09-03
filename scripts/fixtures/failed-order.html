@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Failed order | controlled fixture</title>
+<link rel="stylesheet" href="_fixture.css">
+</head>
+<body>
+<div class="fixture-banner">Controlled recorded state | fixture failed-order</div>
+<div class="fixture-app">
+  <div class="panel">
+    <div class="panel-head"><span>Order 8f42k1</span><span class="chip failed">Failed</span></div>
+    <div class="panel-body">
+      <div class="row"><span class="k">State</span><span class="v"><span class="chip failed">failed</span></span></div>
+      <div class="row"><span class="k">What happened</span><span class="v">Payment confirmed, token transfer not verifiable</span></div>
+      <div class="row"><span class="k">Your BTC</span><span class="v venue">Listing escrow, recoverable</span></div>
+      <div class="row"><span class="k">The tokens</span><span class="v venue">Listing escrow, recoverable</span></div>
+      <div class="warnbox">Failed does not mean lost. Escrow released nothing. Recovery returns each side its own value.</div>
+      <div class="row"><span class="k">Recovery owner</span><span class="v">StampDEX settlement worker</span></div>
+      <div class="row"><span class="k">Recovery window</span><span class="v">Automatic, no action needed</span></div>
+    </div>
+    <div class="actions">
+      <div class="btn btn-ghost">Order detail</div>
+      <div class="btn btn-danger">Contact support</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
