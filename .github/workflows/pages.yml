@@ -13,22 +13,14 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  route:
-    uses: ./.github/workflows/route.yml
-    secrets: inherit
-    with:
-      plan: '{"build_and_publish":"light"}'
-      config_ref: b7ec516812bcab9cce5a8280034c61082c9e62bd
-
   build-and-publish:
-    needs: route
     # Routed through the shared capacity router rather than the self-hosted
     # fleet. The organisation-owned Linux runners do not pick up jobs for this
     # repository, and the RunsOn artifact proxy returns a plain-text endpoint
     # marker to actions/upload-artifact, which breaks the Pages artifact
     # upload. Publishing to a branch avoids both problems: it needs no
     # artifact upload and no particular runner.
-    runs-on: ${{ fromJSON(needs.route.outputs.targets).build_and_publish }}
+    runs-on: [self-hosted, linux, x64, universe, gcp, universe-gcp-small]
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
