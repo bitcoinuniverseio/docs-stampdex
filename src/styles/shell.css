@@ -84,6 +84,9 @@
 .sidebar {
   --sl-color-white: var(--sd-ink-inverse);
   --sl-color-text: var(--sd-ink-inverse);
+  --sl-color-gray-1: var(--sd-ink-inverse);
+  --sl-color-gray-2: var(--sd-muted-inverse);
+  --sl-color-text-accent: var(--sd-brand-accent);
 }
 
 /* Focus is always visible in the shell. */
