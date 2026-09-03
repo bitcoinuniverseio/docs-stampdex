@@ -130,6 +130,9 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
       :global([data-has-sidebar]) .header {
         padding-inline-end: var(--sl-nav-pad-x);
       }
+      :global(:not([data-has-sidebar])) .header {
+        padding-inline-end: var(--sl-nav-pad-x);
+      }
       .sidebar-pane {
         --sl-sidebar-visibility: visible;
         width: var(--sl-sidebar-width);
