@@ -1,8 +1,9 @@
 ---
 /**
  * The page trust strip: a visible, compact record of where this page's facts
- * come from and how fresh they are, rendered under the page title so a
- * reader never has to open a hidden panel to see them.
+ * come from and how fresh they are, rendered under the page title. The
+ * primary status facts stay visible, while the secondary source record is
+ * available without adding permanent vertical weight to every page.
  *
  * State derivation is deterministic:
  *   no source record          -> Unknown
@@ -90,49 +91,54 @@ const verified = source?.verified ?? 'unknown';
 
 {
   hasSource && (
-    <dl class="sd-trust">
-      <div class="sd-trust-item">
+    <section class="sd-trust" aria-label="Page source and verification">
+      <dl class="sd-trust-item">
         <dt>State</dt>
         <dd>
           <span class="sd-trust-state" data-state={state.key}>
             {state.label}
           </span>
         </dd>
-      </div>
-      <div class="sd-trust-item">
+      </dl>
+      <dl class="sd-trust-item">
         <dt>Lifecycle</dt>
         <dd>{lifecycle}</dd>
-      </div>
-      <div class="sd-trust-item">
+      </dl>
+      <dl class="sd-trust-item">
         <dt>Applies to</dt>
         <dd class="sd-trust-release">{release}</dd>
-      </div>
-      <div class="sd-trust-item">
+      </dl>
+      <dl class="sd-trust-item">
         <dt>Last verified</dt>
         <dd class="sd-num">{verified}</dd>
-      </div>
-      <div class="sd-trust-item">
+      </dl>
+      <dl class="sd-trust-item">
         <dt>Chain</dt>
         <dd>
           {chainNetwork}
         </dd>
-      </div>
-      <div class="sd-trust-item">
-        <dt>Owning source</dt>
-        <dd>{owning}</dd>
-      </div>
-      <div class="sd-trust-item">
-        <dt>Review window</dt>
-        <dd>{win.label}</dd>
-      </div>
-    </dl>
+      </dl>
+      <details class="sd-trust-details">
+        <summary>Source and review</summary>
+        <dl>
+          <div>
+            <dt>Owning source</dt>
+            <dd>{owning}</dd>
+          </div>
+          <div>
+            <dt>Review window</dt>
+            <dd>{win.label}</dd>
+          </div>
+        </dl>
+      </details>
+    </section>
   )
 }
 
 <style>
   .sd-trust {
-    display: grid;
-    grid-template-columns: max-content max-content minmax(0, 1fr) max-content;
+    display: flex;
+    flex-wrap: wrap;
     gap: 0;
     margin: 0.35rem 0 1rem;
     padding: 0;
@@ -150,8 +156,8 @@ const verified = source?.verified ?? 'unknown';
     min-width: 0;
     max-width: 100%;
   }
-  .sd-trust-item:nth-child(6) {
-    grid-column: span 2;
+  .sd-trust-item:nth-child(3) {
+    flex: 1 1 18rem;
   }
   .sd-trust-item + .sd-trust-item {
     border-inline-start: 1px solid var(--sd-rule);
@@ -170,6 +176,64 @@ const verified = source?.verified ?? 'unknown';
     min-width: 0;
     font-weight: 580;
     color: var(--sd-ink);
+    overflow-wrap: anywhere;
+  }
+  .sd-trust-details {
+    position: relative;
+    min-width: 0;
+    padding: 0.42rem 0.65rem;
+    border-inline-start: 1px solid var(--sd-rule);
+    color: var(--sd-muted);
+  }
+  .sd-trust-details summary {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    cursor: pointer;
+    list-style: none;
+    font-size: 0.58rem;
+    font-weight: 660;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .sd-trust-details summary::-webkit-details-marker {
+    display: none;
+  }
+  .sd-trust-details summary::after {
+    content: '+';
+    font-size: 0.85rem;
+    line-height: 1;
+  }
+  .sd-trust-details[open] {
+    flex-basis: 100%;
+  }
+  .sd-trust-details[open] summary::after {
+    content: '−';
+  }
+  .sd-trust-details dl {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) max-content;
+    gap: 0.25rem 1rem;
+    margin: 0.45rem 0 0;
+  }
+  .sd-trust-details dl > div {
+    display: flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    min-width: 0;
+  }
+  .sd-trust-details dt {
+    flex: none;
+    font-size: 0.58rem;
+    font-weight: 660;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .sd-trust-details dd {
+    min-width: 0;
+    margin: 0;
+    color: var(--sd-ink);
+    font-weight: 580;
     overflow-wrap: anywhere;
   }
   dd.sd-num {
@@ -221,12 +285,11 @@ const verified = source?.verified ?? 'unknown';
     background: var(--sd-inset);
   }
   @media (max-width: 50rem) {
-    .sd-trust {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+    .sd-trust-item:nth-child(3) {
+      flex-basis: 100%;
     }
-    .sd-trust-item:nth-child(3),
-    .sd-trust-item:nth-child(6) {
-      grid-column: span 2;
+    .sd-trust-details[open] dl {
+      grid-template-columns: 1fr;
     }
   }
 </style>
