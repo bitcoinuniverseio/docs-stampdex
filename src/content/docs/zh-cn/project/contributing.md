@@ -35,7 +35,7 @@ here.
 
 ## Running the site locally
 
-```bash
+```bash frame=none
 npm install
 npm run dev
 npm run build

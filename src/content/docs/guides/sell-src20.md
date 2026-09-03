@@ -56,7 +56,7 @@ An order in state **Open**, visible on the book and in your
 
 ## How to verify
 
-```bash
+```bash frame=none
 curl "https://stamp.api.bitcoinuniverse.io/api/v1/orders?tick=KEVIN&status=open"
 ```
 

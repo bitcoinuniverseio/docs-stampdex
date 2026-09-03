@@ -149,18 +149,20 @@ for (const spec of PAGES) {
   });
 }
 
-test('titleless terminal frames omit empty chrome', async ({ page }) => {
+test('titleless command blocks omit terminal chrome', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 960 });
   await page.goto(`http://localhost:${boundPort}${BASE}/api/quickstart/`, { waitUntil: 'networkidle' });
 
-  const terminal = page.locator('.expressive-code .frame.is-terminal').filter({
+  const command = page.locator('.expressive-code .frame').filter({
     hasText: 'curl https://stamp.api.bitcoinuniverse.io/api/version',
   });
-  await expect(terminal).toHaveCount(1);
-  await expect(terminal.locator('> .header')).toBeHidden();
-  const hasRestoredTopEdge = await terminal.locator('> pre').evaluate((element) => {
+  await expect(command).toHaveCount(1);
+  await expect(command).not.toHaveClass(/is-terminal/);
+  await expect(command.locator('> .header')).toBeHidden();
+  await expect(command.locator('.copy button')).toHaveCount(1);
+  const hasCompleteTopEdge = await command.locator('> pre').evaluate((element) => {
     const style = getComputedStyle(element);
     return style.borderTopStyle === 'solid' && style.borderTopLeftRadius !== '0px';
   });
-  expect(hasRestoredTopEdge).toBe(true);
+  expect(hasCompleteTopEdge).toBe(true);
 });

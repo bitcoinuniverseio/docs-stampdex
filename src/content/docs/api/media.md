@@ -28,7 +28,7 @@ are the only routes served to any browser origin.
 
 ## Example
 
-```bash
+```bash frame=none
 curl -o kevin-thumb.webp \
   "https://stamp.api.bitcoinuniverse.io/api/v1/stamps/1472320/preview?w=320"
 ```
