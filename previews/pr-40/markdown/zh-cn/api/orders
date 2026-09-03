@@ -1,0 +1,123 @@
+# 订单数据 API
+
+查询全网挂单、撮合状态与订单生命周期的标准化公开接口。
+
+> Source: bitcoinuniverseio/stampdex (private application source), orders controller, order response shape, wallet action challenge service. Applicable release continuous deployment, verify with GET /api/version. Last verified 2026-09-01. Chain bitcoin/mainnet.
+
+> [!NOTE]
+> **简体中文官方文档**：本接口仅展示公开订单信息，不包含任何敏感账户数据或托管私钥。 核心交易规则为非托管模式，买卖双方按标准费率收取服务费，并于比特币主网进行原子结算。
+
+
+
+Base path: `/api/v1/orders`.
+
+Read routes are open. Write routes build transactions your wallet must sign; nothing
+moves without your signature.
+
+## Authorising a mutation
+
+Every mutation needs a one-time action challenge.
+
+1. `POST /api/v1/orders/challenges` with the wallet address, the action id, and the
+   exact request you intend to send. The server normalises the request and rejects
+   unknown fields outright.
+2. It returns a challenge id, a nonce, a message, and an expiry.
+3. Your wallet signs that message. It names the action, your address, a hash of the
+   normalised request, the nonce, and the expiry.
+4. Send the mutation with four headers: the wallet address, the signature, the
+   challenge id, and the nonce.
+
+A challenge lives five minutes, is bound to one action and one request body, and is
+consumed once. Changing the body after signing invalidates it.
+
+## Routes
+
+| Method | Path | Does |
+| --- | --- | --- |
+| GET | `/` | List orders |
+| GET | `/:id` | One order in detail |
+| POST | `/challenges` | Request an action challenge |
+| POST | `/ensure-dust-utxo` | Build a dust output transaction when the seller has none |
+| POST | `/prepare-listing` | Build the listing transaction and the escrow addresses |
+| POST | `/` | Finalize a signed draft into an open listing |
+| DELETE | `/:id` | Cancel a listing |
+| POST | `/:id/reprice` | Replace an open listing with one at a new price |
+| POST | `/:id/repair` | Rebuild a listing whose anchor was spent |
+| POST | `/:id/split` | Split one listing into several lots |
+| POST | `/split/finalize` | Finalize a split group atomically |
+| POST | `/:id/fill` | Start a buy and receive payment instructions |
+| POST | `/:id/confirm-payment` | Report the payment transaction id |
+| POST | `/:id/release` | Return a lock you are not going to use |
+| POST | `/bulk-fill` | Start several buys in one transaction |
+| POST | `/bulk-confirm-payment` | Confirm several payments |
+| GET | `/:id/diagnosis` | Why a listing of yours is not fillable |
+| GET | `/seller/:sellerAddress/optimizer` | Seller-side listing analysis |
+
+The last two need a read-scope wallet proof rather than an action challenge.
+
+Bulk routes accept at most 20 order ids. A split takes between 2 and 10 lots, and the
+lot amounts must sum to the original amount.
+
+## Listing orders
+
+```bash
+curl "https://stamp.api.bitcoinuniverse.io/api/v1/orders?tick=SEX&status=open"
+```
+
+| Parameter | Meaning |
+| --- | --- |
+| `tick` | Filter by ticker |
+| `status` | One of the [order states](/docs-stampdex/zh-cn/reference/order-states/) |
+| `walletAddress` | Filter to one address |
+| `page` | From 1, default 1 |
+| `limit` | 1 to 100, default 20 |
+
+The response is `{ "data": [...], "total": n }`.
+
+An open order looks like this, with fields trimmed:
+
+```json
+{
+  "id": "71933438-5fe7-424c-85cf-9ee52d22556d",
+  "tick": "SEX",
+  "amount": "10000",
+  "priceSatsPerToken": "46",
+  "totalPriceSats": "460000",
+  "sellerAddress": "bc1q69m...",
+  "status": "open"
+}
+```
+
+`priceSatsPerToken * amount` always equals `totalPriceSats`. The API refuses to serve a
+price the total contradicts.
+
+## What an order never returns
+
+Escrow private keys, the signed listing transaction hex, and the settlement transaction
+hex are never returned by any route. They exist server side, encrypted, and are
+discarded when a draft expires.
+
+## Common failures
+
+| Status | Message you may see | Meaning |
+| --- | --- | --- |
+| 401 | "Wallet action challenge is invalid or expired" | The challenge outlived its five minutes, or was already used |
+| 401 | "Wallet action signature is invalid" | The signature does not verify for that address |
+| 401 | "Wallet does not own this order" | You are acting as a different address |
+| 400 | "Order action request has invalid fields" | The body carried a field the action does not accept |
+| 400 | "Minimum total payment is 2000 sats" | The listing total is below the floor |
+| 400 | "signedListingPsbtHex does not match the prepared listing transaction" | What was signed is not what was prepared |
+| 404 | "Order not found" | No such order |
+| 409 | "This item is currently being purchased by another buyer" | Somebody else holds the lock |
+| 409 | "Order already has a payment confirmation in progress" | A confirmation is already being processed |
+| 410 | "Order has expired" | The listing or the lock ran out of time |
+
+The full user-facing walkthrough is in
+[Order lifecycle](/docs-stampdex/zh-cn/concepts/order-lifecycle/) and
+[Recovery](/docs-stampdex/zh-cn/concepts/recovery/).
+
+## Related
+
+- [Order states](/docs-stampdex/zh-cn/reference/order-states/)
+- [Where your funds are](/docs-stampdex/zh-cn/concepts/custody/)
+- [Worked examples](/docs-stampdex/zh-cn/api/examples/)
