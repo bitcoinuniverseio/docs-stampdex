@@ -1,0 +1,19 @@
+# 系统化学习路径
+
+专为新手交易员、资深收藏家、协议开发者与审计人员定制的阶段式学习路径。
+
+> Source: bitcoinuniverseio/docs-stampdex, this repository. Applicable release continuous deployment, verify with GET /api/version. Last verified 2026-09-02. Chain bitcoin/mainnet.
+
+> [!NOTE]
+> **简体中文官方文档**：循序渐进掌握从非托管交易到 API 自动化的全套知识图谱。 核心交易规则为非托管模式，买卖双方按标准费率收取服务费，并于比特币主网进行原子结算。
+
+
+
+import LearningPaths from '../../../../components/explainers/LearningPaths.astro';
+
+Each path is an ordered list of pages with one goal. Read them in order the
+first time; afterwards they work as reference. Tick the steps to keep your
+place: progress is kept in this browser only, never sent anywhere, and the
+reset button erases it.
+
+<LearningPaths />
