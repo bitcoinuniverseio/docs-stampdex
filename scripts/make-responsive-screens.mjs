@@ -49,9 +49,38 @@ for (const capture of manifest.captures) {
     continue;
   }
   const meta = await sharp(master).metadata();
-  for (const width of WIDTHS) {
-    if (meta.width < width) continue;
-    const resize = sharp(master).resize({ width, withoutEnlargement: true });
+  const crop = capture.crop;
+  if (
+    crop &&
+    (crop.x < 0 || crop.y < 0 || crop.width <= 0 || crop.height <= 0 ||
+      crop.x + crop.width > meta.width || crop.y + crop.height > meta.height)
+  ) {
+    console.error(`${capture.id}: crop is outside assets/screens/${capture.id}.png`);
+    failures++;
+    continue;
+  }
+  const sourceWidth = crop?.width ?? meta.width;
+  for (const name of readdirSync(OUT)) {
+    const match = name.match(new RegExp(`^${capture.id}\\.(\\d+)w\\.(webp|avif)$`));
+    if (match && Number(match[1]) > sourceWidth) {
+      rmSync(join(OUT, name));
+      console.log(`removed oversized variant public/screens/${name}`);
+    }
+  }
+  const widths = crop
+    ? [...new Set([...WIDTHS, sourceWidth])].sort((a, b) => a - b)
+    : WIDTHS;
+  for (const width of widths) {
+    if (sourceWidth < width) continue;
+    const source = crop
+      ? sharp(master).extract({
+          left: crop.x,
+          top: crop.y,
+          width: crop.width,
+          height: crop.height,
+        })
+      : sharp(master);
+    const resize = source.resize({ width, withoutEnlargement: true });
     for (const [ext, pipe] of [
       ['webp', () => resize.clone().webp({ quality: 84, effort: 5 })],
       ['avif', () => resize.clone().avif({ quality: 60, effort: 5 })],
@@ -68,7 +97,9 @@ for (const capture of manifest.captures) {
       }
     }
   }
-  console.log(`${capture.id}: ${meta.width}x${meta.height} -> variants written`);
+  console.log(
+    `${capture.id}: ${meta.width}x${meta.height}${crop ? ` cropped to ${crop.width}x${crop.height}` : ''} -> variants written`,
+  );
 }
 
 if (failures) {
