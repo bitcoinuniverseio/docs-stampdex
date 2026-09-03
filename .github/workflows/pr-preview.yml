@@ -17,7 +17,7 @@ concurrency:
 jobs:
   preview:
     if: github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: [self-hosted, linux, x64, universe-linux]
+    runs-on: [self-hosted, linux, x64, universe-super]
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4

@@ -16,7 +16,7 @@ jobs:
     # This repository is public, so pull request jobs run through the shared
     # capacity router. A fork pull request must not reach organisation-owned
     # infrastructure.
-    runs-on: [self-hosted, linux, x64, universe-linux]
+    runs-on: [self-hosted, linux, x64, universe-super]
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
