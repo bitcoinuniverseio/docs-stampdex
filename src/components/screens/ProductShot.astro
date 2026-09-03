@@ -54,7 +54,10 @@ const srcsetAvif = variants
   .map((v) => `${base}/${v.file} ${v.width}w`)
   .join(', ');
 const largest = widths[widths.length - 1];
-const sizes = `(min-width: 60rem) ${largest * 0.72}px, 100vw`;
+const sizes = `(min-width: 60rem) ${capture.crop ? largest : largest * 0.72}px, 100vw`;
+const sourceWidth = capture.crop?.width ?? capture.viewport.width;
+const sourceHeight = capture.crop?.height ?? capture.viewport.height;
+const imageHeight = Math.round((largest * sourceHeight) / sourceWidth);
 
 const isFixture = capture.source === 'controlled-fixture';
 ---
@@ -67,9 +70,7 @@ const isFixture = capture.source === 'controlled-fixture';
       <img
         src={src}
         width={largest}
-        height={Math.round(
-          (largest * capture.viewport.height) / capture.viewport.width,
-        )}
+        height={imageHeight}
         alt={alt ?? capture.alt}
         loading="lazy"
         decoding="async"
@@ -96,9 +97,7 @@ const isFixture = capture.source === 'controlled-fixture';
             <img
               src={src}
               width={largest}
-              height={Math.round(
-                (largest * capture.viewport.height) / capture.viewport.width,
-              )}
+              height={imageHeight}
               alt={alt ?? capture.alt}
               loading="lazy"
               decoding="async"
@@ -112,9 +111,7 @@ const isFixture = capture.source === 'controlled-fixture';
           <img
             src={src}
             width={largest}
-            height={Math.round(
-              (largest * capture.viewport.height) / capture.viewport.width,
-            )}
+            height={imageHeight}
             alt={alt ?? capture.alt}
             loading="lazy"
             decoding="async"

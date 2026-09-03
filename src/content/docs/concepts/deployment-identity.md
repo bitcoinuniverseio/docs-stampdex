@@ -52,7 +52,7 @@ One means nobody deployed this ticker. The other means StampDEX could not ask.
 
 ## Reading it yourself
 
-```bash
+```bash frame=none
 curl "https://stamp.api.bitcoinuniverse.io/api/v1/market/deployments/KEVIN"
 ```
 
@@ -62,7 +62,7 @@ The response carries `resolution`, `source`, `source_available`, `observed_at`, 
 
 Going the other way, from a transaction to a token:
 
-```bash
+```bash frame=none
 curl "https://stamp.api.bitcoinuniverse.io/api/v1/market/deployments/tx/23765f9bc6b87e078b1f93ed213f90b9004998336575f726e46f34ddbea5e5f3"
 ```
 

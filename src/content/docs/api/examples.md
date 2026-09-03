@@ -20,7 +20,7 @@ signature, and none of them can move anything.
 
 ## Find the cheapest listing for a token
 
-```bash
+```bash frame=none
 curl -s "https://stamp.api.bitcoinuniverse.io/api/v1/orders?tick=KEVIN&status=open&limit=1"
 ```
 
@@ -30,7 +30,7 @@ nothing is listed, which is different from a floor of zero.
 
 ## Compare the order book floor with the index price
 
-```bash
+```bash frame=none
 curl -s "https://stamp.api.bitcoinuniverse.io/api/v1/market/tokens/KEVIN"
 ```
 
@@ -41,7 +41,7 @@ and the field is unknown.
 
 ## Check whether a ticker is ambiguous before you trade
 
-```bash
+```bash frame=none
 curl -s "https://stamp.api.bitcoinuniverse.io/api/v1/market/deployments/KEVIN"
 ```
 
@@ -52,7 +52,7 @@ nobody deploying it.
 
 ## Turn a transaction id into a token
 
-```bash
+```bash frame=none
 curl -s "https://stamp.api.bitcoinuniverse.io/api/v1/market/deployments/tx/23765f9bc6b87e078b1f93ed213f90b9004998336575f726e46f34ddbea5e5f3"
 ```
 
@@ -61,7 +61,7 @@ Expect `found` and a `deployment`. Anything that is not 64 hex characters return
 
 ## Read what an address holds
 
-```bash
+```bash frame=none
 curl -s "https://stamp.api.bitcoinuniverse.io/api/v1/wallet/ADDRESS/portfolio"
 ```
 
@@ -70,7 +70,7 @@ involved, and nothing here tells you who controls that address.
 
 ## Fetch several stamps in one call
 
-```bash
+```bash frame=none
 curl -s -X POST "https://stamp.api.bitcoinuniverse.io/api/v1/stamps/details" \
   -H "Content-Type: application/json" \
   -d '{"stampIds": [1472320, 1472321, 1472322]}'
@@ -81,7 +81,7 @@ calls. This route has its own, more generous rate limit.
 
 ## Find the cheapest way to buy a stamp
 
-```bash
+```bash frame=none
 curl -s "https://stamp.api.bitcoinuniverse.io/api/v1/stamps/1472320/best-dispenser"
 ```
 
@@ -91,7 +91,7 @@ be asked, not that there is nothing for sale.
 
 ## Get a thumbnail rather than the full artwork
 
-```bash
+```bash frame=none
 curl -s -o thumb.webp \
   "https://stamp.api.bitcoinuniverse.io/api/v1/stamps/1472320/preview?w=320"
 ```
@@ -101,7 +101,7 @@ against the rate limit.
 
 ## Ask how far behind the index is
 
-```bash
+```bash frame=none
 curl -s "https://stamp.api.bitcoinuniverse.io/api/v1/indexer/status"
 ```
 
@@ -111,7 +111,7 @@ says so.
 
 ## Find out where one order actually is
 
-```bash
+```bash frame=none
 curl -s "https://stamp.api.bitcoinuniverse.io/api/v1/indexer/orders/ORDER_ID"
 ```
 
@@ -121,7 +121,7 @@ where.
 
 ## Check which commit is serving you
 
-```bash
+```bash frame=none
 curl -s "https://stamp.api.bitcoinuniverse.io/api/version"
 ```
 
@@ -129,7 +129,7 @@ The commit, the release id, and the build timestamp of the code answering your r
 
 ## A polite polling loop
 
-```bash
+```bash frame=none
 while true; do
   curl -s "https://stamp.api.bitcoinuniverse.io/api/v1/market/tokens?limit=100" \
     -H "Accept-Encoding: gzip" --compressed -o board.json

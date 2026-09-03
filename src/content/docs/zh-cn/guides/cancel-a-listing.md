@@ -49,7 +49,7 @@ alone again.
 
 ## How to verify
 
-```bash
+```bash frame=none
 curl "https://stamp.api.bitcoinuniverse.io/api/v1/orders/ORDER_ID"
 ```
 

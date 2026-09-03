@@ -148,3 +148,51 @@ for (const spec of PAGES) {
     });
   });
 }
+
+test('titleless command blocks omit terminal chrome', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 960 });
+  await page.goto(`http://localhost:${boundPort}${BASE}/api/quickstart/`, { waitUntil: 'networkidle' });
+
+  const command = page.locator('.expressive-code .frame').filter({
+    hasText: 'curl https://stamp.api.bitcoinuniverse.io/api/version',
+  });
+  await expect(command).toHaveCount(1);
+  await expect(command).not.toHaveClass(/is-terminal/);
+  await expect(command.locator('> .header')).toBeHidden();
+  await expect(command.locator('.copy button')).toHaveCount(1);
+  const hasCompleteTopEdge = await command.locator('> pre').evaluate((element) => {
+    const style = getComputedStyle(element);
+    return style.borderTopStyle === 'solid' && style.borderTopLeftRadius !== '0px';
+  });
+  expect(hasCompleteTopEdge).toBe(true);
+});
+
+test('search results keep the component visual system', async ({ page }) => {
+  await page.setViewportSize({ width: 1024, height: 800 });
+  await page.goto(`http://localhost:${boundPort}${BASE}/`, { waitUntil: 'networkidle' });
+  await page.evaluate(() => {
+    document.documentElement.dataset.theme = 'light';
+    localStorage.setItem('starlight-theme', 'light');
+  });
+
+  await page.locator('[data-open-modal]').click();
+  await page.locator('.sd-search-input').fill('guide');
+
+  const result = page.locator('.sd-result-item').first();
+  await expect(result).toBeVisible();
+  await expect(page.locator('#sdAskCard')).toBeHidden();
+  await expect(result.locator('.sd-result-link')).toHaveCSS('text-decoration-line', 'none');
+  const baseline = test.info().snapshotPath('search-results.png');
+  if (existsSync(baseline)) {
+    await expect(page.locator('.sd-search-dialog')).toHaveScreenshot('search-results.png', {
+      animations: 'disabled',
+    });
+  } else {
+    await page.locator('.sd-search-dialog').screenshot({ path: baseline, animations: 'disabled' });
+  }
+
+  await page.locator('.sd-search-input').fill('custody');
+  const citation = page.locator('.sd-citation-link').first();
+  await expect(page.locator('#sdAskCard')).toBeVisible();
+  await expect(citation).toHaveCSS('text-decoration-line', 'none');
+});

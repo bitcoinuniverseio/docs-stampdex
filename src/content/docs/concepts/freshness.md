@@ -19,7 +19,7 @@ Every number here has an age. This page says how old it can be and how to find o
 
 ## The lag report
 
-```bash
+```bash frame=none
 curl https://stamp.api.bitcoinuniverse.io/api/v1/indexer/status
 ```
 
