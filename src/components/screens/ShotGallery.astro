@@ -13,18 +13,25 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const shots = ids.map((id) => {
   const capture = getCapture(id);
   const best = bestVariant(capture);
-  return { capture, src: `${base}/${best.file}`, width: best.width };
+  const sourceWidth = capture.crop?.width ?? capture.viewport.width;
+  const sourceHeight = capture.crop?.height ?? capture.viewport.height;
+  return {
+    capture,
+    src: `${base}/${best.file}`,
+    width: best.width,
+    height: Math.round((best.width * sourceHeight) / sourceWidth),
+  };
 });
 ---
 
 <ul class="sd-atlas">
   {
-    shots.map(({ capture, src, width }) => (
+    shots.map(({ capture, src, width, height }) => (
       <li>
         <img
           src={src}
           width={width}
-          height={Math.round((width * capture.viewport.height) / capture.viewport.width)}
+          height={height}
           alt={capture.alt}
           loading="lazy"
           decoding="async"
