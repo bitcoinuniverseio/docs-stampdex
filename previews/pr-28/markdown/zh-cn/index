@@ -1,0 +1,97 @@
+# StampDEX 文档
+
+详细了解面向比特币 Stamps 和 SRC-20 协议的 StampDEX 交易平台机制，包括订单生命周期、各阶段资金托管状态、服务费费率、原子结算流程与公开读取 API。
+
+> Source: bitcoinuniverseio/docs-stampdex, this repository. Applicable release continuous deployment, verify with GET /api/version. Last verified 2026-09-02. Chain bitcoin/mainnet.
+
+import ProductShot from '../../../components/screens/ProductShot.astro';
+import TaskLauncher from '../../../components/home/TaskLauncher.astro';
+import AudiencePaths from '../../../components/home/AudiencePaths.astro';
+import ProtocolMap from '../../../components/home/ProtocolMap.astro';
+import CustodySummary from '../../../components/home/CustodySummary.astro';
+import QuickstartTeaser from '../../../components/home/QuickstartTeaser.astro';
+import ReleaseState from '../../../components/home/ReleaseState.astro';
+import LatestChanges from '../../../components/home/LatestChanges.astro';
+
+<div class="sd-home-lede">
+
+StampDEX 是位于 [stampdex.fun](https://stampdex.fun) 的交易市场与区块链浏览器，专为两种比特币协议打造：**比特币 Stamps**（直接写入比特币交易输出的链上艺术品）与 **SRC-20**（基于相同链上机制构建的代币规范）。您可以在无需连接钱包的情况下浏览平台的全部市场数据；仅在准备发起交易时才需连接支持的钱包。
+
+本技术文档的核心使命十分明确：比特币网络上的每笔交易都需要区块确认时间，而在该确认周期内，您的资金必须处于明确且受保护的技术状态中。本站的每一页均透明公开资金位置、数据来源、核验版本，以及平台的防范边界。
+
+</div>
+
+## 平台界面实况
+
+<div class="sd-venue">
+  <div class="sd-venue-main">
+
+<ProductShot id="market-desktop-dark" />
+
+<ProductShot id="token-desktop-dark" />
+
+  </div>
+  <div class="sd-venue-phone">
+
+<ProductShot id="market-mobile-dark" />
+
+  </div>
+</div>
+
+## 核心操作快速导航
+
+<TaskLauncher />
+
+## 按读者角色指引
+
+<AudiencePaths />
+
+## 协议底层架构
+
+<ProtocolMap />
+
+所有交易均在 StampDEX 撮合执行，而非在其他 Bitcoin Universe 产品内部。Universe 其他前端产品可以展示 Stamp 或代币资产，但订单簿维护、撮合逻辑与单交易结算均由 StampDEX 独立处理。
+
+## 资金全生命周期状态一览
+
+<CustodySummary />
+
+## 开发者接入中心
+
+<QuickstartTeaser />
+
+## 当前线上版本状态
+
+<ReleaseState />
+
+## 常用文档直达
+
+| 目标场景 | 推荐阅读 |
+| --- | --- |
+| 五分钟快速入门交易平台 | [新手指南](/docs-stampdex/zh-cn/start-here/) |
+| 查阅系统已支持与不支持的功能 | [平台功能与限制清单](/docs-stampdex/zh-cn/capabilities/) |
+| 排查未决或中断的订单 | [订单生命周期](/docs-stampdex/zh-cn/concepts/order-lifecycle/) 与 [资产恢复](/docs-stampdex/zh-cn/concepts/recovery/) |
+| 查阅完整交易与网络费用 | [服务费标准](/docs-stampdex/zh-cn/reference/fees/) |
+| 验证市场数据的链上来源 | [数据溯源](/docs-stampdex/zh-cn/concepts/data-provenance/) |
+| 查阅各钱包的功能支持矩阵 | [钱包兼容性](/docs-stampdex/zh-cn/reference/wallets/) |
+| 查阅包含时间截屏的完整图册 | [视觉产品图册](/docs-stampdex/product-atlas/) |
+
+## 最近更新记录
+
+<LatestChanges />
+
+## 代码源、运行状态与技术支持
+
+| 项目 | 说明与链接 |
+| --- | --- |
+| 生产平台 | [stampdex.fun](https://stampdex.fun) |
+| 文档源码仓库 | [github.com/bitcoinuniverseio/docs-stampdex](https://github.com/bitcoinuniverseio/docs-stampdex) |
+| 应用问题反馈 | [github.com/bitcoinuniverseio/stampdex/issues](https://github.com/bitcoinuniverseio/stampdex/issues) |
+| 实时运行状态 | [`GET /api/v1/indexer/status`](/docs-stampdex/zh-cn/api/status/) |
+| 更新日志 | [变更日志](/docs-stampdex/zh-cn/project/changelog/) |
+| 安全漏洞通报 | 请发送邮件至 `legal@bitcoinuniverse.io`，切勿公开发布。详见 [安全守则](/docs-stampdex/zh-cn/safety/) |
+| 核心开发者生态 | [docs.bitcoinuniverse.io](https://docs.bitcoinuniverse.io) |
+
+<p class="sd-footnote">
+本网站中的任何内容均不构成财务或投资建议。StampDEX 仅展示资产身份、市场事实并构建交易。您购买的具体资产及其价格完全由您自行决定。
+</p>

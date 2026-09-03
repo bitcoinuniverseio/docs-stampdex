@@ -1,0 +1,83 @@
+# 平台功能与限制清单
+
+StampDEX 平台支持与不支持功能的完整清单，严格依据最新应用发布代码验证。
+
+> Source: bitcoinuniverseio/core, published as a snapshot in bitcoinuniverseio/docs-platform, backend/packages/ecosystem-contracts/lib/protocols.js. Applicable release core commit 15dd03b5986a0a7ceba2b1a1ed30f3888ae4712c. Last verified 2026-09-01. Chain bitcoin/mainnet.
+
+> [!NOTE]
+> **简体中文官方文档**：本功能清单直接转录自后端与前端核心配置。每一项能力均经过自动化测试验证。 核心交易规则为非托管模式，买卖双方按标准费率收取服务费，并于比特币主网进行原子结算。
+
+
+
+import ActionTable from '../../../components/ActionTable.astro';
+
+A route existing in a product is not the same as an action working. This page is
+generated from the Bitcoin Universe ecosystem capability registry, so what you read
+here is what the platform records as true, not what somebody hoped to ship.
+
+Both protocols are marketplace-owned by StampDEX, with `availability: enabled` and
+`mode: external-execution`.
+
+## What external execution means
+
+Trades are executed through StampDEX, an external venue, rather than inside Bitcoin
+Universe products. A Universe wallet or explorer can show you a stamp or a token
+balance, but the order book, the matching, and the settlement are StampDEX's. If
+StampDEX is down, those actions are unavailable even though the assets themselves are
+untouched on Bitcoin.
+
+The practical consequences:
+
+- The order book you trade against is StampDEX's, not a Universe-internal book.
+- Ownership resolution runs through the StampDEX and Counterparty indexers.
+- Universe does not compare the provider's chain tip against Bitcoin's own tip, and
+  does not enforce a lag threshold. See [Freshness](/docs-stampdex/zh-cn/concepts/freshness/).
+
+## Bitcoin Stamps
+
+<ActionTable protocol="stamps" />
+
+The action worth reading twice is `update-listing`. You cannot change the price of a
+live stamp listing. There is no atomic listing update, so the only way to move a price
+is to cancel the listing and create a new one. That is a real transaction with a real
+网络费用, and there is a window in between where the stamp is not for sale. See
+[Change a listing price](/docs-stampdex/zh-cn/guides/change-a-listing-price/).
+
+`sell`, `make-offer`, `accept-offer` and `cancel-offer` are all unsupported for stamps
+because there is no executable offer workflow on this marketplace surface. `settle` and
+`reconcile` are unsupported because this surface has no settle or reconcile authority:
+a stamp sale completes through a Counterparty dispense that Bitcoin confirms, and
+nothing at the marketplace layer can force or unwind it.
+
+## SRC-20
+
+<ActionTable protocol="src20" />
+
+SRC-20 supports two actions that stamps do not: `cancel-offer` and `settle`. `settle`
+is what the settlement worker exercises when it verifies the token balance and
+broadcasts the transfer; see
+[Settlement lifecycle](/docs-stampdex/zh-cn/concepts/settlement-lifecycle/).
+`update-listing` is unsupported here for the same reason as stamps, and `make-offer`
+and `accept-offer` are unsupported because there is no executable offer workflow.
+
+## The short version
+
+| | Bitcoin Stamps | SRC-20 |
+| --- | --- | --- |
+| Browse, search, view activity | Yes | Yes |
+| List for sale | Yes | Yes |
+| Take a listing down | Yes | Yes |
+| Change the price of a live listing | No, cancel and relist | No, cancel and relist |
+| Buy | Yes | Yes |
+| Make or accept an offer | No | No |
+| Cancel an offer | No | Yes |
+| Settle at the marketplace layer | No | Yes |
+| Reconcile after a reorg | No | No |
+
+## Related
+
+- [Order lifecycle](/docs-stampdex/zh-cn/concepts/order-lifecycle/)
+- [Where your funds are](/docs-stampdex/zh-cn/concepts/custody/)
+- [Offers](/docs-stampdex/zh-cn/concepts/offers/)
+- [Capability matrix](/docs-stampdex/zh-cn/reference/capability-matrix/), the same data with
+  the raw registry fields
