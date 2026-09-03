@@ -362,6 +362,12 @@
       },
       "maxAgeDays": 180,
       "category": "safety",
+      "crop": {
+        "x": 240,
+        "y": 160,
+        "width": 800,
+        "height": 480
+      },
       "alt": "A controlled recording of a failed order panel: the state marked failed, both the BTC and the tokens marked as held in escrow and recoverable, and the recovery owner named.",
       "caption": "A failed order, reproduced as a controlled recorded state. Failed does not mean lost: escrow released nothing, and recovery returns each side its own value."
     },
