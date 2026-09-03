@@ -12,10 +12,10 @@ import { SECTION_LINKS, STAMPDEX_URL, RELEASE } from '../../data/site';
 /**
  * Starlight Header override.
  *
- * The desktop header carries the brand, the seven documentation sections,
- * the visible documentation release state, search, the language and theme
- * selectors, and the Open StampDEX call to action. Narrow screens drop the
- * middle first: the section menu button keeps every destination reachable.
+ * The desktop header puts the product and documentation paths first. Release
+ * evidence, search, and display controls remain available without competing
+ * with the primary navigation. Narrow screens drop the middle first: the
+ * section menu button keeps every destination reachable.
  * Starlight's accessible built-ins (search dialog, theme pickers, focus
  * behaviour) are reused, not reimplemented.
  */
@@ -56,7 +56,7 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
       </a>
 
       <a class="sd-cta" href={STAMPDEX_URL} rel="noopener">
-        Open StampDEX
+        Trade on StampDEX
         <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path
             d="M14 3a1 1 0 0 0 0 2h3.6l-8.3 8.3a1 1 0 1 0 1.4 1.4L19 6.4V10a1 1 0 0 0 2 0V4a1 1 0 0 0-1-1h-6ZM5 5h4a1 1 0 0 1 0 2H6v11h11v-3a1 1 0 0 1 2 0v4a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"
@@ -68,11 +68,13 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
         {shouldRenderSearch && <Search />}
       </div>
 
-      <div class="sl-flex social-icons">
-        <SocialIcons />
+      <div class="sd-header-tools">
+        <div class="sl-flex social-icons">
+          <SocialIcons />
+        </div>
+        <ThemeSelect />
+        <LanguageSelect />
       </div>
-      <ThemeSelect />
-      <LanguageSelect />
     </div>
   </div>
 
@@ -91,15 +93,14 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
         const live = (body.gitCommit ?? "unknown").slice(0, 7);
         const expected = document.querySelector("[data-release-expected]")?.textContent.replace("docs:", "").trim();
         if (expected && live === expected) {
-          set(live, "is-ok");
+          set("Verified", "is-ok");
           el.title = "Production matches the commit this documentation describes";
         } else {
-          set(live, "is-drift");
+          set("Updated", "is-drift");
           el.title = "Production has moved past this documentation's commit. The pages describe " + (expected ?? "an earlier build") + ".";
         }
       } catch {
-        set("Unknown", "is-unknown");
-        el.title = "The version endpoint did not answer; the documentation stays usable without it";
+        el.hidden = true;
       }
     };
     check();
@@ -112,13 +113,14 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
   @layer starlight.core {
     .header {
       background: var(--sd-nav);
-      border-bottom: 1px solid var(--sd-rule-strong);
+      border-bottom: 1px solid rgba(185, 195, 208, 0.38);
+      box-shadow: 0 1px 0 rgba(247, 147, 26, 0.42);
     }
     .sd-header-row {
       display: flex;
       flex-wrap: nowrap;
       align-items: center;
-      gap: 0.9rem;
+      gap: 0.75rem;
       height: 100%;
       min-width: 0;
     }
@@ -131,7 +133,7 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
     .sd-header-end {
       display: flex;
       align-items: center;
-      gap: 0.7rem;
+      gap: 0.5rem;
       margin-inline-start: auto;
       min-width: 0;
     }
@@ -139,6 +141,7 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
       display: none;
       align-items: center;
       gap: 0.1rem;
+      flex: 1;
       min-width: 0;
       overflow-x: auto;
       scrollbar-width: none;
@@ -148,31 +151,33 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
     }
     .sd-nav a {
       display: inline-block;
-      padding: 0.32rem 0.55rem;
-      border-radius: var(--sd-r-sm);
-      font-size: 0.86rem;
-      font-weight: 520;
+      padding: 0.66rem 0.55rem 0.56rem;
+      border-bottom: 2px solid transparent;
+      font-size: 0.82rem;
+      font-weight: 590;
       color: var(--sd-muted-inverse);
       text-decoration: none;
       white-space: nowrap;
     }
     .sd-nav a:hover {
       color: var(--sd-ink-inverse);
-      background: rgba(226, 232, 241, 0.08);
+      background: rgba(226, 232, 241, 0.05);
     }
     .sd-nav a[aria-current='true'] {
-      color: var(--sd-brand-accent);
-      background: rgba(247, 147, 26, 0.12);
+      color: var(--sd-ink-inverse);
+      border-bottom-color: var(--sd-brand);
     }
     .sd-release-chip {
       display: none;
       align-items: center;
-      gap: 0.4rem;
-      font-size: 0.72rem;
+      gap: 0.35rem;
+      min-height: 2.2rem;
+      font-size: 0.7rem;
       color: var(--sd-muted-inverse);
-      border: 1px solid var(--sd-rule-strong);
+      border: 1px solid rgba(185, 195, 208, 0.42);
       border-radius: 999px;
-      padding: 0.18rem 0.6rem;
+      padding: 0.18rem 0.62rem;
+      background: rgba(255, 255, 255, 0.035);
       white-space: nowrap;
       text-decoration: none;
     }
@@ -198,15 +203,12 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
     }
     .sd-release-live {
       font-family: var(--sd-mono);
-      margin-left: 0.5rem;
-      padding-left: 0.5rem;
-      border-left: 1px solid var(--sd-rule-strong);
+      margin-left: 0.25rem;
+      padding-left: 0.4rem;
+      border-left: 1px solid rgba(185, 195, 208, 0.42);
     }
     .sd-release-live.is-ok {
       color: #6fcb80;
-    }
-    .sd-release-live.is-unknown {
-      color: var(--sd-muted-inverse);
     }
     .sd-release-live.is-drift {
       color: var(--sd-brand-accent);
@@ -223,27 +225,66 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
       gap: 0.4rem;
       background: var(--sd-brand);
       color: #07090d;
-      font-size: 0.84rem;
-      font-weight: 660;
+      min-height: 2.25rem;
+      font-size: 0.8rem;
+      font-weight: 720;
       text-decoration: none;
-      padding: 0.42rem 0.8rem;
-      border-radius: var(--sd-r-sm);
+      padding: 0.42rem 0.72rem;
+      border-radius: var(--sd-r-md);
+      box-shadow: 0 2px 8px rgba(247, 147, 26, 0.2);
       white-space: nowrap;
     }
     .sd-cta:hover {
-      filter: brightness(1.08);
+      background: var(--sd-brand-accent);
+      box-shadow: 0 3px 12px rgba(247, 147, 26, 0.32);
     }
-    @media (min-width: 62rem) {
-      .sd-nav {
-        display: flex;
-      }
+    .sd-searchwrap {
+      min-width: 12.5rem;
+    }
+    .sd-searchwrap :global(.sd-search-btn) {
+      min-height: 2.25rem;
+      width: 100%;
+      border-color: rgba(185, 195, 208, 0.5);
+      border-radius: var(--sd-r-md);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--sd-ink-inverse);
+    }
+    .sd-searchwrap :global(.sd-search-btn:hover) {
+      border-color: var(--sd-brand-accent);
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--sd-ink-inverse);
+    }
+    .sd-searchwrap :global(.sd-search-btn kbd) {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(185, 195, 208, 0.38);
+      color: var(--sd-muted-inverse);
+    }
+    .sd-header-tools {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding-inline-start: 0.55rem;
+      border-inline-start: 1px solid rgba(185, 195, 208, 0.32);
+      color: var(--sd-muted-inverse);
+    }
+    @media (min-width: 68rem) {
       .sd-release-chip {
         display: inline-flex;
       }
     }
     @media (min-width: 80rem) {
+      .sd-nav {
+        display: flex;
+      }
+    }
+    @media (min-width: 106rem) {
       .sd-cta {
         display: inline-flex;
+      }
+    }
+    @media (min-width: 96rem) {
+      .sd-searchwrap {
+        min-width: 15rem;
       }
     }
     :focus-visible {

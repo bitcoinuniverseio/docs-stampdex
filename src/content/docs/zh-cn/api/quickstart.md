@@ -30,7 +30,7 @@ prefix.
 
 ## Your first request
 
-```bash
+```bash frame=none
 curl "https://stamp.api.bitcoinuniverse.io/api/v1/market/tokens?limit=2"
 ```
 
@@ -97,7 +97,7 @@ If you are building a browser application, proxy the JSON API through your own b
 
 ## Health and version
 
-```bash
+```bash frame=none
 curl https://stamp.api.bitcoinuniverse.io/api/version
 ```
 

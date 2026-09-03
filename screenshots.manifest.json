@@ -332,6 +332,12 @@
       },
       "maxAgeDays": 180,
       "category": "trade",
+      "crop": {
+        "x": 240,
+        "y": 170,
+        "width": 800,
+        "height": 470
+      },
       "alt": "A controlled recording of the StampDEX buy review panel: token, amount, unit price, trade total, buyer service fee, estimated network fee, and the line saying where the BTC goes.",
       "caption": "The buy review, reproduced as a controlled recorded state with deterministic example numbers. Read the review panel in production before you sign; these numbers are not live."
     },
@@ -356,6 +362,12 @@
       },
       "maxAgeDays": 180,
       "category": "safety",
+      "crop": {
+        "x": 240,
+        "y": 160,
+        "width": 800,
+        "height": 480
+      },
       "alt": "A controlled recording of a failed order panel: the state marked failed, both the BTC and the tokens marked as held in escrow and recoverable, and the recovery owner named.",
       "caption": "A failed order, reproduced as a controlled recorded state. Failed does not mean lost: escrow released nothing, and recovery returns each side its own value."
     },
@@ -380,6 +392,12 @@
       },
       "maxAgeDays": 180,
       "category": "markets",
+      "crop": {
+        "x": 240,
+        "y": 190,
+        "width": 800,
+        "height": 440
+      },
       "alt": "A controlled recording of a market row where floor price and volume show dashes with a source label of none, next to a holders count that does have a source.",
       "caption": "Unknown is not zero, reproduced as a controlled recorded state. A dash means the venue has no number it can prove, and the sources are named per figure."
     },

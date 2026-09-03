@@ -463,9 +463,19 @@ if (project.trailingSlash === 'never') dataAttributes['data-strip-trailing-slash
           resultsContainer.innerHTML = filtered
             .map((item: any) => {
               const excerpt = item.excerpt || '';
+              const kind = item.url?.includes('/guides/')
+                ? 'Guide'
+                : item.url?.includes('/concepts/')
+                  ? 'Concept'
+                  : item.url?.includes('/api/')
+                    ? 'API'
+                    : item.url?.includes('/reference/')
+                      ? 'Reference'
+                      : 'Documentation';
               return `
                 <div class="sd-result-item">
                   <a href="${item.url}" class="sd-result-link">
+                    <span class="sd-result-kind">${kind}</span>
                     <div class="sd-result-title">${item.meta?.title || 'Documentation Page'}</div>
                     <div class="sd-result-excerpt">${excerpt}</div>
                   </a>
@@ -668,6 +678,9 @@ if (project.trailingSlash === 'never') dataAttributes['data-strip-trailing-slash
     flex-direction: column;
     gap: 0.4rem;
   }
+  .sd-ask-card.sl-hidden {
+    display: none;
+  }
   .sd-ask-header {
     display: flex;
     align-items: center;
@@ -698,15 +711,22 @@ if (project.trailingSlash === 'never') dataAttributes['data-strip-trailing-slash
     gap: 0.4rem;
     font-size: 0.75rem;
   }
-  .sd-citations-label {
+  :global(.sd-citations-label) {
     color: var(--sd-muted);
     font-weight: 600;
   }
-  .sd-citation-link {
+  :global(.sd-citation-link) {
     color: var(--sd-info);
+    text-decoration: none;
+  }
+  :global(.sd-citation-link:hover) {
+    color: var(--sd-brand-text);
     text-decoration: underline;
   }
-  .sd-release-tag {
+  :root[data-theme='dark'] :global(.sd-citation-link:hover) {
+    color: var(--sd-brand-accent);
+  }
+  :global(.sd-release-tag) {
     font-family: var(--sd-mono);
     font-size: 0.65rem;
     background: var(--sd-inset);
@@ -722,41 +742,95 @@ if (project.trailingSlash === 'never') dataAttributes['data-strip-trailing-slash
     flex-direction: column;
     gap: 0.5rem;
   }
-  .sd-results-placeholder {
+  :global(.sd-results-placeholder) {
     padding: 1.5rem 0;
     text-align: center;
     color: var(--sd-muted);
   }
-  .sd-result-item {
+  :global(.sd-result-item) {
     border-radius: var(--sd-r-md);
-    padding: 0.6rem 0.75rem;
     background: var(--sd-panel-2);
     border: 1px solid var(--sd-rule);
-    transition: background 0.15s ease;
+    overflow: hidden;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
-  .sd-result-item:hover {
-    background: var(--sd-inset);
+  :global(.sd-result-item:hover) {
     border-color: var(--sd-rule-strong);
+    box-shadow: var(--sd-shadow-1);
   }
-  .sd-result-title {
+  :global(.sd-result-link) {
+    display: block;
+    padding: 0.65rem 0.8rem 0.7rem;
+    color: inherit;
+    text-decoration: none;
+  }
+  :global(.sd-result-link:focus-visible) {
+    outline: 2px solid var(--sd-focus);
+    outline-offset: -2px;
+  }
+  :global(.sd-result-kind) {
+    display: block;
+    color: var(--sd-muted);
+    font-family: var(--sd-mono);
+    font-size: 0.64rem;
+    font-weight: 680;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    margin-bottom: 0.35rem;
+    text-transform: uppercase;
+  }
+  :global(.sd-result-title) {
     font-weight: 600;
-    color: var(--sd-brand);
-    font-size: 0.9rem;
-    margin-bottom: 0.2rem;
+    color: var(--sd-ink);
+    font-size: 0.94rem;
+    line-height: 1.25;
+    margin-bottom: 0.25rem;
   }
-  .sd-result-excerpt {
+  :global(.sd-result-link:hover .sd-result-title) {
+    color: var(--sd-brand-text);
+  }
+  :root[data-theme='dark'] :global(.sd-result-link:hover .sd-result-title) {
+    color: var(--sd-brand-accent);
+  }
+  :global(.sd-result-excerpt) {
     font-size: 0.78rem;
     color: var(--sd-muted);
     line-height: 1.35;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+  :global(.sd-result-excerpt mark) {
+    background: var(--sd-ask-wash);
+    border-radius: 2px;
+    color: inherit;
+    padding: 0 0.08em;
   }
 
-  .sd-alias-hit {
+  :global(.sd-alias-hit),
+  :global(.sd-static-hit),
+  :global(.sd-no-results) {
     background: var(--sd-panel-2);
-    border: 1px solid var(--sd-brand);
+    border: 1px solid var(--sd-rule-strong);
+    border-left: 3px solid var(--sd-brand);
     border-radius: var(--sd-r-md);
-    padding: 1rem;
+    padding: 0.8rem 0.9rem;
+    color: var(--sd-muted);
+    font-size: 0.82rem;
+    line-height: 1.5;
   }
-  .sd-hit-badge {
+  :global(.sd-alias-hit h3),
+  :global(.sd-static-hit p),
+  :global(.sd-no-results p) {
+    margin: 0 0 0.3rem;
+  }
+  :global(.sd-alias-hit a),
+  :global(.sd-static-hit a),
+  :global(.sd-no-results a) {
+    color: var(--sd-info);
+  }
+  :global(.sd-hit-badge) {
     background: var(--sd-brand);
     color: #fff;
     font-size: 0.65rem;
@@ -765,7 +839,7 @@ if (project.trailingSlash === 'never') dataAttributes['data-strip-trailing-slash
     border-radius: var(--sd-r-sm);
     text-transform: uppercase;
   }
-  .sd-hit-badge.error-badge {
+  :global(.sd-hit-badge.error-badge) {
     background: var(--sd-warn);
   }
 

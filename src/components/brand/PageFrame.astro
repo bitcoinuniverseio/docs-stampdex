@@ -114,7 +114,35 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
       gap: 1rem;
     }
 
-    @media (min-width: 50rem) {
+    /* A 50rem screen is too narrow for an 18.5rem sidebar and a readable
+       article column. Keep the familiar menu drawer through tablet portrait,
+       then introduce the persistent sidebar only when both columns fit. */
+    @media (min-width: 50rem) and (max-width: 59.999rem) {
+      :global([data-has-sidebar]) {
+        --sl-content-inline-start: 0rem !important;
+      }
+
+      .main-frame {
+        padding-inline-start: 0rem !important;
+      }
+
+      :global([data-has-sidebar]) .header,
+      :global(:not([data-has-sidebar])) .header {
+        padding-inline-end: calc(
+          var(--sl-nav-gap) + var(--sl-nav-pad-x) + var(--sl-menu-button-size)
+        );
+      }
+
+      :global(starlight-menu-button button) {
+        display: flex !important;
+      }
+
+      :global([data-mobile-menu-expanded]) {
+        overflow: hidden;
+      }
+    }
+
+    @media (min-width: 60rem) {
       .sidebar-content::after {
         content: '';
         padding-bottom: 1px;
@@ -128,6 +156,9 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
 
     @media (min-width: 50rem) {
       :global([data-has-sidebar]) .header {
+        padding-inline-end: var(--sl-nav-pad-x);
+      }
+      :global(:not([data-has-sidebar])) .header {
         padding-inline-end: var(--sl-nav-pad-x);
       }
       .sidebar-pane {

@@ -47,7 +47,7 @@ Base path: `/api/v1`.
 
 ## Example
 
-```bash
+```bash frame=none
 curl "https://stamp.api.bitcoinuniverse.io/api/v1/stamps?limit=1"
 ```
 
@@ -58,7 +58,7 @@ the file hash and size. That combination is the stamp's identity. See
 
 ## Best dispenser
 
-```bash
+```bash frame=none
 curl "https://stamp.api.bitcoinuniverse.io/api/v1/stamps/1472320/best-dispenser"
 ```
 

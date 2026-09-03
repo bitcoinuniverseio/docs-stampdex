@@ -19,7 +19,7 @@ These endpoints exist so you never have to take a claim about StampDEX on trust.
 
 ## Which commit is serving you
 
-```bash
+```bash frame=none
 curl https://stamp.api.bitcoinuniverse.io/api/version
 ```
 
@@ -47,7 +47,7 @@ no-store`, so what you read is now, not a cached now.
 
 ## How fresh is the index
 
-```bash
+```bash frame=none
 curl https://stamp.api.bitcoinuniverse.io/api/v1/indexer/status
 ```
 
@@ -68,7 +68,7 @@ it reads `external`, which is what it reads today.
 
 ## Where is one transaction
 
-```bash
+```bash frame=none
 curl https://stamp.api.bitcoinuniverse.io/api/v1/indexer/tx/TXID
 ```
 
@@ -78,7 +78,7 @@ block height where relevant, and a timestamp.
 
 The order version answers the same shape for a whole order:
 
-```bash
+```bash frame=none
 curl https://stamp.api.bitcoinuniverse.io/api/v1/indexer/orders/ORDER_ID
 ```
 

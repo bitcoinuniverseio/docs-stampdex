@@ -66,7 +66,7 @@ lot amounts must sum to the original amount.
 
 ## Listing orders
 
-```bash
+```bash frame=none
 curl "https://stamp.api.bitcoinuniverse.io/api/v1/orders?tick=SEX&status=open"
 ```
 
