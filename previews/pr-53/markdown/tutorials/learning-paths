@@ -1,0 +1,14 @@
+# Learning paths
+
+Guided reading paths for the six most common goals on this site, from a first SRC-20 purchase to building against the public API, each with a clear order and a stated outcome.
+
+> Source: bitcoinuniverseio/docs-stampdex, this repository. Applicable release continuous deployment, verify with GET /api/version. Last verified 2026-09-02. Chain bitcoin/mainnet.
+
+import LearningPaths from '../../../components/explainers/LearningPaths.astro';
+
+Each path is an ordered list of pages with one goal. Read them in order the
+first time; afterwards they work as reference. Tick the steps to keep your
+place: progress is kept in this browser only, never sent anywhere, and the
+reset button erases it.
+
+<LearningPaths />
