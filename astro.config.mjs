@@ -176,6 +176,7 @@ export default defineConfig({
             { label: 'Fees', slug: 'reference/fees' },
             { label: 'Wallets', slug: 'reference/wallets' },
             { label: 'Capability matrix', slug: 'reference/capability-matrix' },
+            { label: 'Emerging markets & settlement', slug: 'reference/emerging-markets' },
             { label: 'Order states', slug: 'reference/order-states' },
             { label: 'Glossary', slug: 'reference/glossary' },
           ],
