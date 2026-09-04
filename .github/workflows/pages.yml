@@ -20,7 +20,7 @@ jobs:
     # marker to actions/upload-artifact, which breaks the Pages artifact
     # upload. Publishing to a branch avoids both problems: it needs no
     # artifact upload and no particular runner.
-    runs-on: [self-hosted, linux, x64, universe-linux]
+    runs-on: [self-hosted, linux, x64, universe-super]
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4

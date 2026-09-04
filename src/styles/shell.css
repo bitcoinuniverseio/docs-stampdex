@@ -35,7 +35,7 @@
  * both themes, so the reading area is the brightest thing on screen and the
  * brand band frames it. Content colours stay on the --sd-* tokens. */
 :root {
-  --sl-nav-height: 3.5rem;
+  --sl-nav-height: 3.75rem;
 
   --sl-color-black: var(--sd-nav);
   --sl-color-white: var(--sd-ink-inverse);  --sl-color-bg: var(--sd-bg);
@@ -75,6 +75,12 @@
   --sl-color-text-accent: var(--sd-brand-text);
   --sl-color-text-accent-hover: var(--sd-brand-text);
   --sl-color-accent-high: #123b6b;
+}
+
+@media (min-width: 70rem) {
+  :root {
+    --sl-nav-height: 6.65rem;
+  }
 }
 
 /* The header and the left sidebar stay on the dark navigation surface in
