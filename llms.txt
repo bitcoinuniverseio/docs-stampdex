@@ -64,6 +64,7 @@ Two facts shape most of this documentation.
 ## Reference
 
 - [Capability matrix](https://bitcoinuniverseio.github.io/docs-stampdex/reference/capability-matrix/): The raw ecosystem registry fields for Bitcoin Stamps and SRC-20 on StampDEX, including surfaces, ownership model, and every unsupported action with its reason.
+- [Emerging markets and private settlement](https://bitcoinuniverseio.github.io/docs-stampdex/reference/emerging-markets/): Specifications and execution models for Liquid, Stacks, Fractal, Rootstock, Babylon, and Nostr private settlement on StampDEX.
 - [Fees](https://bitcoinuniverseio.github.io/docs-stampdex/reference/fees/): Every fee StampDEX charges, who pays it, how the network fee is estimated, and a worked example including the case where the minimum dominates.
 - [Glossary](https://bitcoinuniverseio.github.io/docs-stampdex/reference/glossary/): Plain-word meanings for the terms StampDEX uses, from CPID and dispenser to the per-listing escrow addresses and the signature type a listing is signed with.
 - [Order states](https://bitcoinuniverseio.github.io/docs-stampdex/reference/order-states/): Every SRC-20 order state on StampDEX, the value the API returns for it, what it means, where the funds are in it, and what ends it.
@@ -137,6 +138,7 @@ Two facts shape most of this documentation.
 - [页面新鲜度管理策略](https://bitcoinuniverseio.github.io/docs-stampdex/zh-cn/project/page-freshness/): 阐述文档核验窗口（30天、90天、180天）与技术真理流水线的运作逻辑。
 - [生产发布证据与审计记录](https://bitcoinuniverseio.github.io/docs-stampdex/zh-cn/project/release-evidence/): 线上各微服务与智能合约部署哈希、测试结果与自动化流水线凭证。
 - [完整功能能力矩阵](https://bitcoinuniverseio.github.io/docs-stampdex/zh-cn/reference/capability-matrix/): 各项协议资产操作（买入、卖出、转账、铸造）在不同平台与钱包下的支持详情。
+- [新兴市场与隐私结算](https://bitcoinuniverseio.github.io/docs-stampdex/zh-cn/reference/emerging-markets/): StampDEX 上 Liquid、Stacks、Fractal、Rootstock、Babylon 以及 Nostr 隐私结算的规格说明与执行模型。
 - [完整费用费率标准](https://bitcoinuniverseio.github.io/docs-stampdex/zh-cn/reference/fees/): SRC-20 交易服务费（买卖双方各 1.5%，最低 500 satoshis）与网络矿工费解析。
 - [核心术语与双语词汇表](https://bitcoinuniverseio.github.io/docs-stampdex/zh-cn/reference/glossary/): 比特币、Stamps、SRC-20 与非托管交易相关的标准专业词汇对照表。
 - [订单状态枚举规格](https://bitcoinuniverseio.github.io/docs-stampdex/zh-cn/reference/order-states/): OrderStatus 完整十状态定义、产生条件、流转方向与前端呈现规范。

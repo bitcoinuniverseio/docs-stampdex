@@ -1,0 +1,106 @@
+# Emerging markets and private settlement
+
+Specifications and execution models for Liquid, Stacks, Fractal, Rootstock, Babylon, and Nostr private settlement on StampDEX.
+
+> Source: bitcoinuniverseio/stampdex, backend/src/ and frontend/src/. Applicable release continuous deployment, verify with GET /api/version. Last verified 2026-09-04. Chain bitcoin/mainnet.
+
+StampDEX supports six protocol venues and private settlement mechanisms alongside Bitcoin Stamps and SRC-20.
+
+All venues follow the non-custodial rule: the server never holds private keys, seed phrases, or unencrypted scan keys.
+
+## 1. Liquid Confidential Markets and Capital Assets
+
+Liquid is an Elements-based sidechain with confidential transactions and asset issuance.
+
+- **Asset registry**: tracks L-BTC and issued assets (AMP0 and AMP2 security tokens).
+- **Partially Signed Elements Transactions (PSET)**: trades settle atomically via dual-signed PSET proposals.
+- **Confidential values**: transaction amounts and asset IDs remain blinded on-chain.
+- **Two-way peg tracking**: monitors peg-in and peg-out transactions between Bitcoin mainnet and Liquid.
+
+```
+Route: /markets/liquid
+API: /api/v2/liquid/assets, /api/v2/liquid/proposals/swap, /api/v2/liquid/peg/quotes
+Artifact: LiquidPsetArtifact (payloadKind: 'pset')
+```
+
+## 2. Stacks sBTC and Clarity Markets
+
+Stacks provides smart contracts secured by Bitcoin proof-of-transfer consensus.
+
+- **Token standards**: supports Stacks native STX, SIP-010 fungibles, and SIP-009 collectibles.
+- **sBTC bridge flows**: tracks 1:1 Bitcoin deposits and withdrawals through the sBTC threshold signer network.
+- **Clarity contract calls**: builds deterministic transaction payloads with strict post-conditions that prevent unexpected asset transfers.
+
+```
+Route: /markets/stacks
+API: /api/v2/stacks/assets, /api/v2/stacks/call, /api/v2/stacks/peg/quotes
+Artifact: StacksClarityArtifact (payloadKind: 'stacks-call')
+```
+
+## 3. Fractal Bitcoin Markets and Index Mining
+
+Fractal Bitcoin is a Bitcoin virtualization network supporting native ordinals, runes, and InSwap AMMs.
+
+- **InSwap AMM math**: computes constant-product swaps ($x \cdot y = k$) with integer square-root liquidity minting and 30 basis point swap fees.
+- **FIP-101 index provider staking**: index operators lock FB to run verified state indexers and earn fee shares.
+- **PSBT execution**: pool deposits, withdrawals, and token swaps resolve through standard 2-of-2 multisig or script-path spends.
+
+```
+Route: /markets/fractal
+API: /api/v2/fractal/assets, /api/v2/fractal/amm/quote, /api/v2/fractal/index-providers
+Artifact: FractalPsbtArtifact (payloadKind: 'psbt')
+```
+
+## 4. Rootstock rBTC and Smart-Contract Markets
+
+Rootstock is an EVM-compatible Bitcoin merge-mined sidechain.
+
+- **Exact allowances**: token approval builders enforce exact spend amounts. The interface blocks infinite approvals (`type(uint256).max`) to protect user funds from smart-contract drain attacks.
+- **ERC-20 trading**: executes swaps and orders against Rootstock DEX contracts.
+- **Two-way bridge quotes**: compares standard PowPeg delay routes against Flyover fast-bridge quotes backed by liquidity providers.
+
+```
+Route: /markets/rootstock
+API: /api/v2/rootstock/assets, /api/v2/rootstock/approval, /api/v2/rootstock/bridge/quotes
+Artifact: RootstockCalldataArtifact (payloadKind: 'rootstock-calldata')
+```
+
+## 5. Babylon Native BTC Staking and Finality Provider Hub
+
+Babylon enables Bitcoin holders to stake native BTC to secure proof-of-stake networks without bridging.
+
+- **Layer 1 locking invariant**: staked BTC stays on Bitcoin Layer 1 locked in `OP_CHECKLOCKTIMEVERIFY` script outputs. Coins are never wrapped or moved off-chain.
+- **Finality provider hub**: stakers select active finality providers and delegate consensus voting power.
+- **Unbonding covenants**: unstaking creates an unbonding transaction with a mandatory 1,008 block delay (~7 days) before coins become spendable.
+
+```
+Route: /markets/babylon
+API: /api/v2/babylon/providers, /api/v2/babylon/positions, /api/v2/babylon/stake, /api/v2/babylon/unbond
+Artifact: BabylonStakingArtifact (payloadKind: 'babylon-staking')
+```
+
+## 6. Nostr Market Federation and Private Settlement
+
+Nostr relays federate orders peer-to-peer, while BIP-352 and BIP-78 provide on-chain transaction privacy.
+
+- **Nostr federation orders**: broadcast trade intents over public and private relays using NIP-69 and NIP-99 event schemas.
+- **NIP-46 remote bunker signing**: routes signing requests to remote signer hardware or servers. Private keys never touch browser memory.
+- **BIP-352 Silent Payments**: derives single-use Taproot output scripts from static silent payment addresses (`sp1...`). Observers cannot link recipient outputs to the published address.
+- **BIP-78 and BIP-77 Payjoin**: receiver contributes inputs to the sender transaction. This breaks blockchain surveillance heuristics based on common-input ownership. Supports BIP-77 asynchronous negotiation.
+
+```
+Route: /markets/nostr-settlement
+API: /api/v2/nostr/relays, /api/v2/nostr/orders, /api/v2/nostr/nip46/handshake, /api/v2/settlement/private/silent-payment/derive, /api/v2/settlement/private/payjoin/proposal
+Artifacts: NostrEventArtifact, PayjoinProposalArtifact, SilentPaymentArtifact
+```
+
+## Summary of execution modes
+
+| Venue | Base Asset | Settlement Layer | Transaction Artifact | Custody Model |
+| --- | --- | --- | --- | --- |
+| Liquid | L-BTC | Elements sidechain | PSET proposal | Non-custodial 2-of-2 / multi-sig |
+| Stacks | STX / sBTC | Stacks Layer 2 | Clarity call | Non-custodial smart contract |
+| Fractal | FB | Fractal network | PSBT | Non-custodial script path |
+| Rootstock | rBTC | RSK sidechain | EVM calldata | Non-custodial exact allowance |
+| Babylon | BTC | Bitcoin Layer 1 | Timelocked PSBT | Non-custodial L1 covenant |
+| Nostr / Private | BTC | Bitcoin Layer 1 | Event / Payjoin PSBT | Non-custodial peer-to-peer |

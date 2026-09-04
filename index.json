@@ -1463,6 +1463,43 @@
       }
     },
     {
+      "id": "reference/emerging-markets",
+      "title": "Emerging markets and private settlement",
+      "description": "Specifications and execution models for Liquid, Stacks, Fractal, Rootstock, Babylon, and Nostr private settlement on StampDEX.",
+      "url": "/docs-stampdex/reference/emerging-markets/",
+      "markdown": "/docs-stampdex/markdown/reference/emerging-markets",
+      "contentType": "reference",
+      "audiences": [
+        "traders",
+        "developers",
+        "operators"
+      ],
+      "products": [
+        "desk",
+        "src20",
+        "stamps"
+      ],
+      "protocols": [
+        "bitcoin",
+        "src20",
+        "stamps"
+      ],
+      "difficulty": "hands-on",
+      "estimatedMinutes": 8,
+      "lifecycle": "stable",
+      "releaseStatus": "live",
+      "riskLevel": null,
+      "source": {
+        "repo": "bitcoinuniverseio/stampdex",
+        "path": "backend/src/ and frontend/src/",
+        "release": "continuous deployment, verify with GET /api/version",
+        "chain": "bitcoin",
+        "network": "mainnet",
+        "lifecycle": "stable",
+        "verified": "2026-09-04"
+      }
+    },
+    {
       "id": "reference/fees",
       "title": "Fees",
       "description": "Every fee StampDEX charges, who pays it, how the network fee is estimated, and a worked example including the case where the minimum dominates.",
@@ -3245,6 +3282,43 @@
         "network": "mainnet",
         "lifecycle": "stable",
         "verified": "2026-09-01"
+      }
+    },
+    {
+      "id": "zh-cn/reference/emerging-markets",
+      "title": "新兴市场与隐私结算",
+      "description": "StampDEX 上 Liquid、Stacks、Fractal、Rootstock、Babylon 以及 Nostr 隐私结算的规格说明与执行模型。",
+      "url": "/docs-stampdex/zh-cn/reference/emerging-markets/",
+      "markdown": "/docs-stampdex/markdown/zh-cn/reference/emerging-markets",
+      "contentType": "reference",
+      "audiences": [
+        "traders",
+        "developers",
+        "operators"
+      ],
+      "products": [
+        "desk",
+        "src20",
+        "stamps"
+      ],
+      "protocols": [
+        "bitcoin",
+        "src20",
+        "stamps"
+      ],
+      "difficulty": "hands-on",
+      "estimatedMinutes": 8,
+      "lifecycle": "stable",
+      "releaseStatus": "live",
+      "riskLevel": null,
+      "source": {
+        "repo": "bitcoinuniverseio/stampdex",
+        "path": "backend/src/ and frontend/src/",
+        "release": "continuous deployment, verify with GET /api/version",
+        "chain": "bitcoin",
+        "network": "mainnet",
+        "lifecycle": "stable",
+        "verified": "2026-09-04"
       }
     },
     {

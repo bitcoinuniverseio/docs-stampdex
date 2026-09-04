@@ -40,6 +40,7 @@
   <url><loc>https://bitcoinuniverseio.github.io/docs-stampdex/project/page-freshness/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://bitcoinuniverseio.github.io/docs-stampdex/project/release-evidence/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://bitcoinuniverseio.github.io/docs-stampdex/reference/capability-matrix/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bitcoinuniverseio.github.io/docs-stampdex/reference/emerging-markets/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://bitcoinuniverseio.github.io/docs-stampdex/reference/fees/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://bitcoinuniverseio.github.io/docs-stampdex/reference/glossary/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://bitcoinuniverseio.github.io/docs-stampdex/reference/order-states/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
@@ -90,6 +91,7 @@
   <url><loc>https://bitcoinuniverseio.github.io/docs-stampdex/zh-cn/project/page-freshness/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://bitcoinuniverseio.github.io/docs-stampdex/zh-cn/project/release-evidence/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://bitcoinuniverseio.github.io/docs-stampdex/zh-cn/reference/capability-matrix/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bitcoinuniverseio.github.io/docs-stampdex/zh-cn/reference/emerging-markets/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://bitcoinuniverseio.github.io/docs-stampdex/zh-cn/reference/fees/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://bitcoinuniverseio.github.io/docs-stampdex/zh-cn/reference/glossary/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://bitcoinuniverseio.github.io/docs-stampdex/zh-cn/reference/order-states/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
