@@ -17,11 +17,12 @@ concurrency:
 jobs:
   preview:
     if: github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: [self-hosted, linux, x64, universe-linux]
+    runs-on: [self-hosted, linux, x64, universe-super]
     timeout-minutes: 20
     steps:
+      # Always check out: an ephemeral runner has no checkout from a previous
+      # job, and the publish step below needs the repository even on close.
       - uses: actions/checkout@v4
-        if: github.event.action != 'closed'
       - uses: bitcoinuniverseio/universe-ci-actions/universe-node-env@8e24bc760556caa5ec8c7c497baaad2e9adcc912
         if: github.event.action != 'closed'
 
