@@ -17,8 +17,24 @@ releaseStatus: live
 lastReviewedBy: docs-stampdex maintainers
 ---
 
-> [!NOTE]
-> **简体中文官方文档**：供审计员与高阶开发者核验线上系统完整性的确凿证据链。 核心交易规则为非托管模式，买卖双方按标准费率收取服务费，并于比特币主网进行原子结算。
+## 2026-09-05：本地修改，尚未发布
+
+**LOCAL UNRELEASED · NO-GO。** 本次仅修复了部分执行缺陷，未部署到生产环境。
+原生协议授权、交易构建器、持久化、恢复流程和端到端证据仍不完整。
+局部测试通过不代表交易流程已获验证。
+
+本地发布验证器要求证据匹配所测源码、具体流程、测试命令、环境和网络。
+时间戳必须有效，并满足该证据类型的时效限制；保留的结果文件必须存在且可核验。
+只有明确验证源码树等价时，才能在不同合并提交之间复用证据。
+验证器还反向检查路由、产品视图、控制器接口、适配器及协议操作清单，拒绝未登记的执行入口。
+
+Spark 页面现通过现有 API 请求资金池、钱包持仓、报价、运营者检查点和退出预览。
+请求失败会显示错误，不再生成虚构数据或空白成功结果。
+退出预览不签署或提交交易；所存检查点不证明当前最终性。
+
+下方 2026-08-31 的计数和操作表属于历史记录，**不证明当前源码或线上版本通过验证**。
+
+
 
 
 
@@ -51,7 +67,7 @@ each naming the evidence that job depends on. Two things about it are worth know
 `BLOCKED` means required evidence is missing. It does not mean a defect was found.
 Those are different things, and this page will not blur them.
 
-## The last recorded snapshot
+## Historical snapshot: 2026-08-31
 
 Recorded 2026-08-31, across 51 rows:
 
@@ -72,7 +88,7 @@ mutations and for stamp mutations, live runs of each wallet extension through ea
 action it claims, a regtest chain exercise, a screen reader pass, and first-party data
 provenance.
 
-## What that means for you, action by action
+## Historical action evidence: 2026-08-31
 
 | What you are doing | Evidence position |
 | --- | --- |
