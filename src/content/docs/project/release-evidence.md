@@ -24,6 +24,13 @@ paths. They have not been deployed. Native protocol authorization, transaction
 builders, persistence, recovery, and end-to-end evidence remain incomplete. Passing
 focused tests does not verify a trading journey.
 
+OPNet now reads configured native RPC observations and binds offline binary state
+to stored intents. Swap uses the existing Atomic quote and purchase path with wallet
+network checks. TAP reads paginated indexer journal updates. Maker RFQ publication
+stores authorized terms and cancellation records; it does not reserve funds or
+execute a trade. Native signing fixtures, isolated database tests, and local browser
+checks cover parts of these paths. Live protocol execution remains unverified.
+
 The local release verifier binds evidence to the tested source, specific workflow,
 test command, environment, and network. It requires valid timestamps, kind-specific
 freshness limits, and retained result files whose contents can be checked. Evidence
@@ -35,6 +42,12 @@ The Spark view now requests pools, wallet positions, quotes, operator checkpoint
 and exit previews through the existing API. Request failures show errors instead of
 invented data or empty success results. An exit preview does not sign or submit a
 transaction. A stored checkpoint does not prove current finality.
+
+Wallet proof now protects Spark positions and exit previews. Universal Markets reads
+indexed SRC-20 deployments and stored atomic listings with identity-bound pagination;
+missing metrics remain unknown. Isolated MySQL tests cover shared lock contention,
+quote replay, rollback after an outbox failure, and datasource restart. These checks
+do not prove native protocol execution or a deployed release.
 
 The 2026-08-31 counts and action table below are historical records. **They do not
 prove that the current source or deployed version passes verification.**
