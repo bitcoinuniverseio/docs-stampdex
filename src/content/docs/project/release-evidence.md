@@ -17,6 +17,29 @@ releaseStatus: live
 lastReviewedBy: docs-stampdex maintainers
 ---
 
+## 2026-09-05: local, unreleased repairs
+
+**LOCAL UNRELEASED · NO-GO.** These local changes repair only part of the execution
+paths. They have not been deployed. Native protocol authorization, transaction
+builders, persistence, recovery, and end-to-end evidence remain incomplete. Passing
+focused tests does not verify a trading journey.
+
+The local release verifier binds evidence to the tested source, specific workflow,
+test command, environment, and network. It requires valid timestamps, kind-specific
+freshness limits, and retained result files whose contents can be checked. Evidence
+reuse across merge commits requires an explicit source-tree equivalence check.
+Inverse checks also compare routes, product views, controller endpoints, adapters,
+and protocol operations against the registry and reject unregistered entry points.
+
+The Spark view now requests pools, wallet positions, quotes, operator checkpoints,
+and exit previews through the existing API. Request failures show errors instead of
+invented data or empty success results. An exit preview does not sign or submit a
+transaction. A stored checkpoint does not prove current finality.
+
+The 2026-08-31 counts and action table below are historical records. **They do not
+prove that the current source or deployed version passes verification.**
+
+
 This page exists because "it is on the site" and "it has been verified" are different
 claims, and you deserve to know which one applies to the thing you are about to do.
 
@@ -46,7 +69,7 @@ each naming the evidence that job depends on. Two things about it are worth know
 `BLOCKED` means required evidence is missing. It does not mean a defect was found.
 Those are different things, and this page will not blur them.
 
-## The last recorded snapshot
+## Historical snapshot: 2026-08-31
 
 Recorded 2026-08-31, across 51 rows:
 
@@ -67,7 +90,7 @@ mutations and for stamp mutations, live runs of each wallet extension through ea
 action it claims, a regtest chain exercise, a screen reader pass, and first-party data
 provenance.
 
-## What that means for you, action by action
+## Historical action evidence: 2026-08-31
 
 | What you are doing | Evidence position |
 | --- | --- |
