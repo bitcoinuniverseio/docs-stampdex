@@ -17,6 +17,27 @@ releaseStatus: preview
 lastReviewedBy: docs-stampdex maintainers
 ---
 
+## 2026-09-06：Arkade 与 BRC2 记录修复
+
+**CI 检查通过。原生执行仍不可用。** 应用提交
+[8b0d3467](https://github.com/bitcoinuniverseio/stampdex/commit/8b0d34678b120535564e0cfa8ec78bc3a4297814) 通过了
+[Quality 运行 34043045580](https://github.com/bitcoinuniverseio/stampdex/actions/runs/34043045580)。
+该运行覆盖 231 个套件中的 1,954 项后端单元测试、46 项 API 测试、迁移、前端检查、
+179 项浏览器测试和路由测试数据。另有三项浏览器测试跳过。这些检查不证明原生交易。
+
+Arkade 与 BRC2 不再返回固定的原生检查点或虚构的执行结果。原生写入在读取或更改已存记录前
+返回 HTTP 503，不生成入金地址、已完成续期、结算或 VM 结果。页面读取 API，并将已存合约、
+VTXO 和回执标记为未经验证的历史记录。已存状态不证明可花费余额或结算。
+
+Arkade 持有者记录需要针对所请求地址的钱包访问签名。读取时精确比较地址，包括字母大小写。
+原始路由及其版本化别名都执行这些检查。历史记录保持原样。更新使用旧响应格式的客户端前，
+请阅读 [API 合约与限制](https://github.com/bitcoinuniverseio/stampdex/blob/main/docs/NATIVE_RECORDS_REPAIR_2026-09-06.md)。
+
+源码清单包含 954 项 API 声明和 1,979 项未绑定声明。注册表仍有零个 PASS 行，
+351 个必需钱包变体均缺少获认可的验证记录。原生权限来源、执行产物、恢复和真实钱包结果仍待完成，
+其中也包括独立的 Spark 和闪电网络缺口。请读取[运行版本](https://stamp.api.bitcoinuniverse.io/api/version)
+以确认已部署的提交。下方早期章节属于历史快照。
+
 ## 2026-09-06：事件访问修复与 CI 证据
 
 **CI 检查通过。原生执行就绪状态仍为 NO-GO。** 应用提交
