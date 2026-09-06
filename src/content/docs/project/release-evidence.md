@@ -17,6 +17,70 @@ releaseStatus: live
 lastReviewedBy: docs-stampdex maintainers
 ---
 
+## 2026-09-06: the GO verdict is withdrawn
+
+**LOCAL UNRELEASED · FUNCTIONAL NO-GO.** The 2026-09-05 registry page that read
+GO with 123 passing rows is withdrawn. Its verifier compared the registry with
+itself, so it could not see the endpoints, routes, views, and protocol flags the
+rows omitted, and it accepted one sentence reused across nine journey stages as
+proof of a Signet transaction. Those ledgers are kept for audit and rejected by
+the repaired verifier.
+
+The repaired gate counts every declared surface, keeps one row per review-owned
+operation (224 `SDX-` rows), and one variant per wallet per action. It reports
+five outcomes: `PASS`, `FAIL`, `BLOCKED`, `NOT TESTED`, and
+`NOT_APPLICABLE`, with the network as a separate field. A PASS proven on Signet
+reads `PASS - SIGNET` and needs no mainnet run. A production read never turns a
+row green. A journey needs typed stage records with a transaction id, the node's
+broadcast answer, an authoritative confirmation, and protocol recognition.
+
+Sample data was removed from the executable paths: protocol adapters answer only
+from a configured authority, OP_NET lists no seeded contracts, tokens, or pools,
+and the OP_NET pages say so. Lightning Direct seller offers are stored against the
+saved request with a node-signed proof and a HODL invoice from the configured LND
+node; without that node nothing can be offered or settled. Leather is now part of
+the wallet network check, and its network read is marked not tested.
+
+No native authority, Signet wallet, or Lightning node is configured where this
+work ran. Every row that needs one stays BLOCKED or NOT TESTED. Nothing was
+deployed.
+
+## 2026-09-05: local, unreleased repairs
+
+**LOCAL UNRELEASED · NO-GO.** These local changes repair only part of the execution
+paths. They have not been deployed. Native protocol authorization, transaction
+builders, persistence, recovery, and end-to-end evidence remain incomplete. Passing
+focused tests does not verify a trading journey.
+
+OPNet now reads configured native RPC observations and binds offline binary state
+to stored intents. Swap uses the existing Atomic quote and purchase path with wallet
+network checks. TAP reads paginated indexer journal updates. Maker RFQ publication
+stores authorized terms and cancellation records; it does not reserve funds or
+execute a trade. Native signing fixtures, isolated database tests, and local browser
+checks cover parts of these paths. Live protocol execution remains unverified.
+
+The local release verifier binds evidence to the tested source, specific workflow,
+test command, environment, and network. It requires valid timestamps, kind-specific
+freshness limits, and retained result files whose contents can be checked. Evidence
+reuse across merge commits requires an explicit source-tree equivalence check.
+Inverse checks also compare routes, product views, controller endpoints, adapters,
+and protocol operations against the registry and reject unregistered entry points.
+
+The Spark view now requests pools, wallet positions, quotes, operator checkpoints,
+and exit previews through the existing API. Request failures show errors instead of
+invented data or empty success results. An exit preview does not sign or submit a
+transaction. A stored checkpoint does not prove current finality.
+
+Wallet proof now protects Spark positions and exit previews. Universal Markets reads
+indexed SRC-20 deployments and stored atomic listings with identity-bound pagination;
+missing metrics remain unknown. Isolated MySQL tests cover shared lock contention,
+quote replay, rollback after an outbox failure, and datasource restart. These checks
+do not prove native protocol execution or a deployed release.
+
+The 2026-08-31 counts and action table below are historical records. **They do not
+prove that the current source or deployed version passes verification.**
+
+
 This page exists because "it is on the site" and "it has been verified" are different
 claims, and you deserve to know which one applies to the thing you are about to do.
 
@@ -39,14 +103,15 @@ The application repository holds a release capability registry: one row per user
 each naming the evidence that job depends on. Two things about it are worth knowing:
 
 - **Rows carry no self-declared status.** A verifier derives one, from the evidence.
-- **There are exactly three derived outcomes:** `PASS`, `NOT_APPLICABLE`, and
-  `BLOCKED`. There is deliberately no "partial", no "beta", and no "planned". A row
-  either has its evidence or it does not.
+- **There are exactly five derived outcomes:** `PASS`, `FAIL`, `BLOCKED`,
+  `NOT TESTED`, and `NOT_APPLICABLE`, with the network recorded beside them.
+  There is deliberately no "partial", no "beta", and no "planned". A row either
+  has its evidence or it does not.
 
 `BLOCKED` means required evidence is missing. It does not mean a defect was found.
 Those are different things, and this page will not blur them.
 
-## The last recorded snapshot
+## Historical snapshot: 2026-08-31
 
 Recorded 2026-08-31, across 51 rows:
 
@@ -67,7 +132,7 @@ mutations and for stamp mutations, live runs of each wallet extension through ea
 action it claims, a regtest chain exercise, a screen reader pass, and first-party data
 provenance.
 
-## What that means for you, action by action
+## Historical action evidence: 2026-08-31
 
 | What you are doing | Evidence position |
 | --- | --- |
