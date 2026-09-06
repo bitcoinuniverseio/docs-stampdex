@@ -17,6 +17,34 @@ releaseStatus: preview
 lastReviewedBy: docs-stampdex maintainers
 ---
 
+## 2026-09-06: Arkade and BRC2 record repair
+
+**CI checks passed. Native execution remains unavailable.** Application commit
+[8b0d3467](https://github.com/bitcoinuniverseio/stampdex/commit/8b0d34678b120535564e0cfa8ec78bc3a4297814) passed
+[Quality run 34043045580](https://github.com/bitcoinuniverseio/stampdex/actions/runs/34043045580).
+The run covers 1,954 backend unit tests in 231 suites, 46 API tests, migrations,
+frontend checks, 179 browser tests and the route fixture. Three browser tests
+remain skipped. These checks do not prove native transactions.
+
+Arkade and BRC2 no longer return fixed native checkpoints or invented execution
+results. Native writes return HTTP 503 before reading or changing stored records.
+No boarding address, completed renewal, settlement or VM result is generated.
+The pages read the APIs and label stored contracts, VTXOs and receipts as
+unverified history. Stored status does not prove a spendable balance or settlement.
+
+Arkade owner records require a wallet access signature for the requested address.
+Reads compare addresses exactly, including letter case. Both the original routes
+and their versioned aliases use these checks. Historical rows remain intact.
+Read the [API contract and limits](https://github.com/bitcoinuniverseio/stampdex/blob/main/docs/NATIVE_RECORDS_REPAIR_2026-09-06.md)
+before updating a client that consumes the old response format.
+
+The source inventory contains 954 API declarations and 1,979 unbound declarations.
+The registry still has zero PASS rows; all 351 required wallet variants lack
+accepted witnesses. Native authorities, execution artifacts, recovery and real
+wallet outcomes remain open, including separate Spark and Lightning gaps.
+Check the [running version](https://stamp.api.bitcoinuniverse.io/api/version) for
+the deployed commit. Earlier sections below are historical snapshots.
+
 ## 2026-09-06: event access repair and CI evidence
 
 **CI checks passed. Native readiness remains NO-GO.** Application commit
