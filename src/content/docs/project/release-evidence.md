@@ -17,6 +17,34 @@ releaseStatus: live
 lastReviewedBy: docs-stampdex maintainers
 ---
 
+## 2026-09-06: the GO verdict is withdrawn
+
+**LOCAL UNRELEASED · FUNCTIONAL NO-GO.** The 2026-09-05 registry page that read
+GO with 123 passing rows is withdrawn. Its verifier compared the registry with
+itself, so it could not see the endpoints, routes, views, and protocol flags the
+rows omitted, and it accepted one sentence reused across nine journey stages as
+proof of a Signet transaction. Those ledgers are kept for audit and rejected by
+the repaired verifier.
+
+The repaired gate counts every declared surface, keeps one row per review-owned
+operation (224 `SDX-` rows), and one variant per wallet per action. It reports
+five outcomes: `PASS`, `FAIL`, `BLOCKED`, `NOT TESTED`, and
+`NOT_APPLICABLE`, with the network as a separate field. A PASS proven on Signet
+reads `PASS - SIGNET` and needs no mainnet run. A production read never turns a
+row green. A journey needs typed stage records with a transaction id, the node's
+broadcast answer, an authoritative confirmation, and protocol recognition.
+
+Sample data was removed from the executable paths: protocol adapters answer only
+from a configured authority, OP_NET lists no seeded contracts, tokens, or pools,
+and the OP_NET pages say so. Lightning Direct seller offers are stored against the
+saved request with a node-signed proof and a HODL invoice from the configured LND
+node; without that node nothing can be offered or settled. Leather is now part of
+the wallet network check, and its network read is marked not tested.
+
+No native authority, Signet wallet, or Lightning node is configured where this
+work ran. Every row that needs one stays BLOCKED or NOT TESTED. Nothing was
+deployed.
+
 ## 2026-09-05: local, unreleased repairs
 
 **LOCAL UNRELEASED · NO-GO.** These local changes repair only part of the execution
@@ -75,9 +103,10 @@ The application repository holds a release capability registry: one row per user
 each naming the evidence that job depends on. Two things about it are worth knowing:
 
 - **Rows carry no self-declared status.** A verifier derives one, from the evidence.
-- **There are exactly three derived outcomes:** `PASS`, `NOT_APPLICABLE`, and
-  `BLOCKED`. There is deliberately no "partial", no "beta", and no "planned". A row
-  either has its evidence or it does not.
+- **There are exactly five derived outcomes:** `PASS`, `FAIL`, `BLOCKED`,
+  `NOT TESTED`, and `NOT_APPLICABLE`, with the network recorded beside them.
+  There is deliberately no "partial", no "beta", and no "planned". A row either
+  has its evidence or it does not.
 
 `BLOCKED` means required evidence is missing. It does not mean a defect was found.
 Those are different things, and this page will not blur them.
