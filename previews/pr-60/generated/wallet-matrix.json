@@ -1,0 +1,148 @@
+{
+  "schema": "stampdex.docs.wallet-matrix/1",
+  "provenance": {
+    "repository": "bitcoinuniverseio/stampdex",
+    "sourcePath": "frontend/src/wallet/capabilities.js",
+    "sourceRef": "main",
+    "sourceCommit": "5b98a4095aa2767d308175a49e4273b838c6fb7f",
+    "generatedAt": "2026-09-02T19:14:57.122Z",
+    "generator": "scripts/gen-truth.mjs"
+  },
+  "states": {
+    "works": "supported and tested",
+    "untested": "untested",
+    "no": "unavailable"
+  },
+  "wallets": [
+    {
+      "id": "bitcoinuniverse",
+      "name": "Universe Wallet",
+      "nativeAssetDisplay": true,
+      "actions": {
+        "detect": "works",
+        "connect": "works",
+        "reconnect": "works",
+        "accountRefresh": "works",
+        "accountChangeEvent": "works",
+        "networkCheck": "untested",
+        "signMessage": "works",
+        "signPsbt": "works",
+        "signPsbtUnfinalized": "works",
+        "sendBitcoin": "works",
+        "src20Buy": "works",
+        "src20List": "works",
+        "src20Cancel": "works",
+        "src20Transfer": "works",
+        "stampDispenserBuy": "works",
+        "stampDispenserOpen": "untested",
+        "stampDispenserClose": "untested",
+        "mint": "works",
+        "embeddedMode": "works"
+      }
+    },
+    {
+      "id": "unisat",
+      "name": "UniSat",
+      "nativeAssetDisplay": false,
+      "actions": {
+        "detect": "works",
+        "connect": "works",
+        "reconnect": "works",
+        "accountRefresh": "works",
+        "accountChangeEvent": "works",
+        "networkCheck": "untested",
+        "signMessage": "works",
+        "signPsbt": "works",
+        "signPsbtUnfinalized": "works",
+        "sendBitcoin": "works",
+        "src20Buy": "works",
+        "src20List": "works",
+        "src20Cancel": "works",
+        "src20Transfer": "works",
+        "stampDispenserBuy": "works",
+        "stampDispenserOpen": "untested",
+        "stampDispenserClose": "untested",
+        "mint": "works",
+        "embeddedMode": "no"
+      }
+    },
+    {
+      "id": "leather",
+      "name": "Leather",
+      "nativeAssetDisplay": false,
+      "actions": {
+        "detect": "works",
+        "connect": "works",
+        "reconnect": "works",
+        "accountRefresh": "works",
+        "accountChangeEvent": "no",
+        "networkCheck": "works",
+        "signMessage": "untested",
+        "signPsbt": "untested",
+        "signPsbtUnfinalized": "untested",
+        "sendBitcoin": "untested",
+        "src20Buy": "untested",
+        "src20List": "untested",
+        "src20Cancel": "untested",
+        "src20Transfer": "untested",
+        "stampDispenserBuy": "untested",
+        "stampDispenserOpen": "no",
+        "stampDispenserClose": "no",
+        "mint": "untested",
+        "embeddedMode": "no"
+      }
+    },
+    {
+      "id": "xverse",
+      "name": "Xverse",
+      "nativeAssetDisplay": false,
+      "actions": {
+        "detect": "works",
+        "connect": "works",
+        "reconnect": "works",
+        "accountRefresh": "works",
+        "accountChangeEvent": "works",
+        "networkCheck": "works",
+        "signMessage": "works",
+        "signPsbt": "works",
+        "signPsbtUnfinalized": "untested",
+        "sendBitcoin": "works",
+        "src20Buy": "untested",
+        "src20List": "untested",
+        "src20Cancel": "untested",
+        "src20Transfer": "untested",
+        "stampDispenserBuy": "untested",
+        "stampDispenserOpen": "no",
+        "stampDispenserClose": "no",
+        "mint": "untested",
+        "embeddedMode": "no"
+      }
+    },
+    {
+      "id": "okx",
+      "name": "OKX Wallet",
+      "nativeAssetDisplay": false,
+      "actions": {
+        "detect": "works",
+        "connect": "works",
+        "reconnect": "works",
+        "accountRefresh": "works",
+        "accountChangeEvent": "works",
+        "networkCheck": "untested",
+        "signMessage": "untested",
+        "signPsbt": "untested",
+        "signPsbtUnfinalized": "untested",
+        "sendBitcoin": "untested",
+        "src20Buy": "untested",
+        "src20List": "no",
+        "src20Cancel": "no",
+        "src20Transfer": "untested",
+        "stampDispenserBuy": "untested",
+        "stampDispenserOpen": "no",
+        "stampDispenserClose": "no",
+        "mint": "no",
+        "embeddedMode": "no"
+      }
+    }
+  ]
+}
