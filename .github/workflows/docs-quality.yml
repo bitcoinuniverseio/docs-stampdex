@@ -8,7 +8,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: docs-quality-${{ github.ref }}
+  group: docs-quality-${{ github.event.pull_request.head.sha || github.sha }}
   cancel-in-progress: true
 
 jobs:
