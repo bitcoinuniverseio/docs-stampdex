@@ -11,7 +11,7 @@ protocols: [src20, stamps, bitcoin]
 difficulty: intro
 estimatedMinutes: 5
 lifecycle: stable
-releaseStatus: live
+releaseStatus: preview
 lastReviewedBy: docs-stampdex maintainers
 
 ---
@@ -41,39 +41,38 @@ wallet to sign when you act. It never sees your keys.
 
 ## What each wallet can do here
 
+**Local candidate, 6 September 2026. NO-GO. Not deployed.** These source changes have no real-wallet, native-network or browser acceptance witness. Earlier captures do not verify this candidate.
+
 <WalletExplorer />
 
-Connecting a wallet is not the same as being able to do everything with it. This table
-comes from the code that talks to each wallet, so it says what StampDEX actually does
-rather than what a wallet is generally capable of.
-
-- **Yes** means the action has been run through that wallet on StampDEX.
-- **Not tested** means StampDEX can ask the wallet for it and nobody has run it yet.
-  StampDEX offers the action and says so on the screen.
-- **No** means the wallet exposes nothing that performs the action here, so StampDEX
-  hides it rather than showing a button that fails.
+**Yes** requires a retained journey for the exact wallet version, action,
+network and source revision. **Not tested** means the adapter offers the
+action but no accepted journey witness proves it. Old `works` declarations
+alone do not establish a pass. **No** means this adapter does not offer the
+action. Provider signing does not establish native display, protected inputs,
+native protocol execution, or a delivered asset.
 
 | Action | Universe Wallet | UniSat | Leather | Xverse | OKX Wallet |
 | --- | --- | --- | --- | --- | --- |
-| Detected in the browser | Yes | Yes | Yes | Yes | Yes |
-| Connect | Yes | Yes | Yes | Yes | Yes |
-| Reconnect after a reload | Yes | Yes | Yes | Yes | Yes |
-| Read the current account | Yes | Yes | Yes | Yes | Yes |
-| Report an account change | Yes | Yes | No | Yes | Yes |
-| Report the network | Not tested | Not tested | Yes | Yes | Not tested |
-| Sign a message | Yes | Yes | Not tested | Yes | Not tested |
-| Sign a transaction | Yes | Yes | Not tested | Yes | Not tested |
-| Sign an unfinalized listing transaction | Yes | Yes | Not tested | Not tested | Not tested |
-| Send BTC | Yes | Yes | Not tested | Yes | Not tested |
-| Buy SRC-20 | Yes | Yes | Not tested | Not tested | Not tested |
-| List SRC-20 | Yes | Yes | Not tested | Not tested | No |
-| Cancel a listing | Yes | Yes | Not tested | Not tested | No |
-| Transfer SRC-20 | Yes | Yes | Not tested | Not tested | Not tested |
-| Buy from a dispenser | Yes | Yes | Not tested | Not tested | Not tested |
+| Detected in the browser | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Connect | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Reconnect after a reload | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Read the current account | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Report an account change | Not tested | Not tested | No | Not tested | Not tested |
+| Report the network | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Sign a message | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Sign a transaction | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Sign a listing transaction | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Send BTC | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Buy SRC-20 | Not tested | Not tested | Not tested | Not tested | Not tested |
+| List SRC-20 | Not tested | Not tested | Not tested | Not tested | No |
+| Cancel a listing | Not tested | Not tested | Not tested | Not tested | No |
+| Transfer SRC-20 | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Buy from a dispenser | Not tested | Not tested | Not tested | Not tested | Not tested |
 | Open a dispenser | Not tested | Not tested | No | No | No |
 | Close a dispenser | Not tested | Not tested | No | No | No |
-| Mint | Yes | Yes | Not tested | Not tested | No |
-| Work inside Universe Wallet | Yes | No | No | No | No |
+| Mint | Not tested | Not tested | Not tested | Not tested | No |
+| Work inside Universe Wallet | Not tested | No | No | No | No |
 | List an asset on Atomic | Not tested | Not tested | Not tested | Not tested | Not tested |
 | Buy on Atomic | Not tested | Not tested | Not tested | Not tested | Not tested |
 | Delist from Atomic | Not tested | Not tested | Not tested | Not tested | Not tested |
@@ -102,39 +101,87 @@ rather than what a wallet is generally capable of.
 | Renew an expiring Arkade VTXO | Not tested | Not tested | Not tested | Not tested | Not tested |
 | Initiate a unilateral Arkade exit | Not tested | Not tested | Not tested | Not tested | Not tested |
 | Settle a Banco contract on Ark | Not tested | Not tested | Not tested | Not tested | Not tested |
-| liquidPsetSwap | Not tested | Not tested | Not tested | Not tested | Not tested |
-| liquidPegFlow | Not tested | Not tested | Not tested | Not tested | Not tested |
-| stacksContractCall | Not tested | Not tested | Not tested | Not tested | Not tested |
-| stacksTransfer | Not tested | Not tested | Not tested | Not tested | Not tested |
-| fractalInswapPool | Not tested | Not tested | Not tested | Not tested | Not tested |
-| fractalIndexMining | Not tested | Not tested | Not tested | Not tested | Not tested |
-| rootstockContractCall | Not tested | Not tested | Not tested | Not tested | Not tested |
-| rootstockTokenApproval | Not tested | Not tested | Not tested | Not tested | Not tested |
-| rootstockBridge | Not tested | Not tested | Not tested | Not tested | Not tested |
-| babylonStakeBtc | Not tested | Not tested | Not tested | Not tested | Not tested |
-| babylonUnbondStake | Not tested | Not tested | Not tested | Not tested | Not tested |
-| nostrRemoteSign | Not tested | Not tested | Not tested | Not tested | Not tested |
-| payjoinBip78Proposal | Not tested | Not tested | Not tested | Not tested | Not tested |
-| silentPaymentBip352 | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Swap on Liquid with PSET | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Convert Liquid peg | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Call a Stacks Clarity contract | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Transfer a Stacks asset | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Provide Fractal InSwap liquidity | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Stake a Fractal index provider | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Call a Rootstock contract | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Approve Rootstock token spend | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Bridge BTC through Rootstock PowPeg | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Stake Bitcoin with Babylon | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Unbond a Babylon Bitcoin stake | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Sign a Nostr remote event | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Settle a Payjoin proposal | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Send a BIP-352 silent payment | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Call an OP_NET contract | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Deploy an OP_NET contract | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Swap on MotoSwap | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Manage MotoSwap liquidity | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Transfer an RGB++ asset | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Leap an RGB++ asset | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Pay through Fiber | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Swap through Fiber | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Deploy a TAP token | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Mint a TAP token | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Transfer a TAP token | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Send TAP to multiple recipients | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Redeem a TAP authority | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Place a Lightning Pool order | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Request direct Lightning liquidity | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Call a Citrea contract | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Bridge to Citrea | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Call a Bitlayer contract | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Bridge to Bitlayer | Not tested | Not tested | Not tested | Not tested | Not tested |
 
-Read the "Not tested" column honestly: it is an offer with a warning attached, not a
-guarantee. See [Release evidence](/docs-stampdex/project/release-evidence/).
+## Native display, input protection and provider signing
 
-## Does the wallet show Stamps and SRC-20 itself
+Each dimension keeps its own source date and evidence status in the matrix.
+`adapter` means a source path exists, with source date 2026-09-06 and
+evidence status SOURCE ONLY. `unknown` means no dated proof is retained,
+with evidence status NOT TESTED. Native display observations below use
+SOURCE VERIFIED only for the linked wallet notice. No row is wallet-live proof.
 
-This is about each wallet's own interface, not about StampDEX. Where the answer is No,
-StampDEX shows your holdings and the wallet signs for them.
+| Wallet | Protocol | Native display | Input protection | Provider signing | Display source date | Display evidence |
+| --- | --- | --- | --- | --- | --- | --- |
+| Universe Wallet | stamps | unknown | unknown | adapter | Not recorded | NOT TESTED |
+| Universe Wallet | src-20 | unknown | unknown | adapter | Not recorded | NOT TESTED |
+| Universe Wallet | ordinals | unknown | unknown | adapter | Not recorded | NOT TESTED |
+| Universe Wallet | brc-20 | unknown | unknown | adapter | Not recorded | NOT TESTED |
+| Universe Wallet | runes | unknown | unknown | adapter | Not recorded | NOT TESTED |
+| UniSat | stamps | unknown | unknown | adapter | Not recorded | NOT TESTED |
+| UniSat | src-20 | unknown | unknown | adapter | Not recorded | NOT TESTED |
+| UniSat | ordinals | unknown | unknown | adapter | Not recorded | NOT TESTED |
+| UniSat | brc-20 | unknown | unknown | adapter | Not recorded | NOT TESTED |
+| UniSat | runes | unknown | unknown | adapter | Not recorded | NOT TESTED |
+| Leather | stamps | unsupported | unknown | adapter | 2026-04-17 | SOURCE VERIFIED |
+| Leather | src-20 | unsupported | unknown | adapter | 2026-04-17 | SOURCE VERIFIED |
+| Leather | ordinals | unsupported | unsupported | adapter | 2026-04-22 | SOURCE VERIFIED |
+| Leather | brc-20 | unsupported | unsupported | adapter | 2026-04-22 | SOURCE VERIFIED |
+| Leather | runes | unknown | unknown | adapter | Not recorded | NOT TESTED |
+| Xverse | stamps | unknown | unknown | adapter | Not recorded | NOT TESTED |
+| Xverse | src-20 | unknown | unknown | adapter | Not recorded | NOT TESTED |
+| Xverse | ordinals | unknown | unknown | adapter | Not recorded | NOT TESTED |
+| Xverse | brc-20 | unknown | unknown | adapter | Not recorded | NOT TESTED |
+| Xverse | runes | unknown | unknown | adapter | Not recorded | NOT TESTED |
+| OKX Wallet | stamps | unknown | unknown | adapter | Not recorded | NOT TESTED |
+| OKX Wallet | src-20 | unknown | unknown | adapter | Not recorded | NOT TESTED |
+| OKX Wallet | ordinals | unknown | unknown | adapter | Not recorded | NOT TESTED |
+| OKX Wallet | brc-20 | unknown | unknown | adapter | Not recorded | NOT TESTED |
+| OKX Wallet | runes | unknown | unknown | adapter | Not recorded | NOT TESTED |
 
-| Wallet | Shows these assets |
-| --- | --- |
-| Universe Wallet | Yes |
-| UniSat | No |
-| Leather | No |
-| Xverse | No |
-| OKX Wallet | No |
+Leather ended Stamps/SRC-20 display and management on April 18, 2026.
+Its notice keeps compatible dApp signing separate.
+[Leather Stamps notice](https://app.leather.io/posts/leather-stamps-src20-wallet).
 
-The negatives are stated deliberately, because the opposite claim sends people looking
-for balances that are not there.
+Leather ended inscription/BRC-20 display and inscription input protection
+on May 18, 2026. The notice does not prove a change to generic dApp signing.
+[Leather inscription notice](https://app.leather.io/posts/deprecation-of-ordinals-inscriptions-support-in-leather).
+
+StampDEX must classify selected inputs through its first-party safety service
+before signing. Unknown classification cannot count as ordinary spendable BTC.
+The 351 inherited wallet variants remain separate release obligations.
 
 ## Per-wallet caveats
 

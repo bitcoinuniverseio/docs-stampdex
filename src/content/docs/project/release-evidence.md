@@ -13,9 +13,17 @@ protocols: [src20, stamps, bitcoin]
 difficulty: intro
 estimatedMinutes: 5
 lifecycle: stable
-releaseStatus: live
+releaseStatus: preview
 lastReviewedBy: docs-stampdex maintainers
 ---
+
+## 2026-09-06: implementation program candidate
+
+**Local candidate, 6 September 2026. NO-GO. Not deployed.** These source changes have no real-wallet, native-network or browser acceptance witness. Earlier captures do not verify this candidate.
+
+Evidence format stampdex-stage-v2 computes comparisons against hash-checked raw JSON and binds stage-relevant operation, asset, actor, source and network identities. Wallet transactions, authenticated publications, anonymous reads and service jobs have different required stages. An anonymous API read does not invent a wallet signature. Old v1 evidence needs revalidation when it lacks these checks.
+
+Selected unit and isolated MySQL checks cover invoice crash recovery, outbox leases, public launch filtering and stable market snapshots. Invoice settlement does not prove lease delivery or seller payment. Mandatory native contracts, inventory, wallet, mobile, accessibility and performance obligations remain open. Quality runs browser jobs, so the no-UI-CI boundary prevents PR integration. No deployment occurred.
 
 ## 2026-09-06: the GO verdict is withdrawn
 

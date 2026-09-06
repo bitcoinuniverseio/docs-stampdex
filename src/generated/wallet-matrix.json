@@ -3,80 +3,556 @@
   "provenance": {
     "repository": "bitcoinuniverseio/stampdex",
     "sourcePath": "frontend/src/wallet/capabilities.js",
-    "sourceRef": "main",
-    "sourceCommit": "5b98a4095aa2767d308175a49e4273b838c6fb7f",
-    "generatedAt": "2026-09-02T19:14:57.122Z",
-    "generator": "scripts/gen-truth.mjs"
+    "sourceRef": "local-candidate",
+    "sourceCommit": "135d0a594a8cf83136b1fc12245b5a9fda96fb64",
+    "sourceDirty": false,
+    "sourceSha256": "7e01de6760806603e47fb8433c43c8aada738e416eafeb0efd80f406a5fe1ae5",
+    "generatedAt": "2026-09-06T11:33:56.899Z",
+    "generator": "scripts/gen-truth.mjs --wallet-source",
+    "deployed": false
   },
   "states": {
-    "works": "supported and tested",
-    "untested": "untested",
-    "no": "unavailable"
+    "works": "verified wallet/version/action journey",
+    "untested": "no accepted journey witness",
+    "no": "adapter unavailable"
   },
   "wallets": [
     {
       "id": "bitcoinuniverse",
       "name": "Universe Wallet",
       "nativeAssetDisplay": true,
+      "protocols": {
+        "stamps": {
+          "nativeDisplay": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "inputProtection": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "providerSigning": {
+            "support": "adapter",
+            "sourceDate": "2026-09-06",
+            "evidenceStatus": "SOURCE ONLY",
+            "source": "frontend/src/hooks/useWallet.js",
+            "effectiveDate": null
+          }
+        },
+        "src-20": {
+          "nativeDisplay": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "inputProtection": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "providerSigning": {
+            "support": "adapter",
+            "sourceDate": "2026-09-06",
+            "evidenceStatus": "SOURCE ONLY",
+            "source": "frontend/src/hooks/useWallet.js",
+            "effectiveDate": null
+          }
+        },
+        "ordinals": {
+          "nativeDisplay": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "inputProtection": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "providerSigning": {
+            "support": "adapter",
+            "sourceDate": "2026-09-06",
+            "evidenceStatus": "SOURCE ONLY",
+            "source": "frontend/src/hooks/useWallet.js",
+            "effectiveDate": null
+          }
+        },
+        "brc-20": {
+          "nativeDisplay": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "inputProtection": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "providerSigning": {
+            "support": "adapter",
+            "sourceDate": "2026-09-06",
+            "evidenceStatus": "SOURCE ONLY",
+            "source": "frontend/src/hooks/useWallet.js",
+            "effectiveDate": null
+          }
+        },
+        "runes": {
+          "nativeDisplay": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "inputProtection": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "providerSigning": {
+            "support": "adapter",
+            "sourceDate": "2026-09-06",
+            "evidenceStatus": "SOURCE ONLY",
+            "source": "frontend/src/hooks/useWallet.js",
+            "effectiveDate": null
+          }
+        }
+      },
       "actions": {
-        "detect": "works",
-        "connect": "works",
-        "reconnect": "works",
-        "accountRefresh": "works",
-        "accountChangeEvent": "works",
+        "detect": "untested",
+        "connect": "untested",
+        "reconnect": "untested",
+        "accountRefresh": "untested",
+        "accountChangeEvent": "untested",
         "networkCheck": "untested",
-        "signMessage": "works",
-        "signPsbt": "works",
-        "signPsbtUnfinalized": "works",
-        "sendBitcoin": "works",
-        "src20Buy": "works",
-        "src20List": "works",
-        "src20Cancel": "works",
-        "src20Transfer": "works",
-        "stampDispenserBuy": "works",
+        "signMessage": "untested",
+        "signPsbt": "untested",
+        "signPsbtUnfinalized": "untested",
+        "sendBitcoin": "untested",
+        "src20Buy": "untested",
+        "src20List": "untested",
+        "src20Cancel": "untested",
+        "src20Transfer": "untested",
+        "stampDispenserBuy": "untested",
         "stampDispenserOpen": "untested",
         "stampDispenserClose": "untested",
-        "mint": "works",
-        "embeddedMode": "works"
+        "mint": "untested",
+        "embeddedMode": "untested",
+        "atomicList": "untested",
+        "atomicBuy": "untested",
+        "atomicDelist": "untested",
+        "auctionCreate": "untested",
+        "auctionBid": "untested",
+        "auctionBuyNow": "untested",
+        "poolDeposit": "untested",
+        "poolWithdraw": "untested",
+        "poolSwap": "untested",
+        "dexOrder": "untested",
+        "profileLink": "untested",
+        "launchParticipate": "untested",
+        "launchReserve": "untested",
+        "distributeMpma": "untested",
+        "sparkSwap": "untested",
+        "sparkExit": "untested",
+        "brc2Deploy": "untested",
+        "brc2Call": "untested",
+        "preblockReserve": "untested",
+        "preblockSettle": "untested",
+        "rareSatProtect": "untested",
+        "rareSatUnlock": "untested",
+        "rareSatIsolate": "untested",
+        "rgbIntent": "untested",
+        "rgbWitnessAnchor": "untested",
+        "arkadeRenew": "untested",
+        "arkadeExit": "untested",
+        "bancoSettle": "untested",
+        "liquidPsetSwap": "untested",
+        "liquidPegFlow": "untested",
+        "stacksContractCall": "untested",
+        "stacksTransfer": "untested",
+        "fractalInswapPool": "untested",
+        "fractalIndexMining": "untested",
+        "rootstockContractCall": "untested",
+        "rootstockTokenApproval": "untested",
+        "rootstockBridge": "untested",
+        "babylonStakeBtc": "untested",
+        "babylonUnbondStake": "untested",
+        "nostrRemoteSign": "untested",
+        "payjoinBip78Proposal": "untested",
+        "silentPaymentBip352": "untested",
+        "opnetContractCall": "untested",
+        "opnetContractDeploy": "untested",
+        "opnetSwap": "untested",
+        "opnetLiquidity": "untested",
+        "rgbppBtcTransfer": "untested",
+        "rgbppLeap": "untested",
+        "fiberPayment": "untested",
+        "fiberSwap": "untested",
+        "tapDeploy": "untested",
+        "tapMint": "untested",
+        "tapTransfer": "untested",
+        "tapMultiSend": "untested",
+        "tapAuthorityRedeem": "untested",
+        "lightningPoolOrder": "untested",
+        "lightningDirectLiquidity": "untested",
+        "citreaContractCall": "untested",
+        "citreaBridge": "untested",
+        "bitlayerContractCall": "untested",
+        "bitlayerBridge": "untested"
       }
     },
     {
       "id": "unisat",
       "name": "UniSat",
       "nativeAssetDisplay": false,
+      "protocols": {
+        "stamps": {
+          "nativeDisplay": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "inputProtection": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "providerSigning": {
+            "support": "adapter",
+            "sourceDate": "2026-09-06",
+            "evidenceStatus": "SOURCE ONLY",
+            "source": "frontend/src/hooks/useWallet.js",
+            "effectiveDate": null
+          }
+        },
+        "src-20": {
+          "nativeDisplay": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "inputProtection": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "providerSigning": {
+            "support": "adapter",
+            "sourceDate": "2026-09-06",
+            "evidenceStatus": "SOURCE ONLY",
+            "source": "frontend/src/hooks/useWallet.js",
+            "effectiveDate": null
+          }
+        },
+        "ordinals": {
+          "nativeDisplay": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "inputProtection": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "providerSigning": {
+            "support": "adapter",
+            "sourceDate": "2026-09-06",
+            "evidenceStatus": "SOURCE ONLY",
+            "source": "frontend/src/hooks/useWallet.js",
+            "effectiveDate": null
+          }
+        },
+        "brc-20": {
+          "nativeDisplay": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "inputProtection": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "providerSigning": {
+            "support": "adapter",
+            "sourceDate": "2026-09-06",
+            "evidenceStatus": "SOURCE ONLY",
+            "source": "frontend/src/hooks/useWallet.js",
+            "effectiveDate": null
+          }
+        },
+        "runes": {
+          "nativeDisplay": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "inputProtection": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "providerSigning": {
+            "support": "adapter",
+            "sourceDate": "2026-09-06",
+            "evidenceStatus": "SOURCE ONLY",
+            "source": "frontend/src/hooks/useWallet.js",
+            "effectiveDate": null
+          }
+        }
+      },
       "actions": {
-        "detect": "works",
-        "connect": "works",
-        "reconnect": "works",
-        "accountRefresh": "works",
-        "accountChangeEvent": "works",
+        "detect": "untested",
+        "connect": "untested",
+        "reconnect": "untested",
+        "accountRefresh": "untested",
+        "accountChangeEvent": "untested",
         "networkCheck": "untested",
-        "signMessage": "works",
-        "signPsbt": "works",
-        "signPsbtUnfinalized": "works",
-        "sendBitcoin": "works",
-        "src20Buy": "works",
-        "src20List": "works",
-        "src20Cancel": "works",
-        "src20Transfer": "works",
-        "stampDispenserBuy": "works",
+        "signMessage": "untested",
+        "signPsbt": "untested",
+        "signPsbtUnfinalized": "untested",
+        "sendBitcoin": "untested",
+        "src20Buy": "untested",
+        "src20List": "untested",
+        "src20Cancel": "untested",
+        "src20Transfer": "untested",
+        "stampDispenserBuy": "untested",
         "stampDispenserOpen": "untested",
         "stampDispenserClose": "untested",
-        "mint": "works",
-        "embeddedMode": "no"
+        "mint": "untested",
+        "embeddedMode": "no",
+        "atomicList": "untested",
+        "atomicBuy": "untested",
+        "atomicDelist": "untested",
+        "auctionCreate": "untested",
+        "auctionBid": "untested",
+        "auctionBuyNow": "untested",
+        "poolDeposit": "untested",
+        "poolWithdraw": "untested",
+        "poolSwap": "untested",
+        "dexOrder": "untested",
+        "profileLink": "untested",
+        "launchParticipate": "untested",
+        "launchReserve": "untested",
+        "distributeMpma": "untested",
+        "sparkSwap": "untested",
+        "sparkExit": "untested",
+        "brc2Deploy": "untested",
+        "brc2Call": "untested",
+        "preblockReserve": "untested",
+        "preblockSettle": "untested",
+        "rareSatProtect": "untested",
+        "rareSatUnlock": "untested",
+        "rareSatIsolate": "untested",
+        "rgbIntent": "untested",
+        "rgbWitnessAnchor": "untested",
+        "arkadeRenew": "untested",
+        "arkadeExit": "untested",
+        "bancoSettle": "untested",
+        "liquidPsetSwap": "untested",
+        "liquidPegFlow": "untested",
+        "stacksContractCall": "untested",
+        "stacksTransfer": "untested",
+        "fractalInswapPool": "untested",
+        "fractalIndexMining": "untested",
+        "rootstockContractCall": "untested",
+        "rootstockTokenApproval": "untested",
+        "rootstockBridge": "untested",
+        "babylonStakeBtc": "untested",
+        "babylonUnbondStake": "untested",
+        "nostrRemoteSign": "untested",
+        "payjoinBip78Proposal": "untested",
+        "silentPaymentBip352": "untested",
+        "opnetContractCall": "untested",
+        "opnetContractDeploy": "untested",
+        "opnetSwap": "untested",
+        "opnetLiquidity": "untested",
+        "rgbppBtcTransfer": "untested",
+        "rgbppLeap": "untested",
+        "fiberPayment": "untested",
+        "fiberSwap": "untested",
+        "tapDeploy": "untested",
+        "tapMint": "untested",
+        "tapTransfer": "untested",
+        "tapMultiSend": "untested",
+        "tapAuthorityRedeem": "untested",
+        "lightningPoolOrder": "untested",
+        "lightningDirectLiquidity": "untested",
+        "citreaContractCall": "untested",
+        "citreaBridge": "untested",
+        "bitlayerContractCall": "untested",
+        "bitlayerBridge": "untested"
       }
     },
     {
       "id": "leather",
       "name": "Leather",
       "nativeAssetDisplay": false,
+      "protocols": {
+        "stamps": {
+          "nativeDisplay": {
+            "support": "unsupported",
+            "sourceDate": "2026-04-17",
+            "evidenceStatus": "SOURCE VERIFIED",
+            "source": "https://app.leather.io/posts/leather-stamps-src20-wallet",
+            "effectiveDate": "2026-04-18"
+          },
+          "inputProtection": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "providerSigning": {
+            "support": "adapter",
+            "sourceDate": "2026-09-06",
+            "evidenceStatus": "SOURCE ONLY",
+            "source": "frontend/src/hooks/useWallet.js",
+            "effectiveDate": null
+          }
+        },
+        "src-20": {
+          "nativeDisplay": {
+            "support": "unsupported",
+            "sourceDate": "2026-04-17",
+            "evidenceStatus": "SOURCE VERIFIED",
+            "source": "https://app.leather.io/posts/leather-stamps-src20-wallet",
+            "effectiveDate": "2026-04-18"
+          },
+          "inputProtection": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "providerSigning": {
+            "support": "adapter",
+            "sourceDate": "2026-09-06",
+            "evidenceStatus": "SOURCE ONLY",
+            "source": "frontend/src/hooks/useWallet.js",
+            "effectiveDate": null
+          }
+        },
+        "ordinals": {
+          "nativeDisplay": {
+            "support": "unsupported",
+            "sourceDate": "2026-04-22",
+            "evidenceStatus": "SOURCE VERIFIED",
+            "source": "https://app.leather.io/posts/deprecation-of-ordinals-inscriptions-support-in-leather",
+            "effectiveDate": "2026-05-18"
+          },
+          "inputProtection": {
+            "support": "unsupported",
+            "sourceDate": "2026-04-22",
+            "evidenceStatus": "SOURCE VERIFIED",
+            "source": "https://app.leather.io/posts/deprecation-of-ordinals-inscriptions-support-in-leather",
+            "effectiveDate": "2026-05-18"
+          },
+          "providerSigning": {
+            "support": "adapter",
+            "sourceDate": "2026-09-06",
+            "evidenceStatus": "SOURCE ONLY",
+            "source": "frontend/src/hooks/useWallet.js",
+            "effectiveDate": null
+          }
+        },
+        "brc-20": {
+          "nativeDisplay": {
+            "support": "unsupported",
+            "sourceDate": "2026-04-22",
+            "evidenceStatus": "SOURCE VERIFIED",
+            "source": "https://app.leather.io/posts/deprecation-of-ordinals-inscriptions-support-in-leather",
+            "effectiveDate": "2026-05-18"
+          },
+          "inputProtection": {
+            "support": "unsupported",
+            "sourceDate": "2026-04-22",
+            "evidenceStatus": "SOURCE VERIFIED",
+            "source": "https://app.leather.io/posts/deprecation-of-ordinals-inscriptions-support-in-leather",
+            "effectiveDate": "2026-05-18"
+          },
+          "providerSigning": {
+            "support": "adapter",
+            "sourceDate": "2026-09-06",
+            "evidenceStatus": "SOURCE ONLY",
+            "source": "frontend/src/hooks/useWallet.js",
+            "effectiveDate": null
+          }
+        },
+        "runes": {
+          "nativeDisplay": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "inputProtection": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "providerSigning": {
+            "support": "adapter",
+            "sourceDate": "2026-09-06",
+            "evidenceStatus": "SOURCE ONLY",
+            "source": "frontend/src/hooks/useWallet.js",
+            "effectiveDate": null
+          }
+        }
+      },
       "actions": {
-        "detect": "works",
-        "connect": "works",
-        "reconnect": "works",
-        "accountRefresh": "works",
+        "detect": "untested",
+        "connect": "untested",
+        "reconnect": "untested",
+        "accountRefresh": "untested",
         "accountChangeEvent": "no",
-        "networkCheck": "works",
+        "networkCheck": "untested",
         "signMessage": "untested",
         "signPsbt": "untested",
         "signPsbtUnfinalized": "untested",
@@ -89,24 +565,202 @@
         "stampDispenserOpen": "no",
         "stampDispenserClose": "no",
         "mint": "untested",
-        "embeddedMode": "no"
+        "embeddedMode": "no",
+        "atomicList": "untested",
+        "atomicBuy": "untested",
+        "atomicDelist": "untested",
+        "auctionCreate": "untested",
+        "auctionBid": "untested",
+        "auctionBuyNow": "untested",
+        "poolDeposit": "untested",
+        "poolWithdraw": "untested",
+        "poolSwap": "untested",
+        "dexOrder": "untested",
+        "profileLink": "untested",
+        "launchParticipate": "untested",
+        "launchReserve": "untested",
+        "distributeMpma": "untested",
+        "sparkSwap": "untested",
+        "sparkExit": "untested",
+        "brc2Deploy": "untested",
+        "brc2Call": "untested",
+        "preblockReserve": "untested",
+        "preblockSettle": "untested",
+        "rareSatProtect": "untested",
+        "rareSatUnlock": "untested",
+        "rareSatIsolate": "untested",
+        "rgbIntent": "untested",
+        "rgbWitnessAnchor": "untested",
+        "arkadeRenew": "untested",
+        "arkadeExit": "untested",
+        "bancoSettle": "untested",
+        "liquidPsetSwap": "untested",
+        "liquidPegFlow": "untested",
+        "stacksContractCall": "untested",
+        "stacksTransfer": "untested",
+        "fractalInswapPool": "untested",
+        "fractalIndexMining": "untested",
+        "rootstockContractCall": "untested",
+        "rootstockTokenApproval": "untested",
+        "rootstockBridge": "untested",
+        "babylonStakeBtc": "untested",
+        "babylonUnbondStake": "untested",
+        "nostrRemoteSign": "untested",
+        "payjoinBip78Proposal": "untested",
+        "silentPaymentBip352": "untested",
+        "opnetContractCall": "untested",
+        "opnetContractDeploy": "untested",
+        "opnetSwap": "untested",
+        "opnetLiquidity": "untested",
+        "rgbppBtcTransfer": "untested",
+        "rgbppLeap": "untested",
+        "fiberPayment": "untested",
+        "fiberSwap": "untested",
+        "tapDeploy": "untested",
+        "tapMint": "untested",
+        "tapTransfer": "untested",
+        "tapMultiSend": "untested",
+        "tapAuthorityRedeem": "untested",
+        "lightningPoolOrder": "untested",
+        "lightningDirectLiquidity": "untested",
+        "citreaContractCall": "untested",
+        "citreaBridge": "untested",
+        "bitlayerContractCall": "untested",
+        "bitlayerBridge": "untested"
       }
     },
     {
       "id": "xverse",
       "name": "Xverse",
       "nativeAssetDisplay": false,
+      "protocols": {
+        "stamps": {
+          "nativeDisplay": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "inputProtection": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "providerSigning": {
+            "support": "adapter",
+            "sourceDate": "2026-09-06",
+            "evidenceStatus": "SOURCE ONLY",
+            "source": "frontend/src/hooks/useWallet.js",
+            "effectiveDate": null
+          }
+        },
+        "src-20": {
+          "nativeDisplay": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "inputProtection": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "providerSigning": {
+            "support": "adapter",
+            "sourceDate": "2026-09-06",
+            "evidenceStatus": "SOURCE ONLY",
+            "source": "frontend/src/hooks/useWallet.js",
+            "effectiveDate": null
+          }
+        },
+        "ordinals": {
+          "nativeDisplay": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "inputProtection": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "providerSigning": {
+            "support": "adapter",
+            "sourceDate": "2026-09-06",
+            "evidenceStatus": "SOURCE ONLY",
+            "source": "frontend/src/hooks/useWallet.js",
+            "effectiveDate": null
+          }
+        },
+        "brc-20": {
+          "nativeDisplay": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "inputProtection": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "providerSigning": {
+            "support": "adapter",
+            "sourceDate": "2026-09-06",
+            "evidenceStatus": "SOURCE ONLY",
+            "source": "frontend/src/hooks/useWallet.js",
+            "effectiveDate": null
+          }
+        },
+        "runes": {
+          "nativeDisplay": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "inputProtection": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "providerSigning": {
+            "support": "adapter",
+            "sourceDate": "2026-09-06",
+            "evidenceStatus": "SOURCE ONLY",
+            "source": "frontend/src/hooks/useWallet.js",
+            "effectiveDate": null
+          }
+        }
+      },
       "actions": {
-        "detect": "works",
-        "connect": "works",
-        "reconnect": "works",
-        "accountRefresh": "works",
-        "accountChangeEvent": "works",
-        "networkCheck": "works",
-        "signMessage": "works",
-        "signPsbt": "works",
+        "detect": "untested",
+        "connect": "untested",
+        "reconnect": "untested",
+        "accountRefresh": "untested",
+        "accountChangeEvent": "untested",
+        "networkCheck": "untested",
+        "signMessage": "untested",
+        "signPsbt": "untested",
         "signPsbtUnfinalized": "untested",
-        "sendBitcoin": "works",
+        "sendBitcoin": "untested",
         "src20Buy": "untested",
         "src20List": "untested",
         "src20Cancel": "untested",
@@ -115,19 +769,197 @@
         "stampDispenserOpen": "no",
         "stampDispenserClose": "no",
         "mint": "untested",
-        "embeddedMode": "no"
+        "embeddedMode": "no",
+        "atomicList": "untested",
+        "atomicBuy": "untested",
+        "atomicDelist": "untested",
+        "auctionCreate": "untested",
+        "auctionBid": "untested",
+        "auctionBuyNow": "untested",
+        "poolDeposit": "untested",
+        "poolWithdraw": "untested",
+        "poolSwap": "untested",
+        "dexOrder": "untested",
+        "profileLink": "untested",
+        "launchParticipate": "untested",
+        "launchReserve": "untested",
+        "distributeMpma": "untested",
+        "sparkSwap": "untested",
+        "sparkExit": "untested",
+        "brc2Deploy": "untested",
+        "brc2Call": "untested",
+        "preblockReserve": "untested",
+        "preblockSettle": "untested",
+        "rareSatProtect": "untested",
+        "rareSatUnlock": "untested",
+        "rareSatIsolate": "untested",
+        "rgbIntent": "untested",
+        "rgbWitnessAnchor": "untested",
+        "arkadeRenew": "untested",
+        "arkadeExit": "untested",
+        "bancoSettle": "untested",
+        "liquidPsetSwap": "untested",
+        "liquidPegFlow": "untested",
+        "stacksContractCall": "untested",
+        "stacksTransfer": "untested",
+        "fractalInswapPool": "untested",
+        "fractalIndexMining": "untested",
+        "rootstockContractCall": "untested",
+        "rootstockTokenApproval": "untested",
+        "rootstockBridge": "untested",
+        "babylonStakeBtc": "untested",
+        "babylonUnbondStake": "untested",
+        "nostrRemoteSign": "untested",
+        "payjoinBip78Proposal": "untested",
+        "silentPaymentBip352": "untested",
+        "opnetContractCall": "untested",
+        "opnetContractDeploy": "untested",
+        "opnetSwap": "untested",
+        "opnetLiquidity": "untested",
+        "rgbppBtcTransfer": "untested",
+        "rgbppLeap": "untested",
+        "fiberPayment": "untested",
+        "fiberSwap": "untested",
+        "tapDeploy": "untested",
+        "tapMint": "untested",
+        "tapTransfer": "untested",
+        "tapMultiSend": "untested",
+        "tapAuthorityRedeem": "untested",
+        "lightningPoolOrder": "untested",
+        "lightningDirectLiquidity": "untested",
+        "citreaContractCall": "untested",
+        "citreaBridge": "untested",
+        "bitlayerContractCall": "untested",
+        "bitlayerBridge": "untested"
       }
     },
     {
       "id": "okx",
       "name": "OKX Wallet",
       "nativeAssetDisplay": false,
+      "protocols": {
+        "stamps": {
+          "nativeDisplay": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "inputProtection": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "providerSigning": {
+            "support": "adapter",
+            "sourceDate": "2026-09-06",
+            "evidenceStatus": "SOURCE ONLY",
+            "source": "frontend/src/hooks/useWallet.js",
+            "effectiveDate": null
+          }
+        },
+        "src-20": {
+          "nativeDisplay": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "inputProtection": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "providerSigning": {
+            "support": "adapter",
+            "sourceDate": "2026-09-06",
+            "evidenceStatus": "SOURCE ONLY",
+            "source": "frontend/src/hooks/useWallet.js",
+            "effectiveDate": null
+          }
+        },
+        "ordinals": {
+          "nativeDisplay": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "inputProtection": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "providerSigning": {
+            "support": "adapter",
+            "sourceDate": "2026-09-06",
+            "evidenceStatus": "SOURCE ONLY",
+            "source": "frontend/src/hooks/useWallet.js",
+            "effectiveDate": null
+          }
+        },
+        "brc-20": {
+          "nativeDisplay": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "inputProtection": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "providerSigning": {
+            "support": "adapter",
+            "sourceDate": "2026-09-06",
+            "evidenceStatus": "SOURCE ONLY",
+            "source": "frontend/src/hooks/useWallet.js",
+            "effectiveDate": null
+          }
+        },
+        "runes": {
+          "nativeDisplay": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "inputProtection": {
+            "support": "unknown",
+            "sourceDate": null,
+            "evidenceStatus": "NOT TESTED",
+            "source": null,
+            "effectiveDate": null
+          },
+          "providerSigning": {
+            "support": "adapter",
+            "sourceDate": "2026-09-06",
+            "evidenceStatus": "SOURCE ONLY",
+            "source": "frontend/src/hooks/useWallet.js",
+            "effectiveDate": null
+          }
+        }
+      },
       "actions": {
-        "detect": "works",
-        "connect": "works",
-        "reconnect": "works",
-        "accountRefresh": "works",
-        "accountChangeEvent": "works",
+        "detect": "untested",
+        "connect": "untested",
+        "reconnect": "untested",
+        "accountRefresh": "untested",
+        "accountChangeEvent": "untested",
         "networkCheck": "untested",
         "signMessage": "untested",
         "signPsbt": "untested",
@@ -141,7 +973,68 @@
         "stampDispenserOpen": "no",
         "stampDispenserClose": "no",
         "mint": "no",
-        "embeddedMode": "no"
+        "embeddedMode": "no",
+        "atomicList": "untested",
+        "atomicBuy": "untested",
+        "atomicDelist": "untested",
+        "auctionCreate": "untested",
+        "auctionBid": "untested",
+        "auctionBuyNow": "untested",
+        "poolDeposit": "untested",
+        "poolWithdraw": "untested",
+        "poolSwap": "untested",
+        "dexOrder": "untested",
+        "profileLink": "untested",
+        "launchParticipate": "untested",
+        "launchReserve": "untested",
+        "distributeMpma": "untested",
+        "sparkSwap": "untested",
+        "sparkExit": "untested",
+        "brc2Deploy": "untested",
+        "brc2Call": "untested",
+        "preblockReserve": "untested",
+        "preblockSettle": "untested",
+        "rareSatProtect": "untested",
+        "rareSatUnlock": "untested",
+        "rareSatIsolate": "untested",
+        "rgbIntent": "untested",
+        "rgbWitnessAnchor": "untested",
+        "arkadeRenew": "untested",
+        "arkadeExit": "untested",
+        "bancoSettle": "untested",
+        "liquidPsetSwap": "untested",
+        "liquidPegFlow": "untested",
+        "stacksContractCall": "untested",
+        "stacksTransfer": "untested",
+        "fractalInswapPool": "untested",
+        "fractalIndexMining": "untested",
+        "rootstockContractCall": "untested",
+        "rootstockTokenApproval": "untested",
+        "rootstockBridge": "untested",
+        "babylonStakeBtc": "untested",
+        "babylonUnbondStake": "untested",
+        "nostrRemoteSign": "untested",
+        "payjoinBip78Proposal": "untested",
+        "silentPaymentBip352": "untested",
+        "opnetContractCall": "untested",
+        "opnetContractDeploy": "untested",
+        "opnetSwap": "untested",
+        "opnetLiquidity": "untested",
+        "rgbppBtcTransfer": "untested",
+        "rgbppLeap": "untested",
+        "fiberPayment": "untested",
+        "fiberSwap": "untested",
+        "tapDeploy": "untested",
+        "tapMint": "untested",
+        "tapTransfer": "untested",
+        "tapMultiSend": "untested",
+        "tapAuthorityRedeem": "untested",
+        "lightningPoolOrder": "untested",
+        "lightningDirectLiquidity": "untested",
+        "citreaContractCall": "untested",
+        "citreaBridge": "untested",
+        "bitlayerContractCall": "untested",
+        "bitlayerBridge": "untested"
       }
     }
   ]
