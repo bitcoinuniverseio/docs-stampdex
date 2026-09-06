@@ -20,7 +20,7 @@ lastReviewedBy: docs-stampdex maintainers
 ## 2026-09-06：事件访问修复与 CI 证据
 
 **CI 检查通过。原生执行就绪状态仍为 NO-GO。** 应用提交
-`8349878769b5f969e02a57440af33bd0791ead0f` 通过了
+[83498787](https://github.com/bitcoinuniverseio/stampdex/commit/8349878769b5f969e02a57440af33bd0791ead0f) 通过了
 [Quality 运行 34036927184](https://github.com/bitcoinuniverseio/stampdex/actions/runs/34036927184)。
 记录包括 231 个后端单元测试套件中的 1,957 项测试、45 项 API 集成测试、版本化迁移、
 前端检查、浏览器测试和生产运维检查。首次 MySQL 测试容器启动失败，后端任务重试后通过。

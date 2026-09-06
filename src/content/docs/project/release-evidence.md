@@ -20,7 +20,7 @@ lastReviewedBy: docs-stampdex maintainers
 ## 2026-09-06: event access repair and CI evidence
 
 **CI checks passed. Native readiness remains NO-GO.** Application commit
-`8349878769b5f969e02a57440af33bd0791ead0f` passed
+[83498787](https://github.com/bitcoinuniverseio/stampdex/commit/8349878769b5f969e02a57440af33bd0791ead0f) passed
 [Quality run 34036927184](https://github.com/bitcoinuniverseio/stampdex/actions/runs/34036927184).
 It records 1,957 backend unit tests across 231 suites, 45 API integration tests,
 versioned migrations, frontend checks, browser tests and production operation checks.
