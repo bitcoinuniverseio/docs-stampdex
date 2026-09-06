@@ -4,8 +4,53 @@
 
 > Source: bitcoinuniverseio/stampdex release registry, and bitcoinuniverseio/core for the capability registry, release registry and verifier, GET /api/version. Applicable release snapshot recorded 2026-08-31. Last verified 2026-09-01. Chain bitcoin/mainnet.
 
-> [!NOTE]
-> **简体中文官方文档**：供审计员与高阶开发者核验线上系统完整性的确凿证据链。 核心交易规则为非托管模式，买卖双方按标准费率收取服务费，并于比特币主网进行原子结算。
+## 2026-09-06：撤回 GO 结论
+
+**本地修改，尚未发布 · 功能性 NO-GO。** 2026-09-05 显示 GO、123 行通过的注册表页面已撤回。
+当时的校验器把注册表与其自身比较，看不到行中遗漏的端点、路由、视图与协议标志；
+它还把同一句话在九个阶段重复使用当作 Signet 交易的证明。这些账本保留供审计，并被修复后的校验器拒绝。
+
+修复后的门禁统计每一个已声明的接口，为每个审阅登记的操作保留一行（224 个 `SDX-` 行），
+并为每个钱包的每个动作保留一个变体。结果有五种：`PASS`、`FAIL`、`BLOCKED`、
+`NOT TESTED`、`NOT_APPLICABLE`，网络单独记录。在 Signet 上证明的 PASS 显示为
+`PASS - SIGNET`，不需要主网运行。生产环境读取不会让任何行变绿。一次旅程需要带交易 ID、
+节点广播响应、权威确认与协议识别的结构化阶段记录。
+
+可执行路径中的示例数据已移除：协议适配器仅从已配置的权限来源应答，OP_NET 不再列出
+预置的合约、代币或池，OP_NET 页面会如实说明。闪电网络直接报价的卖方报价与已保存的请求绑定，
+需要节点签名证明与已配置 LND 节点创建的 HODL 发票；没有该节点就无法报价或结算。
+Leather 已纳入钱包网络检查，其网络读取标记为未测试。
+
+本次工作运行的环境未配置任何原生权限来源、Signet 钱包或闪电网络节点。需要这些的每一行
+仍为 BLOCKED 或 NOT TESTED。没有任何部署。
+
+## 2026-09-05：本地修改，尚未发布
+
+**LOCAL UNRELEASED · NO-GO。** 本次仅修复了部分执行缺陷，未部署到生产环境。
+原生协议授权、交易构建器、持久化、恢复流程和端到端证据仍不完整。
+局部测试通过不代表交易流程已获验证。
+
+OPNet 现读取已配置的原生 RPC 观测，并将离线二进制状态绑定到已存储的交易意图。
+兑换流程使用现有 Atomic 报价和购买路径，并检查钱包网络。TAP 读取分页索引日志。
+做市商 RFQ 发布流程存储已授权的条款和撤销记录，不预留资金或执行交易。
+原生签名样例、隔离数据库测试和本地浏览器检查仅覆盖部分流程，实际协议执行仍未验证。
+
+本地发布验证器要求证据匹配所测源码、具体流程、测试命令、环境和网络。
+时间戳必须有效，并满足该证据类型的时效限制；保留的结果文件必须存在且可核验。
+只有明确验证源码树等价时，才能在不同合并提交之间复用证据。
+验证器还反向检查路由、产品视图、控制器接口、适配器及协议操作清单，拒绝未登记的执行入口。
+
+Spark 页面现通过现有 API 请求资金池、钱包持仓、报价、运营者检查点和退出预览。
+请求失败会显示错误，不再生成虚构数据或空白成功结果。
+退出预览不签署或提交交易；所存检查点不证明当前最终性。
+
+Spark 持仓与退出预览现要求钱包签名证明。统一市场读取已索引的 SRC-20 发行记录及已存储的原子挂单，
+分页绑定完整资产身份，缺失指标保持未知。隔离 MySQL 测试覆盖共享锁竞争、报价重放、
+发件箱写入失败后的回滚及数据源重启。这些检查不证明原生协议执行或线上发布。
+
+下方 2026-08-31 的计数和操作表属于历史记录，**不证明当前源码或线上版本通过验证**。
+
+
 
 
 
@@ -38,7 +83,7 @@ each naming the evidence that job depends on. Two things about it are worth know
 `BLOCKED` means required evidence is missing. It does not mean a defect was found.
 Those are different things, and this page will not blur them.
 
-## The last recorded snapshot
+## Historical snapshot: 2026-08-31
 
 Recorded 2026-08-31, across 51 rows:
 
@@ -59,7 +104,7 @@ mutations and for stamp mutations, live runs of each wallet extension through ea
 action it claims, a regtest chain exercise, a screen reader pass, and first-party data
 provenance.
 
-## What that means for you, action by action
+## Historical action evidence: 2026-08-31
 
 | What you are doing | Evidence position |
 | --- | --- |
