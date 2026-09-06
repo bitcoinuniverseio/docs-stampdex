@@ -4,8 +4,8 @@ description: 线上各微服务与智能合约部署哈希、测试结果与自�
 source:
   repo: bitcoinuniverseio/stampdex release registry, and bitcoinuniverseio/core for the capability registry
   path: release registry and verifier, GET /api/version
-  release: snapshot recorded 2026-08-31
-  verified: "2026-09-01"
+  release: snapshot recorded 2026-09-06
+  verified: "2026-09-06"
 contentType: reference
 audiences: [traders, collectors, developers]
 products: [src20, stamps]
@@ -17,9 +17,17 @@ releaseStatus: preview
 lastReviewedBy: docs-stampdex maintainers
 ---
 
-## 2026-09-06：事件访问候选版本
+## 2026-09-06：事件访问修复与 CI 证据
 
-**本地候选版本。NO-GO。尚未部署。** 公开活动仅包含获准的事件类型和字段。
+**CI 检查通过。原生执行就绪状态仍为 NO-GO。** 应用提交
+`8349878769b5f969e02a57440af33bd0791ead0f` 通过了
+[Quality 运行 34036927184](https://github.com/bitcoinuniverseio/stampdex/actions/runs/34036927184)。
+记录包括 231 个后端单元测试套件中的 1,957 项测试、45 项 API 集成测试、版本化迁移、
+前端检查、浏览器测试和生产运维检查。首次 MySQL 测试容器启动失败，后端任务重试后通过。
+请读取[运行版本](https://stamp.api.bitcoinuniverse.io/api/version)以确认已部署的应用提交。
+CI 不证明部署或原生执行。下方早期章节描述各次审阅记录时的状态。
+
+公开活动仅包含获准的事件类型和字段。
 Spark 持仓活动需要持有者的钱包签名证明。发行活动所属项目必须已公开且不再是草稿。
 运营者审计结果仅检查已存检查点，不返回私有持仓数量或 ID。获准的检查点事件仍然公开。
 七项隔离 API 和 MySQL 测试通过，覆盖公开数据过滤、持有者签名读取、重启、项目可见性
