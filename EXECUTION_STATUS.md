@@ -1,10 +1,33 @@
 # Execution and recovery, 6 September 2026
 
-**Native readiness remains NO-GO.** The previous GO report remains withdrawn.
-The later consolidation request authorizes CI and deployment. Application commit
-`3e1a9f5cdcb98c40940049fadaed5d1934386b28` passes 1,907 backend unit tests,
-45 API integration tests, 393 frontend unit tests and 173 browser tests.
-Those checks do not establish real-wallet settlement or native protocol coverage.
+**CI-checked privacy repair. Native readiness remains NO-GO.** The previous GO report remains withdrawn.
+Application commit `8349878769b5f969e02a57440af33bd0791ead0f` passed
+[Quality run 34036927184](https://github.com/bitcoinuniverseio/stampdex/actions/runs/34036927184):
+1,957 backend unit tests across 231 suites, 45 API integration tests, versioned
+migrations, frontend checks, browser tests and production operation checks.
+The backend job passed on retry after the first MySQL fixture failed to start.
+These checks do not establish real-wallet settlement or native protocol coverage.
+Read [the running version](https://stamp.api.bitcoinuniverse.io/api/version) for
+the deployed application commit. A CI result does not prove deployment.
+
+The handoff candidate limits public activity to approved event types and fields.
+Private Spark position activity requires the owner's signed wallet proof. Public
+launch activity requires a campaign that is public and no longer a draft. Existing
+event history stays available to internal recovery. This change adds no migration
+and does not complete Spark exits. Operator audit results cover stored checkpoints;
+they omit private position counts and IDs. Approved checkpoint events remain public.
+Seven isolated API and MySQL tests pass for public filtering, signed owner reads,
+restart, campaign visibility and checkpoint-only operator audits. They use controlled
+position inputs and generated, unfunded keys. Installed-wallet and native execution
+remain unverified. Deployment and native execution need separate evidence.
+
+Authority registration and readiness checks remain separate from native execution.
+Missing builders, settlement sources and wallet witnesses still prevent acceptance.
+
+The current source export counts 940 API declarations, including two new owner-event
+route aliases. They bring the unbound declaration count to 1,965. The local release
+evaluator records zero PASS rows; all 351 wallet variants still lack accepted
+witnesses. The original handoff counts remain recorded separately.
 
 | Flow | Behavior in the candidate | Evidence still needed |
 | --- | --- | --- |
