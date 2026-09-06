@@ -8,9 +8,9 @@ venue for Bitcoin Stamps and SRC-20.**
 This repository holds the source of that site. The product itself is a separate,
 private application; this is its public documentation.
 
-The [6 September execution status](EXECUTION_STATUS.md) records the local repair
-candidate, recovery changes and missing native/browser evidence. It is **NO-GO**
-and has not been deployed. Earlier screenshots do not verify this candidate.
+The [6 September execution status](EXECUTION_STATUS.md) records the recovery
+changes and missing native evidence. Native release readiness remains **NO-GO**.
+Earlier screenshots do not verify current native execution.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/home-dark-desktop.png">
