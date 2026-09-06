@@ -11,16 +11,43 @@
 // The token needs read access to the private application repository; CI
 // validates only the committed snapshots against the pages that render
 // them, and regeneration happens wherever a token exists.
-import { writeFileSync, mkdirSync } from 'node:fs';
+import { writeFileSync, mkdirSync, readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
 import { join, resolve } from 'node:path';
 import { dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = join(ROOT, 'src', 'generated');
 mkdirSync(OUT, { recursive: true });
 
 const APP_REPO = 'bitcoinuniverseio/stampdex';
+// Local source sync does not fetch fees, publish, or label a candidate as deployed.
+const localIndex = process.argv.indexOf('--wallet-source');
+if (localIndex >= 0) {
+  if (!process.argv[localIndex + 1]) throw new Error('Pass the inspected local StampDEX checkout path');
+  const appRoot = resolve(process.argv[localIndex + 1]);
+  const sourcePath = 'frontend/src/wallet/capabilities.js';
+  const sourceFile = join(appRoot, sourcePath);
+  const { WALLET_CAPABILITIES, walletIsProven, CAPABILITY } = await import(pathToFileURL(sourceFile).href);
+  const commit = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: appRoot, encoding: 'utf8' }).trim();
+  const dirty = execFileSync('git', ['status', '--porcelain', '--', sourcePath], { cwd: appRoot, encoding: 'utf8' }).trim().length > 0;
+  const wallets = Object.values(WALLET_CAPABILITIES).map((wallet) => ({ ...wallet,
+    actions: Object.fromEntries(Object.entries(wallet.actions).map(([action, declared]) => [action,
+      declared === CAPABILITY.NO ? 'no' : walletIsProven(wallet.id, action) ? 'works' : 'untested'])),
+  }));
+  writeFileSync(join(OUT, 'wallet-matrix.json'), JSON.stringify({
+    schema: 'stampdex.docs.wallet-matrix/1',
+    provenance: { repository: APP_REPO, sourcePath, sourceRef: 'local-candidate', sourceCommit: commit,
+      sourceDirty: dirty, sourceSha256: createHash('sha256').update(readFileSync(sourceFile)).digest('hex'),
+      generatedAt: new Date().toISOString(), generator: 'scripts/gen-truth.mjs --wallet-source', deployed: false },
+    states: { works: 'verified wallet/version/action journey', untested: 'no accepted journey witness', no: 'adapter unavailable' },
+    wallets,
+  }, null, 2) + '\n');
+  console.log(`wallet-matrix.json: ${wallets.length} wallets from local source; deployed=false`);
+  process.exit(0);
+}
 const APP_REF = 'main';
 const token = process.env.STAMPDEX_GH_TOKEN;
 const APP_COMMIT_ENDPOINT = `https://api.github.com/repos/${APP_REPO}/commits/${APP_REF}`;
@@ -179,7 +206,7 @@ function extractWalletMatrix(source) {
     if (!['UNIVERSE', 'UNISAT', 'LEATHER', 'XVERSE', 'OKX'].includes(name)) continue;
     const actions = {};
     for (const action of block[2].matchAll(/(\w+):\s*(WORKS|UNTESTED|NO)/g)) {
-      actions[action[1]] = { WORKS: 'works', UNTESTED: 'untested', NO: 'no' }[action[2]];
+      actions[action[1]] = { WORKS: 'untested', UNTESTED: 'untested', NO: 'no' }[action[2]];
     }
     blocks[name] = actions;
   }
@@ -191,7 +218,7 @@ function extractWalletMatrix(source) {
   if (!exportBlock) throw new Error('WALLET_CAPABILITIES export not found');
   const wallets = [];
   const entryRe = new RegExp(
-    "id: '([a-z]+)',\\s*name: '([^']+)',\\s*nativeAssetDisplay: (true|false),\\s*actions: Object\\.freeze\\(([A-Z]+)\\)",
+    "id: '([a-z]+)',\\s*name: '([^']+)',\\s*nativeAssetDisplay: (true|false),(?:\\s*protocols:[^\\n]+,)?\\s*actions: Object\\.freeze\\(([A-Z]+)\\)",
     'g',
   );
   for (const entry of exportBlock[1].matchAll(entryRe)) {

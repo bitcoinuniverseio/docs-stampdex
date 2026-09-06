@@ -11,12 +11,12 @@ protocols: [src20, stamps, bitcoin]
 difficulty: intro
 estimatedMinutes: 5
 lifecycle: stable
-releaseStatus: live
+releaseStatus: preview
 lastReviewedBy: docs-stampdex maintainers
 ---
 
 > [!NOTE]
-> **简体中文官方文档**：本接口仅展示公开订单信息，不包含任何敏感账户数据或托管私钥。 核心交易规则为非托管模式，买卖双方按标准费率收取服务费，并于比特币主网进行原子结算。
+> 本页说明本地未发布的修复。经典 SRC-20 订单使用托管地址，并非非托管或原子结算。签署部分签名的比特币交易 (PSBT) 前请核对资产、网络和费用。
 
 
 
@@ -24,6 +24,14 @@ Base path: `/api/v1/orders`.
 
 Read routes are open. Write routes build transactions your wallet must sign; nothing
 moves without your signature.
+
+**Local candidate, 6 September 2026. NO-GO. Not deployed.** These source changes have no real-wallet, native-network or browser acceptance witness. Earlier captures do not verify this candidate.
+
+## Candidate execution response
+
+GET /api/v1/orders/:id adds executionSummary version 1 with orderId, qualified chain/network/protocol/deployTx/tick, status, currentStep, observed payment/tokenTransfer/delivery, source freshness, fundsLocation, nextAction and completionVerified. Unknown observations stay null. Historical Filled state alone does not establish current completion. The response excludes WIFs, raw signed payloads and authorization material.
+
+New listings bind the exact deployment to the verified first-party source. Bulk results retain each order, identity, lock, payment association, state and structured error. A known payment stays attached when confirmation fails. Reconcile that same order before retrying; do not pay again from a browser hint.
 
 ## Authorising a mutation
 
