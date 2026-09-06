@@ -1,14 +1,12 @@
 name: PR preview
 
-# Isolated, no-indexed previews for same-repository pull requests. Fork PRs
-# never reach this workflow, and production credentials do not exist here:
-# the preview publishes static files with the workflow token and nothing else.
+# Downloadable, no-indexed builds for same-repository pull requests.
 on:
   pull_request:
-    types: [opened, reopened, synchronize, closed]
+    types: [opened, reopened, synchronize]
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: pr-preview-${{ github.event.pull_request.number }}
@@ -20,8 +18,6 @@ jobs:
     runs-on: [self-hosted, linux, x64, universe-super]
     timeout-minutes: 20
     steps:
-      # Always check out: an ephemeral runner has no checkout from a previous
-      # job, and the publish step below needs the repository even on close.
       - uses: actions/checkout@v4
       - uses: bitcoinuniverseio/universe-ci-actions/universe-node-env@8e24bc760556caa5ec8c7c497baaad2e9adcc912
         if: github.event.action != 'closed'
@@ -48,26 +44,9 @@ jobs:
           </p>
           HTML
 
-      - name: Publish or remove the preview directory
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git fetch origin gh-pages
-          workdir="${RUNNER_TEMP}/preview-pages"
-          git worktree add -B gh-pages "$workdir" origin/gh-pages
-          target="$workdir/previews/pr-${{ github.event.pull_request.number }}"
-          if [ "${{ github.event.action }}" = "closed" ]; then
-            rm -rf "$target"
-          else
-            mkdir -p "$(dirname "$target")"
-            rm -rf "$target"
-            cp -a dist "$target"
-          fi
-          git -C "$workdir" add -A
-          if git -C "$workdir" diff --cached --quiet; then
-            echo "Nothing changed."
-            exit 0
-          fi
-          git -C "$workdir" commit -q -m "Preview ${GITHUB_REF_NAME} of ${GITHUB_SHA}"
-          git -C "$workdir" push -q origin gh-pages
+      - name: Upload the preview
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: preview-pr-${{ github.event.pull_request.number }}
+          path: dist/
+          retention-days: 7

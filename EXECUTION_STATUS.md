@@ -1,7 +1,10 @@
 # Execution and recovery, 6 September 2026
 
-**Local candidate. NO-GO. Not deployed.** The previous GO report remains withdrawn.
-This page describes the current implementation program, not a change to the live site.
+**Native readiness remains NO-GO.** The previous GO report remains withdrawn.
+The later consolidation request authorizes CI and deployment. Application commit
+`3e1a9f5cdcb98c40940049fadaed5d1934386b28` passes 1,907 backend unit tests,
+45 API integration tests, 393 frontend unit tests and 173 browser tests.
+Those checks do not establish real-wallet settlement or native protocol coverage.
 
 | Flow | Behavior in the candidate | Evidence still needed |
 | --- | --- | --- |
@@ -25,13 +28,15 @@ remain unresolved; a historical Filled label does not create current proof.
 
 Local unit and isolated MySQL checks cover selected comparisons, crash boundaries,
 leases, filtering and paging. They are not real-wallet or native-network journeys.
-No browser ran for this candidate. Full native protocol, inventory, responsive,
-accessibility and performance obligations remain open. The registry, seed rows,
+The browser suite includes automated layout and accessibility checks. Full native
+protocol, inventory, manual accessibility and performance obligations remain open. The registry, seed rows,
 unbound declarations and wallet variants overlap and must not be added together.
 
 The application status report and per-step acceptance ledger retain the source
-revision and test results. No deployment or public-chain transaction was performed.
-PR activity would trigger prohibited UI checks, so these changes remain local.
+revision and test results. Native transactions still need their own evidence.
+The `pages` workflow publishes a checked artifact after an explicit dispatch on
+`main`. PR previews are downloadable workflow artifacts. The publication history
+remains in Git; publishing no longer needs a `gh-pages` branch.
 
 Read the existing [order lifecycle](https://bitcoinuniverseio.github.io/docs-stampdex/concepts/order-lifecycle/),
 [wallet reference](https://bitcoinuniverseio.github.io/docs-stampdex/reference/wallets/),
