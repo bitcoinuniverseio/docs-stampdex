@@ -13,7 +13,7 @@ protocols: [src20, stamps, bitcoin]
 difficulty: intro
 estimatedMinutes: 5
 lifecycle: stable
-releaseStatus: live
+releaseStatus: preview
 lastReviewedBy: docs-stampdex maintainers
 ---
 
