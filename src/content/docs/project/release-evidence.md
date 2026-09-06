@@ -4,8 +4,8 @@ description: How StampDEX records what has been verified, what its release regis
 source:
   repo: bitcoinuniverseio/stampdex release registry, and bitcoinuniverseio/core for the capability registry
   path: release registry and verifier, GET /api/version
-  release: snapshot recorded 2026-08-31
-  verified: "2026-09-01"
+  release: snapshot recorded 2026-09-06
+  verified: "2026-09-06"
 contentType: reference
 audiences: [traders, collectors, developers]
 products: [src20, stamps]
@@ -16,6 +16,36 @@ lifecycle: stable
 releaseStatus: preview
 lastReviewedBy: docs-stampdex maintainers
 ---
+
+## 2026-09-06: event access repair and CI evidence
+
+**CI checks passed. Native readiness remains NO-GO.** Application commit
+[83498787](https://github.com/bitcoinuniverseio/stampdex/commit/8349878769b5f969e02a57440af33bd0791ead0f) passed
+[Quality run 34036927184](https://github.com/bitcoinuniverseio/stampdex/actions/runs/34036927184).
+It records 1,957 backend unit tests across 231 suites, 45 API integration tests,
+versioned migrations, frontend checks, browser tests and production operation checks.
+The backend job passed on retry after the first MySQL fixture failed to start.
+Read [the running version](https://stamp.api.bitcoinuniverse.io/api/version) for
+the deployed application commit. CI does not prove deployment or native execution.
+The earlier sections below describe the state at the time each review was recorded.
+
+Public activity includes only approved
+event types and fields. Spark position activity requires the owner's signed wallet
+proof. Launch activity requires a campaign that is public and no longer a draft.
+Operator audit results cover stored checkpoints and omit private position counts
+and IDs. Approved checkpoint events remain public.
+Seven isolated API and MySQL tests pass for public filtering, signed owner reads,
+restart, campaign visibility and checkpoint-only operator audits. They use controlled position inputs and generated,
+unfunded keys. This does not prove installed-wallet behavior, native Spark execution
+or full application acceptance.
+
+Authority registration and readiness checks do not establish native transaction
+execution. Missing native builders, settlement sources and wallet witnesses remain
+open. Earlier test reports do not verify these later changes.
+
+The current source export includes 940 API declarations. Two new owner-event route
+aliases bring the unbound declaration count to 1,965. The release evaluator records
+zero PASS rows, and all 351 required wallet variants still lack accepted witnesses.
 
 ## 2026-09-06: implementation program candidate
 
