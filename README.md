@@ -8,6 +8,10 @@ venue for Bitcoin Stamps and SRC-20.**
 This repository holds the source of that site. The product itself is a separate,
 private application; this is its public documentation.
 
+The [6 September execution status](EXECUTION_STATUS.md) records the recovery
+changes and missing native evidence. Native release readiness remains **NO-GO**.
+Earlier screenshots do not verify current native execution.
+
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/home-dark-desktop.png">
   <img src="assets/home-light-desktop.png" alt="The StampDEX market page: an SRC-20 token table with per-token source labels, floor prices, volume, and holders. Missing values show as dashes, not zeros.">
@@ -15,7 +19,7 @@ private application; this is its public documentation.
 
 ## What the site covers
 
-49 pages across nine sections.
+51 English pages, each with a Simplified Chinese translation.
 
 | Section | What is in it |
 | --- | --- |
@@ -39,15 +43,15 @@ mistaken for a lost payment.
 
 **Which actions are actually supported, and why the others are not.** The capability
 tables are generated from the Bitcoin Universe ecosystem registry, and every
-unsupported action carries the registry's own recorded reason. Neither protocol
-supports an in-place listing price update: listings must be cancelled and relisted,
-because no atomic listing update is implemented. See
+unsupported action carries the registry's own recorded reason. SRC-20 uses guarded
+replacement routes for repricing, splitting and repair. Keep the linked old and new
+order IDs when reviewing the result. See
 [What you can and cannot do](https://bitcoinuniverseio.github.io/docs-stampdex/capabilities/).
 
 **What has and has not been verified.**
 [Release evidence](https://bitcoinuniverseio.github.io/docs-stampdex/project/release-evidence/)
-states, action by action, which paths have recorded mainnet evidence and which are
-implemented and deployed without it.
+states which paths have accepted evidence and which still need it. A supported
+Signet journey can pass without a mainnet transaction.
 
 ## Grounding
 
