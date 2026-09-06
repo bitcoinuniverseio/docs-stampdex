@@ -19,7 +19,7 @@ Earlier screenshots do not verify current native execution.
 
 ## What the site covers
 
-49 pages across nine sections.
+51 English pages, each with a Simplified Chinese translation.
 
 | Section | What is in it |
 | --- | --- |
