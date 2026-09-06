@@ -11,12 +11,12 @@ protocols: [src20, stamps, bitcoin]
 difficulty: intro
 estimatedMinutes: 5
 lifecycle: stable
-releaseStatus: live
+releaseStatus: preview
 lastReviewedBy: docs-stampdex maintainers
 ---
 
 > [!NOTE]
-> **简体中文官方文档**：系统化拆解订单在数据库与区块链网络中的每一层状态机迁移规则。 核心交易规则为非托管模式，买卖双方按标准费率收取服务费，并于比特币主网进行原子结算。
+> 本页说明本地未发布的修复。经典 SRC-20 订单使用托管地址，并非非托管或原子结算。签署部分签名的比特币交易 (PSBT) 前请核对资产、网络和费用。
 
 
 
@@ -26,6 +26,8 @@ An order is not a request that either succeeds or fails. It is a state machine, 
 every state has a name the product shows you, a meaning, and a place where the money
 is. This page draws the machine.
 
+**Local candidate, 6 September 2026. NO-GO. Not deployed.** These source changes have no real-wallet, native-network or browser acceptance witness. Earlier captures do not verify this candidate.
+
 <OrderStateMachine />
 
 ## Every state
@@ -34,29 +36,28 @@ is. This page draws the machine.
 | --- | --- | --- |
 | **Draft** | The listing is prepared but the seller has not signed it. Buyers never see it | The seller, by signing |
 | **Open** | The listing is live on the book at its exact amount and price | Any buyer, or the seller by cancelling |
-| **Pending** | A buyer locked the listing and is paying. The lock releases by itself if the buyer stops | That one buyer |
+| **Pending** | A buyer locked the listing and is paying. Only an unpaid reservation may release; an associated payment stays in recovery | That one buyer |
 | **Awaiting transfer** | The payment is broadcast. StampDEX waits for confirmation and an index check | Nobody. Bitcoin decides |
 | **Settling** | The settlement worker is verifying the balance and broadcasting the token transfer | Nobody |
 | **Awaiting confirmation** | The token transfer is broadcast and needs one confirmation | Nobody |
-| **Filled** | Settled. Buyer has the tokens, seller has the proceeds | Nobody. It is done |
+| **Filled** | The engine recorded finalization. Current completion also needs retained delivery and receipt evidence | Nobody. It is done |
 | **Cancelled** | The seller cancelled before a sale | Nobody |
 | **Expired** | The listing, or a buyer's lock, ran out of time | Nobody |
 | **Failed** | The payment confirmed but the token balance could not be verified. Funds are held in escrow | An operator |
 
 ## The transitions that surprise people
 
-**Pending goes back to Open.** A buyer who locks a listing and then walks away does not
-freeze it. The lock lapses and the listing returns to the book. Neither side lost
-anything, and the seller does nothing.
+**An unpaid reservation may return to Open.** A known payment or uncertain submission must first reconcile the same order and lock. A lost response does not prove that no payment occurred.
 
-**Open does not become Open at a new price.** There is no price edit. Changing a price
-means Cancelled plus a new Draft, both signed by you. The registry records this
-explicitly for both protocols: listings must be cancelled and relisted, because no
-atomic listing update is implemented. See
+**Replacement keeps linked order IDs.** SRC-20 repricing, splitting and repair use the existing guarded replacement routes. A rejected replacement signature must leave the old listing intact. Refresh both linked versions after the action. See
 [Change a listing price](/docs-stampdex/zh-cn/guides/change-a-listing-price/).
 
 **Failed is not the end of the money.** It is the machine refusing to release funds
 against a balance it could not verify. See [Recovery](/docs-stampdex/zh-cn/concepts/recovery/).
+
+## Execution and recovery
+
+The candidate adds executionSummary to the existing order read. It separates payment, token transfer and delivery, shows source freshness and chooses the next supported action. A transaction ID alone does not prove receipt. Old rows with missing identity or observations remain unresolved. Reopen the saved order after reload before starting another payment.
 
 ## Reading an order over the API
 
