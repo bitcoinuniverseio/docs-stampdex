@@ -17,6 +17,26 @@ releaseStatus: preview
 lastReviewedBy: docs-stampdex maintainers
 ---
 
+## 2026-09-06: event access candidate
+
+**Local candidate. NO-GO. Not deployed.** Public activity includes only approved
+event types and fields. Spark position activity requires the owner's signed wallet
+proof. Launch activity requires a campaign that is public and no longer a draft.
+Operator audit results cover stored checkpoints and omit private position counts
+and IDs. Approved checkpoint events remain public.
+Seven isolated API and MySQL tests pass for public filtering, signed owner reads,
+restart, campaign visibility and checkpoint-only operator audits. They use controlled position inputs and generated,
+unfunded keys. This does not prove installed-wallet behavior, native Spark execution
+or full application acceptance.
+
+Authority registration and readiness checks do not establish native transaction
+execution. Missing native builders, settlement sources and wallet witnesses remain
+open. Earlier test reports do not verify these later changes.
+
+The current source export includes 940 API declarations. Two new owner-event route
+aliases bring the unbound declaration count to 1,965. The release evaluator records
+zero PASS rows, and all 351 required wallet variants still lack accepted witnesses.
+
 ## 2026-09-06: implementation program candidate
 
 **Local candidate, 6 September 2026. NO-GO. Not deployed.** These source changes have no real-wallet, native-network or browser acceptance witness. Earlier captures do not verify this candidate.
