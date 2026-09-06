@@ -1,0 +1,173 @@
+# 支持钱包清单与兼容性
+
+Universe Wallet、UniSat、Leather、Xverse 与 OKX Wallet 的连接与签名支持。
+
+> Source: bitcoinuniverseio/stampdex (private application source), frontend wallet capabilities table, wallet adapters. Applicable release continuous deployment, verify with GET /api/version. Last verified 2026-09-01. Chain bitcoin/mainnet.
+
+> [!NOTE]
+> **简体中文官方文档**：全面对比各主流比特币钱包在 Stamps 与 SRC-20 资产下的签名能力差异。 核心交易规则为非托管模式，买卖双方按标准费率收取服务费，并于比特币主网进行原子结算。
+
+
+
+import WalletExplorer from '../../../../components/explainers/WalletExplorer.astro';
+
+
+import ProductShot from '../../../../components/screens/ProductShot.astro';
+
+You can browse everything without a wallet. Connect one when you want to buy, sell, or
+see your own holdings.
+
+## Supported wallets
+
+<ProductShot id="fixture-wallet-connect" />
+
+| Wallet | Where to get it |
+| --- | --- |
+| Universe Wallet | [Chrome Web Store](https://chromewebstore.google.com/detail/universe-bitcoin-wallet/fjalkkkbjffhgdoheannkodafhemfdba) |
+| UniSat | [unisat.io](https://unisat.io) |
+| Leather | [leather.io](https://leather.io) |
+| Xverse | [xverse.app](https://www.xverse.app) |
+| OKX Wallet | [okx.com/web3](https://www.okx.com/web3) |
+
+Connect from the wallet button in the header. StampDEX sees your address and asks your
+wallet to sign when you act. It never sees your keys.
+
+## What each wallet can do here
+
+<WalletExplorer />
+
+Connecting a wallet is not the same as being able to do everything with it. This table
+comes from the code that talks to each wallet, so it says what StampDEX actually does
+rather than what a wallet is generally capable of.
+
+- **Yes** means the action has been run through that wallet on StampDEX.
+- **Not tested** means StampDEX can ask the wallet for it and nobody has run it yet.
+  StampDEX offers the action and says so on the screen.
+- **No** means the wallet exposes nothing that performs the action here, so StampDEX
+  hides it rather than showing a button that fails.
+
+| Action | Universe Wallet | UniSat | Leather | Xverse | OKX Wallet |
+| --- | --- | --- | --- | --- | --- |
+| Detected in the browser | Yes | Yes | Yes | Yes | Yes |
+| Connect | Yes | Yes | Yes | Yes | Yes |
+| Reconnect after a reload | Yes | Yes | Yes | Yes | Yes |
+| Read the current account | Yes | Yes | Yes | Yes | Yes |
+| Report an account change | Yes | Yes | No | Yes | Yes |
+| Report the network | Not tested | Not tested | Yes | Yes | Not tested |
+| Sign a message | Yes | Yes | Not tested | Yes | Not tested |
+| Sign a transaction | Yes | Yes | Not tested | Yes | Not tested |
+| Sign an unfinalized listing transaction | Yes | Yes | Not tested | Not tested | Not tested |
+| Send BTC | Yes | Yes | Not tested | Yes | Not tested |
+| Buy SRC-20 | Yes | Yes | Not tested | Not tested | Not tested |
+| List SRC-20 | Yes | Yes | Not tested | Not tested | No |
+| Cancel a listing | Yes | Yes | Not tested | Not tested | No |
+| Transfer SRC-20 | Yes | Yes | Not tested | Not tested | Not tested |
+| Buy from a dispenser | Yes | Yes | Not tested | Not tested | Not tested |
+| Open a dispenser | Not tested | Not tested | No | No | No |
+| Close a dispenser | Not tested | Not tested | No | No | No |
+| Mint | Yes | Yes | Not tested | Not tested | No |
+| Work inside Universe Wallet | Yes | No | No | No | No |
+| List an asset on Atomic | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Buy on Atomic | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Delist from Atomic | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Create an auction | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Place an auction bid | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Buy an auction now | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Deposit into a pool | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Withdraw from a pool | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Swap through a pool | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Open or cancel a DEX order | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Link a wallet to a profile | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Take part in a FairMinter launch | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Reserve a batch allocation | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Sign a distribution batch | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Swap on Spark Flashnet | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Initiate a unilateral Spark exit | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Deploy a BRC2.0 contract | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Call a BRC2.0 contract | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Reserve a protected listing | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Settle a protected listing | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Protect a sat in the vault | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Unlock a sat from the vault | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Isolate a rare sat UTXO | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Register an RGB settlement intent | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Anchor an RGB witness transaction | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Renew an expiring Arkade VTXO | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Initiate a unilateral Arkade exit | Not tested | Not tested | Not tested | Not tested | Not tested |
+| Settle a Banco contract on Ark | Not tested | Not tested | Not tested | Not tested | Not tested |
+| liquidPsetSwap | Not tested | Not tested | Not tested | Not tested | Not tested |
+| liquidPegFlow | Not tested | Not tested | Not tested | Not tested | Not tested |
+| stacksContractCall | Not tested | Not tested | Not tested | Not tested | Not tested |
+| stacksTransfer | Not tested | Not tested | Not tested | Not tested | Not tested |
+| fractalInswapPool | Not tested | Not tested | Not tested | Not tested | Not tested |
+| fractalIndexMining | Not tested | Not tested | Not tested | Not tested | Not tested |
+| rootstockContractCall | Not tested | Not tested | Not tested | Not tested | Not tested |
+| rootstockTokenApproval | Not tested | Not tested | Not tested | Not tested | Not tested |
+| rootstockBridge | Not tested | Not tested | Not tested | Not tested | Not tested |
+| babylonStakeBtc | Not tested | Not tested | Not tested | Not tested | Not tested |
+| babylonUnbondStake | Not tested | Not tested | Not tested | Not tested | Not tested |
+| nostrRemoteSign | Not tested | Not tested | Not tested | Not tested | Not tested |
+| payjoinBip78Proposal | Not tested | Not tested | Not tested | Not tested | Not tested |
+| silentPaymentBip352 | Not tested | Not tested | Not tested | Not tested | Not tested |
+
+Read the "Not tested" column honestly: it is an offer with a warning attached, not a
+guarantee. See [Release evidence](/docs-stampdex/zh-cn/project/release-evidence/).
+
+## Does the wallet show Stamps and SRC-20 itself
+
+This is about each wallet's own interface, not about StampDEX. Where the answer is No,
+StampDEX shows your holdings and the wallet signs for them.
+
+| Wallet | Shows these assets |
+| --- | --- |
+| Universe Wallet | Yes |
+| UniSat | No |
+| Leather | No |
+| Xverse | No |
+| OKX Wallet | No |
+
+The negatives are stated deliberately, because the opposite claim sends people looking
+for balances that are not there.
+
+## Per-wallet caveats
+
+**Leather** mixes Bitcoin and Stacks entries when it reports addresses. StampDEX filters
+out the Stacks entry and uses the payment address, never an ordinals address. Its
+signing returns a signed but unfinalized transaction, which is the shape a listing
+needs. It does not report account changes, so switching accounts inside Leather is not
+something StampDEX can react to.
+
+**Xverse** keeps payment and ordinals addresses separate, and StampDEX pays from the
+payment address only. An Xverse session ends when you switch accounts inside the
+wallet, rather than carrying on with the address you left.
+
+**OKX Wallet** exposes generic Bitcoin signing only. Listing, cancelling, minting, and
+all dispenser management are hidden for it because nothing behind them would work.
+
+**Universe Wallet** is the first-party target and the only one that embeds the StampDEX
+trading desk. From the wallet you land on the desk with your wallet already connected,
+and token links open the matching StampDEX pages.
+
+## What connecting shares
+
+Your address, and nothing else. StampDEX reads your SRC-20 balances, stamps, open
+orders, and activity for that address from its own API, the same data anyone could read
+for any address. See [Your portfolio](/docs-stampdex/zh-cn/guides/portfolio/).
+
+## Never do this
+
+No wallet on this page needs your recovery phrase or a private key to work with
+StampDEX, and StampDEX never asks for either. If any page, in any tab, asks you to type
+a recovery phrase or import a seed in order to trade, close it.
+
+## Disconnecting
+
+Disconnect from the wallet menu. StampDEX never has your keys, so disconnecting just
+stops the site reading your address. The only funds StampDEX ever operates are the
+per-listing escrow addresses during an active SRC-20 trade. See
+[Where your funds are](/docs-stampdex/zh-cn/concepts/custody/).
+
+## Related
+
+- [Review a 部分签名的比特币交易 (PSBT) before signing](/docs-stampdex/zh-cn/guides/psbt-review/)
+- [Safety and trust](/docs-stampdex/zh-cn/safety/)

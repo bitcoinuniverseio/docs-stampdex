@@ -1,0 +1,17 @@
+{
+  "note": "The release state this documentation describes. Between PR2 and the truth pipeline in PR8 this file is maintained by hand from GET /api/version; PR8 replaces its producer with a build-time generator that records source repository, path, commit, generation time, schema version, and content hash.",
+  "schema": "stampdex.docs.release/1",
+  "app": {
+    "service": "stampdex-backend",
+    "applicationVersion": "0.0.1",
+    "releaseId": "20260831T185153Z-38bc2a0e",
+    "gitCommit": "38bc2a0e1d7f76f805ca505d53b131ec03fc46f6",
+    "buildTimestamp": "2026-08-31T18:51:53Z",
+    "versionEndpoint": "https://stamp.api.bitcoinuniverse.io/api/version"
+  },
+  "docs": {
+    "releaseModel": "continuous",
+    "editBranch": "develop"
+  },
+  "capturedAt": "2026-09-02T00:00:00Z"
+}
