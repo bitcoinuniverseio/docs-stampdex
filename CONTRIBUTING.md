@@ -101,3 +101,11 @@ registry records an action as unsupported, quote the registry's own reason.
 One idea per pull request. Say what changed and what you verified it against. If you
 corrected a fact, say where the old version was wrong, because that belongs in the
 changelog.
+
+## 2026-09-16 local dependency repair
+
+A scoped override under `@scalar/api-reference` pins `@ai-sdk/provider-utils` to 4.0.33. Its parent packages still pin the affected 4.0.5 release, including the latest Scalar agent-chat release reviewed for this change. This fixes [GHSA-866g-f22w-33x8](https://github.com/advisories/GHSA-866g-f22w-33x8), the resource-consumption advisory in JSON and error response handlers. The six affected audit entries came from this one advisory, not six independent exploits.
+
+`npm run test:dependency-security` checks all three response handlers reject an oversized declared body before reading it, valid JSON remains compatible, and a chunked body respects a bounded byte limit. These tests form part of `npm test`. The upstream default cap remains 2 GiB; this repair does not claim a lower application-specific memory budget or demonstrated exploitability in this static documentation site. No AI request or remote model call runs in these tests.
+
+After the override, npm audit reports zero advisories. Keep this override until the parent dependency resolves a patched version and repeat the checks before removal. This is a local candidate, not a published website update.

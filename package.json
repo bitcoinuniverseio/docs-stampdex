@@ -23,7 +23,7 @@
     "check:links": "node scripts/check-links.mjs",
     "make:og": "node scripts/make-og.mjs",
     "make:screens": "node scripts/make-screens.mjs",
-    "test": "npm run check:runners && npm run check:copy && npm run check:contrast && npm run check:manifest && npm run check:content && npm run check:translations",
+    "test": "npm run check:runners && npm run check:copy && npm run check:contrast && npm run check:manifest && npm run check:content && npm run check:translations && npm run test:dependency-security",
     "check:translations": "node scripts/check-translations.mjs",
     "check:contrast": "node scripts/check-contrast.mjs",
     "check:metadata": "node scripts/check-metadata.mjs",
@@ -39,7 +39,8 @@
     "check:content": "node scripts/check-content.mjs",
     "gen:truth": "node scripts/gen-truth.mjs",
     "gen:openapi": "node scripts/gen-openapi.mjs",
-    "test:mcp": "node packages/stampdex-docs-mcp/test.mjs"
+    "test:mcp": "node packages/stampdex-docs-mcp/test.mjs",
+    "test:dependency-security": "node --test scripts/dependency-security.test.mjs"
   },
   "devDependencies": {
     "@astrojs/starlight": "0.41.11",
@@ -55,5 +56,10 @@
   "allowScripts": {
     "esbuild@0.28.2": true,
     "sharp@0.35.4": true
+  },
+  "overrides": {
+    "@scalar/api-reference": {
+      "@ai-sdk/provider-utils": "4.0.33"
+    }
   }
 }

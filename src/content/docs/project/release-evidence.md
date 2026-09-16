@@ -17,6 +17,22 @@ releaseStatus: preview
 lastReviewedBy: docs-stampdex maintainers
 ---
 
+## 2026-09-16: local authority and dependency repair
+
+**Local candidate. NO-GO. Not deployed.** This section records work on the isolated application branch `codex/stampdex-go-20260916`. It does not change the status of the running service or earlier release evidence.
+
+Authority responses now reject contradictory validation and settlement claims. A positive validation result needs a matching manifest, a transaction ID and no errors. Input value must equal output value plus the miner fee. Settlement must keep confirmation, block and finality fields consistent. A rollback acknowledgement must be an empty object. Invalid transaction artifacts return structured errors instead of escaping the contract checks.
+
+The backend pins the affected TOML parser to version 4.2.0 through a narrow dependency override. Eight parser checks, seven native SDK checks and 91 transaction and OPNet unit tests passed locally; the backend build passed. The dependency scan reported zero advisories at the time of this check. These results do not prove a wallet journey, settlement or recovery on an offered network.
+
+Fee panels keep a missing or invalid estimate unavailable rather than showing zero cost. Test-network or unresolved-network transaction IDs remain visible without a mainnet explorer link. Links use the first-party explorer only when the affected operation has explicit mainnet identity. Configuring a display network alone does not prove the source network.
+
+Settlement response checks enforce consistency; native authorities remain responsible for protocol-specific finality. The candidate also supports first-party electrs fee estimates through explicit operator configuration. This is pending rollout and does not supply missing estimates.
+
+Fee rescue now builds an unsigned child transaction for the configured network only after checking the node genesis and parent output script. Local tests decode SegWit and Taproot outputs on mainnet, Signet, testnet and regtest. Wallet signing and a funded network journey remain unverified. Fee-watch counts separate ready from waiting and exclude ended watches. Without functional-cookie consent, the page uses “Watch for this visit” and “Watches for this visit” and warns that refresh or navigation removes them. A local browser check with functional consent verified save, reload, cancel and reopen behavior.
+
+Native authority services, funded wallet journeys, protocol readback and recovery evidence still need acceptance. Rollout remains pending. No production release or mainnet transaction follows from these local checks.
+
 ## 2026-09-06: Arkade and BRC2 record repair
 
 **CI checks passed. Native execution remains unavailable.** Application commit
