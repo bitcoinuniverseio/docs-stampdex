@@ -109,3 +109,11 @@ A scoped override under `@scalar/api-reference` pins `@ai-sdk/provider-utils` to
 `npm run test:dependency-security` checks all three response handlers reject an oversized declared body before reading it, valid JSON remains compatible, and a chunked body respects a bounded byte limit. These tests form part of `npm test`. The upstream default cap remains 2 GiB; this repair does not claim a lower application-specific memory budget or demonstrated exploitability in this static documentation site. No AI request or remote model call runs in these tests.
 
 After the override, npm audit reports zero advisories. Keep this override until the parent dependency resolves a patched version and repeat the checks before removal. This is a local candidate, not a published website update.
+
+## Verification runtime and runner isolation
+
+Use Node 24.19.0 and npm 11.17.0. The pinned Universe Node action restores or
+installs the exact locked dependency graph; workflows do not run a second npm ci.
+Pull requests from forks do not enter the self-hosted quality or preview jobs.
+Run `node --test scripts/fork-isolation.test.mjs` to check both guards and the
+manual-only publishing trigger. The publishing workflow remains opt-in.

@@ -22,10 +22,6 @@ jobs:
       - uses: bitcoinuniverseio/universe-ci-actions/universe-node-env@8e24bc760556caa5ec8c7c497baaad2e9adcc912
         if: github.event.action != 'closed'
 
-      - name: Install
-        if: github.event.action != 'closed'
-        run: npm ci
-
       - name: Build
         if: github.event.action != 'closed'
         run: npm run build

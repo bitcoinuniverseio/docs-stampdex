@@ -17,6 +17,14 @@ releaseStatus: preview
 lastReviewedBy: docs-stampdex maintainers
 ---
 
+## 2026-09-17: authority transport and CI repair
+
+**Unreleased repair branch. Functional NO-GO. No deployment.** [Application pull request 117](https://github.com/bitcoinuniverseio/stampdex/pull/117) preserves the September 16 candidate and adds request and response limits, checkpoint identity checks and rejection of redirects. It also rejects duplicate transaction inputs and malformed warning or script-type fields.
+
+The client checks passed in 100 cases. The five-authority regression suite passed in 192 cases. These are controlled transport and component checks, not funded native transactions. Real protocol recognition, wallet outcomes, finality and recovery still require their own evidence.
+
+CI now stops when an earlier native command fails instead of accepting a later successful command. Eight regression checks cover failure propagation and reuse of the compiled migration runner. Registry and production dependency checks have passed on this pull request; this statement does not certify full application acceptance.
+
 ## 2026-09-16: local authority and dependency repair
 
 **Local candidate. NO-GO. Not deployed.** This section records work on the isolated application branch `codex/stampdex-go-20260916`. It does not change the status of the running service or earlier release evidence.
