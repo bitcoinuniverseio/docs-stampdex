@@ -229,3 +229,11 @@ to trade. See [What you can and cannot do](/docs-stampdex/zh-cn/capabilities/).
 - [Status and version](/docs-stampdex/zh-cn/api/status/)
 - [Changelog](/docs-stampdex/zh-cn/project/changelog/)
 - [Safety and trust](/docs-stampdex/zh-cn/safety/)
+
+## 2026-09-17：检查点与费用提醒后续修复
+
+[应用拉取请求 118](https://github.com/bitcoinuniverseio/stampdex/pull/118) 将每个链检查点的哈希绑定到所读取的高度。并发请求共享本次读取，但不保留过期结果。107 项内存池回归检查全部通过。实际服务的默认 Signet 读取结果与独立 Bitcoin Core 查询一致。这是只读集成证据，并非已获得资金的协议流程。
+
+[应用拉取请求 120](https://github.com/bitcoinuniverseio/stampdex/pull/120) 阻止 Fee Watch 在刷新失败后继续使用缓存的低费率。保存的活动状态会重新计算，已完成和已取消的状态保持不变。修复前有三项组件渲染断言失败，修复后 16 项专项检查全部通过。浏览器恢复场景使用受控 API 响应。费用提醒不会发送付款，也不证明结算。
+
+隔离应用在独立测试数据库完成全部 45 项迁移后启动。这并不证明所有原生权威服务、钱包或已索引协议的结果。功能 GO 仍未获得证据支持，这些更改也不会部署网站。

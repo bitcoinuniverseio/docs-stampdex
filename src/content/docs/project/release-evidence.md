@@ -265,3 +265,11 @@ to trade. See [What you can and cannot do](/docs-stampdex/capabilities/).
 - [Status and version](/docs-stampdex/api/status/)
 - [Changelog](/docs-stampdex/project/changelog/)
 - [Safety and trust](/docs-stampdex/safety/)
+
+## 2026-09-17: checkpoint and fee-watch follow-up
+
+[Application PR 118](https://github.com/bitcoinuniverseio/stampdex/pull/118) binds each chain checkpoint hash to the height it read. Concurrent requests share that read without retaining a stale result. All 107 mempool regression checks passed. A read from the actual service matched an independent Bitcoin Core query on default Signet. This is read-only integration evidence, not a funded protocol journey.
+
+[Application PR 120](https://github.com/bitcoinuniverseio/stampdex/pull/120) stops Fee Watch from using a cached low fee after a failed refresh. Saved active states are recalculated; done and cancelled states are preserved. Three rendered-component assertions failed before repair and all 16 focused checks passed after it. The browser recovery scenarios use controlled API responses. A watch does not send a payment or prove settlement.
+
+The isolated application also started after all 45 migrations created its separate test schema. This does not establish every native authority, wallet or indexed protocol outcome. Functional GO remains unproven, and these changes do not deploy the website.
