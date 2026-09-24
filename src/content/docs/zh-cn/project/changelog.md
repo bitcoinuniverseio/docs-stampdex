@@ -22,6 +22,18 @@ lastReviewedBy: docs-stampdex maintainers
 
 
 
+## 2026-09-23
+
+StampDEX 现在只支持 Bitcoin Stamps 与 SRC-20。Counterparty 仅作为 stamps 所依赖的底层保留。
+[应用拉取请求 126](https://github.com/bitcoinuniverseio/stampdex/pull/126) 实现了这一改动。
+该变更尚未部署。
+
+- 删除了“新兴市场与私密结算”页面。该页介绍的协议 StampDEX 已不再提供。
+- 从[钱包](/docs-stampdex/zh-cn/reference/wallets/)页面删除了这些协议的钱包操作和协议行。
+  该页现列出应用源码声明的三项 Stamp 借贷操作。
+- 在[发布证据](/docs-stampdex/zh-cn/project/release-evidence/)页面添加了一条带日期的说明。
+  该页较早的各节作为历史记录保留。
+
 ## 2026-09-02
 
 The documentation experience release. The facts did not change; everything around
