@@ -1,4 +1,20 @@
-# Execution and recovery, 6 September 2026
+# Execution status
+
+## 18 September 2026: development changes, not a release
+
+**Native readiness remains NO-GO.** The development branch contains funding-validation, transaction-preservation and deployment-preflight changes. This work did not deploy the application or publish new functionality.
+
+The affected backend checks passed 577 tests in 54 suites. The release checks passed 145 tests, including 26 source-preflight cases. These are local component checks, not real-wallet settlement or completed native-network journeys. The build passed; none of these results changes the native release decision.
+
+A failed asset-safety observation must leave signing unavailable rather than imply that unknown inputs are safe. A transaction preview must preserve the intended version, locktime, inputs and outputs. Wallet signing, protocol recognition, settlement and recovery still need their own evidence.
+
+The source registry retains 1039 rows and 351 wallet variants. Zero registry rows currently have accepted PASS evidence for this candidate. A missing or stale evidence record is not itself proof of a product defect. The full inventory, wallet variants and registry rows overlap and must not be added together as independent workflows.
+
+No Signet or Testnet acceptance journey and no Mainnet functional test was performed in this work. The ownership-reconciliation draft is separate, unvalidated work and is not part of the tested candidate. Mainnet release still requires complete accepted functionality and an authorized public rollout.
+
+The dated September 6 record below is historical. Its test totals and source counts are not measurements of this candidate.
+
+## Historical record: execution and recovery, 6 September 2026
 
 **CI-checked privacy repair. Native readiness remains NO-GO.** The previous GO report remains withdrawn.
 Application commit `8349878769b5f969e02a57440af33bd0791ead0f` passed
