@@ -26,7 +26,7 @@ lastReviewedBy: docs-stampdex maintainers
 ## 2026-09-18：来源健康状态开发候选版本
 
 **尚未部署。原生功能发布状态仍为 NO-GO。** 应用提交
-`b83dbcdce29e587fd56f23e94602cc5082040e08` 修改来源健康状态的读取、失败处理和恢复。
+[b83dbcdc](https://github.com/bitcoinuniverseio/stampdex/commit/b83dbcdce29e587fd56f23e94602cc5082040e08) 修改来源健康状态的读取、失败处理和恢复。
 此变更不连接尚缺失的原生协议服务。
 
 TAP、OPNet 或闪电网络的刷新失败不会再阻止返回其他来源的结果。
