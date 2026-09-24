@@ -23,6 +23,26 @@ lastReviewedBy: docs-stampdex maintainers
 
 Sections dated before 2026-09-23 name protocols and pages that this change removes. They stay here as historical records. They do not describe current features.
 
+## 2026-09-18: source-health development candidate
+
+**Not deployed. Native release readiness remains NO-GO.** Application commit
+`b83dbcdce29e587fd56f23e94602cc5082040e08` changes how source-health reads fail and recover.
+It does not connect missing native protocol services.
+
+A failed TAP, OPNet or Lightning refresh no longer prevents the other source
+results from being returned. Concurrent reads share unfinished work. A provider
+wait ends after 30 seconds without starting duplicate unfinished requests.
+Public error messages omit raw upstream exception details.
+
+Each native source keeps its own observation time. An unobserved protocol does
+not borrow the Bitcoin tip's timestamp. Invalid or future times are rejected,
+and provider-declared freshness limits are enforced. Local clock rollback
+invalidates affected caches.
+
+The focused source-health suite passes 24 tests in two suites. The backend
+regression suite, typecheck and targeted lint exit zero. These are controlled
+component checks, not wallet, native-transaction or deployment evidence.
+
 ## 2026-09-17: authority transport and CI repair
 
 **Unreleased repair branch. Functional NO-GO. No deployment.** [Application pull request 117](https://github.com/bitcoinuniverseio/stampdex/pull/117) preserves the September 16 candidate and adds request and response limits, checkpoint identity checks and rejection of redirects. It also rejects duplicate transaction inputs and malformed warning or script-type fields.
