@@ -43,6 +43,28 @@ The focused source-health suite passes 24 tests in two suites. The backend
 regression suite, typecheck and targeted lint exit zero. These are controlled
 component checks, not wallet, native-transaction or deployment evidence.
 
+## 2026-09-18: ownership recovery candidate
+
+**Unreleased candidate. Native acceptance remains NO-GO.** Application commit
+[af90d012](https://github.com/bitcoinuniverseio/stampdex/commit/af90d0121c5c030f8276347e7943bcb2d26d7d11)
+adds a distinct error when stamp ownership cannot be verified. A failed lookup is
+not evidence that a wallet owns zero stamps. The NFT attachment dialog clears its
+old ownership result and provides **Retry ownership check**. That action only
+reads ownership again; it does not sign or broadcast a transaction.
+
+A broadcast transaction still uses the separate **Retry confirmation** action.
+Changing wallets or closing the dialog cancels an ownership retry, and a late
+response cannot replace the new wallet's state. Unknown server-error details do
+not become user-facing messages.
+
+Four focused backend suites passed 18 tests; six frontend HTTP tests passed.
+These are controlled component checks, not a complete wallet or blockchain
+journey. Browser verification and full CI are tracked in
+[PR 122](https://github.com/bitcoinuniverseio/stampdex/pull/122). No deployment or
+mainnet functional transaction was performed for this candidate. Read the
+[running version](https://stamp.api.bitcoinuniverse.io/api/version) before treating
+candidate behavior as live behavior. Earlier sections remain historical records.
+
 ## 2026-09-17: authority transport and CI repair
 
 **Unreleased repair branch. Functional NO-GO. No deployment.** [Application pull request 117](https://github.com/bitcoinuniverseio/stampdex/pull/117) preserves the September 16 candidate and adds request and response limits, checkpoint identity checks and rejection of redirects. It also rejects duplicate transaction inputs and malformed warning or script-type fields.
