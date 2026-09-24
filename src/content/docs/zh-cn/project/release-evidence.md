@@ -17,6 +17,12 @@ releaseStatus: preview
 lastReviewedBy: docs-stampdex maintainers
 ---
 
+## 2026-09-23：仅支持 Stamps 与 SRC-20
+
+**未部署。** [应用拉取请求 126](https://github.com/bitcoinuniverseio/stampdex/pull/126) 移除了 Bitcoin Stamps 与 SRC-20 以外的所有协议。Counterparty 仅作为 stamps 所依赖的底层保留。该拉取请求还移除了此前由构建开关控制的两个画廊页面。
+
+2026-09-23 之前的各节提到的协议和页面已被此次改动移除。这些内容作为历史记录保留，不代表当前功能。
+
 ## 2026-09-17：权威服务传输与 CI 修复
 
 **未发布的修复分支。功能验收仍为 NO-GO。未部署。** [应用拉取请求 117](https://github.com/bitcoinuniverseio/stampdex/pull/117) 保留 9 月 16 日的候选修复，并增加请求与响应大小限制、检查点身份检查及重定向拒绝。客户端还拒绝重复的交易输入，以及格式错误的警告或脚本类型字段。
@@ -211,11 +217,6 @@ with anything in the lower half of that table.
   [Change a listing price](/docs-stampdex/zh-cn/guides/change-a-listing-price/).
 - **A local reorg rollback worker at the Universe layer.** The ecosystem registry
   records `reconcile` as unsupported for both protocols.
-
-## What is switched off
-
-Two gallery surfaces ship behind build flags and are off by default. A feature you
-cannot see is not a feature you have.
 
 ## Where the platform record lives
 
