@@ -8,7 +8,7 @@ venue for Bitcoin Stamps and SRC-20.**
 This repository holds the source of that site. The product itself is a separate,
 private application; this is its public documentation.
 
-The [6 September execution status](EXECUTION_STATUS.md) records the recovery
+The [18 September development status](EXECUTION_STATUS.md) records the unreleased
 changes and missing native evidence. Native release readiness remains **NO-GO**.
 Earlier screenshots do not verify current native execution.
 
@@ -67,6 +67,8 @@ owning repository, the source path, the applicable release, the chain and networ
 lifecycle, and the date it was last checked.
 
 ## Building it
+
+Use Node.js 24.19.0 and npm 11.17.0. The package manifests and `.nvmrc` pin the toolchain.
 
 ```bash
 npm install
