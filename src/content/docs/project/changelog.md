@@ -17,6 +17,20 @@ lastReviewedBy: docs-stampdex maintainers
 
 ---
 
+## 2026-09-23
+
+StampDEX now covers Bitcoin Stamps and SRC-20 only. Counterparty stays only as the
+layer that stamps use. [Application pull request 126](https://github.com/bitcoinuniverseio/stampdex/pull/126)
+makes this change. It is not deployed yet.
+
+- Removed the Emerging markets and private settlement page, which described
+  protocols StampDEX no longer offers.
+- Removed the wallet actions and protocol rows for those protocols from
+  [Wallets](/docs-stampdex/reference/wallets/). The page now lists the three Stamp
+  loan actions that the application source declares.
+- Added a dated note to [Release evidence](/docs-stampdex/project/release-evidence/).
+  Earlier sections there stay as historical records.
+
 ## 2026-09-02
 
 The documentation experience release. The facts did not change; everything around

@@ -17,6 +17,12 @@ releaseStatus: preview
 lastReviewedBy: docs-stampdex maintainers
 ---
 
+## 2026-09-23: Stamps and SRC-20 only
+
+**Not deployed.** [Application pull request 126](https://github.com/bitcoinuniverseio/stampdex/pull/126) removes every protocol except Bitcoin Stamps and SRC-20. Counterparty stays only as the layer that stamps use. The pull request also removes the two gallery pages that shipped behind build flags.
+
+Sections dated before 2026-09-23 name protocols and pages that this change removes. They stay here as historical records. They do not describe current features.
+
 ## 2026-09-17: authority transport and CI repair
 
 **Unreleased repair branch. Functional NO-GO. No deployment.** [Application pull request 117](https://github.com/bitcoinuniverseio/stampdex/pull/117) preserves the September 16 candidate and adds request and response limits, checkpoint identity checks and rejection of redirects. It also rejects duplicate transaction inputs and malformed warning or script-type fields.
@@ -247,11 +253,6 @@ with anything in the lower half of that table.
   [Change a listing price](/docs-stampdex/guides/change-a-listing-price/).
 - **A local reorg rollback worker at the Universe layer.** The ecosystem registry
   records `reconcile` as unsupported for both protocols.
-
-## What is switched off
-
-Two gallery surfaces ship behind build flags and are off by default. A feature you
-cannot see is not a feature you have.
 
 ## Where the platform record lives
 
