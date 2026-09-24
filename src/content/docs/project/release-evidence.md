@@ -26,7 +26,7 @@ Sections dated before 2026-09-23 name protocols and pages that this change remov
 ## 2026-09-18: source-health development candidate
 
 **Not deployed. Native release readiness remains NO-GO.** Application commit
-`b83dbcdce29e587fd56f23e94602cc5082040e08` changes how source-health reads fail and recover.
+[b83dbcdc](https://github.com/bitcoinuniverseio/stampdex/commit/b83dbcdce29e587fd56f23e94602cc5082040e08) changes how source-health reads fail and recover.
 It does not connect missing native protocol services.
 
 A failed TAP, OPNet or Lightning refresh no longer prevents the other source
