@@ -31,16 +31,19 @@ jobs:
     defaults:
       run:
         shell: bash
+    env:
+      ARTIFACT_TAG: ${{ inputs.artifact_tag || vars.DOCS_VERIFIED_ARTIFACT_TAG }}
+      ARTIFACT_SHA256: ${{ inputs.artifact_sha256 || vars.DOCS_VERIFIED_ARTIFACT_SHA256 }}
     steps:
       - uses: actions/checkout@v4
       - uses: bitcoinuniverseio/universe-ci-actions/universe-host-tools@c9bb29ab2b39ea95dcc430fda80416deb2c4eb85
       - uses: bitcoinuniverseio/universe-ci-actions/universe-node-env@8e24bc760556caa5ec8c7c497baaad2e9adcc912 # v1
 
         with:
-          install: ${{ inputs.artifact_tag == '' }}
+          install: ${{ env.ARTIFACT_TAG == '' }}
 
       - name: Reuse checked source and site
-        if: inputs.artifact_tag != ''
+        if: env.ARTIFACT_TAG != ''
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ARTIFACT_TAG: ${{ inputs.artifact_tag }}
@@ -51,67 +54,67 @@ jobs:
         run: node scripts/check-runners.mjs && node --test scripts/fork-isolation.test.mjs
 
       - name: Copy guard (long dash, banned word, marketing phrases, relative links)
-        if: inputs.artifact_tag == ''
+        if: env.ARTIFACT_TAG == ''
         run: npm run check:copy
 
       - name: Bilingual parity and glossary compliance
-        if: inputs.artifact_tag == ''
+        if: env.ARTIFACT_TAG == ''
         run: npm run check:translations
 
       - name: Colour contrast meets WCAG 2.2 AA in both themes
-        if: inputs.artifact_tag == ''
+        if: env.ARTIFACT_TAG == ''
         run: npm run check:contrast
 
       - name: Documentation manifest is valid
-        if: inputs.artifact_tag == ''
+        if: env.ARTIFACT_TAG == ''
         run: npm run check:manifest
 
       - name: Screenshot manifest, freshness, variants, and secret scan
-        if: inputs.artifact_tag == ''
+        if: env.ARTIFACT_TAG == ''
         run: npm run check:screens
 
       - name: Install Playwright browsers
-        if: inputs.artifact_tag == ''
+        if: env.ARTIFACT_TAG == ''
         run: npx playwright install --only-shell chromium
 
       - name: Build
-        if: inputs.artifact_tag == ''
+        if: env.ARTIFACT_TAG == ''
         run: npm run build
 
       - name: Visual regression against the committed baselines
-        if: inputs.artifact_tag == ''
+        if: env.ARTIFACT_TAG == ''
         run: npm run check:visual
 
       - name: MCP tool contract tests
-        if: inputs.artifact_tag == ''
+        if: env.ARTIFACT_TAG == ''
         run: npm run test:mcp
 
       - name: Internal links and anchors
-        if: inputs.artifact_tag == ''
+        if: env.ARTIFACT_TAG == ''
         run: npm run check:links
 
       - name: Page metadata (one h1, skip link, descriptions, Open Graph, alt text)
-        if: inputs.artifact_tag == ''
+        if: env.ARTIFACT_TAG == ''
         run: npm run check:metadata
 
       - name: Nothing unbreakable that would push a 320px screen sideways
-        if: inputs.artifact_tag == ''
+        if: env.ARTIFACT_TAG == ''
         run: npm run check:overflow
 
       - name: Search index exists
-        if: inputs.artifact_tag == ''
+        if: env.ARTIFACT_TAG == ''
         run: test -f dist/pagefind/pagefind.js
 
       - name: Sitemap exists
-        if: inputs.artifact_tag == ''
+        if: env.ARTIFACT_TAG == ''
         run: test -f dist/sitemap-index.xml
 
       - name: Machine-readable index exists
-        if: inputs.artifact_tag == ''
+        if: env.ARTIFACT_TAG == ''
         run: test -s dist/llms.txt
 
       - name: No image over 200 KB
-        if: inputs.artifact_tag == ''
+        if: env.ARTIFACT_TAG == ''
         run: |
           oversized=$(find dist -type f \( -name '*.png' -o -name '*.webp' -o -name '*.jpg' \) -size +200k)
           if [ -n "$oversized" ]; then
@@ -122,11 +125,11 @@ jobs:
           echo "Every image is within budget."
 
       - name: Package the checked site for publishing
-        if: inputs.artifact_tag == ''
+        if: env.ARTIFACT_TAG == ''
         run: node scripts/package-verified-build.mjs
 
       - name: Save the checked site
-        if: inputs.artifact_tag == ''
+        if: env.ARTIFACT_TAG == ''
         uses: actions/upload-artifact@v4
         with:
           name: verified-site
