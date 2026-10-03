@@ -17,6 +17,33 @@ releaseStatus: preview
 lastReviewedBy: docs-stampdex maintainers
 ---
 
+## 2026-10-03: implementation candidate
+
+**Not deployed. Functional and public-release status: NO-GO.** This note covers
+the implementation source on `main`. It does not describe the running release.
+
+[Application d3cacbca](https://github.com/bitcoinuniverseio/stampdex/commit/d3cacbcae3e1dee6f06163ac4500c6e43adc794f) and [native indexer 00176254](https://github.com/bitcoinuniverseio/btc_stamps/commit/001762545493051e81530c474645173784308ff2) now contain the consolidated work. Desktop and mobile checks cover the changed boards, detail pages and error states. These controlled checks do not prove native settlement.
+
+Names offer and auction reads/retries use the configured network. Bid retries
+also check their parent auction. A reused key with changed terms returns a
+conflict. First and later auction bids check the current network's block height
+against the bidding window.
+These source repairs still need real wallet, native SRC-101 and recovery journeys.
+
+The owned Signet node reported a synchronized tip on 3 October. Its observed
+challenge identifies the connected Signet. Node sync alone does not establish
+Stamps, SRC-20 or SRC-101 acceptance or a usable product journey.
+
+The candidate deployer checks MySQL 8.4 and the applied schema before migration.
+The observed production database used MariaDB 10.11.19. Conversion, rollback
+and the service handoff remain unverified. No public rollout follows from these
+checks. Read the [running version](https://stamp.api.bitcoinuniverse.io/api/version)
+before treating candidate behavior as live behavior.
+
+The work tracks `PRODUCT-NAME-02/03/04`, `SDX28-ROOT-NET-01` and
+`SDX28-OPS-02`. Component and database checks do not pass their native acceptance
+rows. Earlier dated records remain historical evidence.
+
 ## 2026-09-23: Stamps and SRC-20 only
 
 **Not deployed.** [Application pull request 126](https://github.com/bitcoinuniverseio/stampdex/pull/126) removes every protocol except Bitcoin Stamps and SRC-20. Counterparty stays only as the layer that stamps use. The pull request also removes the two gallery pages that shipped behind build flags.
