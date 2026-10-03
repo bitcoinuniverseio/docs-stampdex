@@ -2,6 +2,15 @@ name: pages
 
 on:
   workflow_dispatch:
+    inputs:
+      artifact_tag:
+        description: 'Optional checked site artifact tag'
+        type: string
+        default: ''
+      artifact_sha256:
+        description: 'SHA256 of that exact artifact'
+        type: string
+        default: ''
 
 permissions:
   contents: read
@@ -14,26 +23,44 @@ concurrency:
 
 jobs:
   build-and-publish:
-    runs-on: ${{ contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop') && fromJSON('["self-hosted","universe-runners-1"]') || 'ubuntu-24.04' }}
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+    runs-on: [self-hosted, universe-runners-1]
     timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - uses: bitcoinuniverseio/universe-ci-actions/universe-host-tools@c9bb29ab2b39ea95dcc430fda80416deb2c4eb85
       - uses: bitcoinuniverseio/universe-ci-actions/universe-node-env@8e24bc760556caa5ec8c7c497baaad2e9adcc912 # v1
+        with:
+          install: ${{ inputs.artifact_tag == '' }}
 
       - name: Runner policy
         run: node scripts/check-runners.mjs
 
       - name: Gates that must hold on the deployed commit
+        if: inputs.artifact_tag == ''
         run: npm test
 
       - name: Build
+        if: inputs.artifact_tag == ''
         run: npm run build
 
       - name: Internal links, page metadata, and mobile reflow
+        if: inputs.artifact_tag == ''
         run: npm run check:site
+
+      - name: Reuse the checked immutable site
+        if: inputs.artifact_tag != ''
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ARTIFACT_TAG: ${{ inputs.artifact_tag }}
+          ARTIFACT_SHA256: ${{ inputs.artifact_sha256 }}
+        run: node scripts/restore-verified-build.mjs "$ARTIFACT_TAG" "$ARTIFACT_SHA256"
 
       - name: Mark the output as not-Jekyll
         run: touch dist/.nojekyll

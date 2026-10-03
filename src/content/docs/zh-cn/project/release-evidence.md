@@ -17,6 +17,18 @@ releaseStatus: preview
 lastReviewedBy: docs-stampdex maintainers
 ---
 
+## 2026-10-03：实现源代码
+
+**尚未部署。原生功能验收仍为 NO-GO。** 此节说明 `main` 中的源代码，不代表线上版本。
+
+[应用 d3cacbca](https://github.com/bitcoinuniverseio/stampdex/commit/d3cacbcae3e1dee6f06163ac4500c6e43adc794f) 与 [原生索引器 00176254](https://github.com/bitcoinuniverseio/btc_stamps/commit/001762545493051e81530c474645173784308ff2) 已包含合并后的工作。桌面与移动端检查涵盖修改后的列表、详情与错误状态。这些受控检查不能证明原生交易结算。
+
+Names 报价、拍卖与重试按配置的网络读取状态。重复请求必须保留原条款，竞价必须处于当前网络的有效区块窗口内。真实钱包、原生 SRC-101 与恢复流程仍需验收。
+
+Signet 节点同步不能证明 Stamps、SRC-20 或 SRC-101 的原生处理。部署程序要求 MySQL 8.4；此前观察到的生产数据库为 MariaDB 10.11.19。数据库转换、回滚与服务交接尚未验证。请先核对[线上版本](https://stamp.api.bitcoinuniverse.io/api/version)。
+
+工作涉及 `PRODUCT-NAME-02/03/04`、`SDX28-ROOT-NET-01` 与 `SDX28-OPS-02`。此前各节保留为历史记录。
+
 ## 2026-09-23：仅支持 Stamps 与 SRC-20
 
 **未部署。** [应用拉取请求 126](https://github.com/bitcoinuniverseio/stampdex/pull/126) 移除了 Bitcoin Stamps 与 SRC-20 以外的所有协议。Counterparty 仅作为 stamps 所依赖的底层保留。该拉取请求还移除了此前由构建开关控制的两个画廊页面。
