@@ -21,6 +21,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import Ajv from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
+import { isStaleCurrentCapture } from './screenshot-freshness.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const MAX_KB = 200;
@@ -141,7 +142,7 @@ for (const capture of manifest.captures ?? []) {
 
   // Freshness is a gate.
   const ageDays = (Date.now() - Date.parse(capture.capturedAt)) / 86400000;
-  if (ageDays > capture.maxAgeDays) {
+  if (isStaleCurrentCapture(capture)) {
     fail(
       `${capture.id} is ${Math.floor(ageDays)} days old, past its ${capture.maxAgeDays}-day window. Recapture and update the manifest.`,
     );
