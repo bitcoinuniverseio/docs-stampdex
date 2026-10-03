@@ -85,6 +85,17 @@ jobs:
           fi
           echo "Every image is within budget."
 
+      - name: Package the checked site for publishing
+        run: node scripts/package-verified-build.mjs
+
+      - name: Save the checked site
+        uses: actions/upload-artifact@v4
+        with:
+          name: verified-site
+          path: verified-site.tar.gz
+          retention-days: 14
+          if-no-files-found: error
+
       - name: Upload visual baselines for review and commit
         if: always()
         uses: actions/upload-artifact@v4
