@@ -20,7 +20,9 @@ lastReviewedBy: docs-stampdex maintainers
 ## 2026-10-03: implementation candidate
 
 **Not deployed. Functional and public-release status: NO-GO.** This note covers
-the local implementation candidate. It does not describe the running release.
+the implementation source on `main`. It does not describe the running release.
+
+[Application d3cacbca](https://github.com/bitcoinuniverseio/stampdex/commit/d3cacbcae3e1dee6f06163ac4500c6e43adc794f) and [native indexer 00176254](https://github.com/bitcoinuniverseio/btc_stamps/commit/001762545493051e81530c474645173784308ff2) now contain the consolidated work. Desktop and mobile checks cover the changed boards, detail pages and error states. These controlled checks do not prove native settlement.
 
 Names offer and auction reads/retries use the configured network. Bid retries
 also check their parent auction. A reused key with changed terms returns a
