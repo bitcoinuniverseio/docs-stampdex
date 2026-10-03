@@ -1,7 +1,7 @@
 name: Docs quality
 
 on:
-  pull_request:
+  # The persistent fleet admits trusted dispatch jobs, not PR events.
   workflow_dispatch:
 
 permissions:
