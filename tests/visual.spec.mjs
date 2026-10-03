@@ -196,3 +196,51 @@ test('search results keep the component visual system', async ({ page }) => {
   await expect(page.locator('#sdAskCard')).toBeVisible();
   await expect(citation).toHaveCSS('text-decoration-line', 'none');
 });
+
+for (const theme of ['light', 'dark']) {
+  for (const width of [320, 390, 800, 1280]) {
+    test(`navigation contrast and controls: ${theme} ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(`http://localhost:${boundPort}${BASE}/project/release-evidence/`, { waitUntil: 'networkidle' });
+      await page.locator('starlight-theme-select select').selectOption(theme);
+      const menu = page.locator('starlight-menu-button button');
+      if (width < 960) {
+        const box = await menu.boundingBox();
+        expect(box.width).toBeGreaterThanOrEqual(44);
+        expect(box.height).toBeGreaterThanOrEqual(44);
+        await menu.click();
+      }
+      const findings = await page.evaluate(() => {
+        const luminance = color => {
+          const channels = color.match(/[\d.]+/g).slice(0, 3).map(Number).map(v => v / 255);
+          const linear = channels.map(v => v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4);
+          return linear[0] * .2126 + linear[1] * .7152 + linear[2] * .0722;
+        };
+        const issues = [];
+        for (const element of document.querySelectorAll('.sidebar-pane summary,.sidebar-pane a,header .sd-search-links a,mobile-starlight-toc summary')) {
+          const box = element.getBoundingClientRect();
+          if (!box.width || !box.height || getComputedStyle(element).visibility === 'hidden') continue;
+          let parent = element;
+          while (parent && getComputedStyle(parent).backgroundColor === 'rgba(0, 0, 0, 0)') parent = parent.parentElement;
+          const background = getComputedStyle(parent).backgroundColor;
+          const foreground = getComputedStyle(element).color;
+          const a = luminance(background), b = luminance(foreground);
+          const ratio = (Math.max(a, b) + .05) / (Math.min(a, b) + .05);
+          if (ratio < 4.5) issues.push({ text: element.textContent.trim().slice(0, 40), ratio });
+        }
+        if (document.documentElement.scrollWidth > document.documentElement.clientWidth) issues.push({ overflow: true });
+        return issues;
+      });
+      expect(findings).toEqual([]);
+      if (width < 960) {
+        await menu.click();
+        const toc = page.locator('mobile-starlight-toc summary');
+        if (await toc.isVisible()) {
+          await toc.click();
+          await expect(page.locator('mobile-starlight-toc a').first()).toBeVisible();
+          await toc.click();
+        }
+      }
+    });
+  }
+}
