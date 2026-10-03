@@ -14,8 +14,8 @@ const isFixture = capture.source === 'controlled-fixture';
 ---
 
 <p class="sd-evidence" data-source={capture.source}>
-  <span class:list={['sd-evidence-badge', isFixture ? 'is-fixture' : 'is-production']}>
-    {isFixture ? 'Controlled recorded state' : 'Production capture'}
+  <span class:list={['sd-evidence-badge', capture.lifecycle === 'historical' || isFixture ? 'is-fixture' : 'is-production']}>
+    {capture.lifecycle === 'historical' ? 'Historical screen' : isFixture ? 'Controlled recorded state' : 'Production capture'}
   </span>
   <span>{captureDate(capture)}</span>
   <span>app <code>{shortCommit(capture.appCommit)}</code></span>
