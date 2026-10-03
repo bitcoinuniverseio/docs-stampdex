@@ -1,7 +1,9 @@
 name: Docs quality
 
 on:
-  # The persistent fleet admits trusted dispatch jobs, not PR events.
+  push:
+    branches: ["codex/**"]
+  # The persistent fleet admits trusted push and dispatch jobs, not PR events.
   workflow_dispatch:
     inputs:
       artifact_tag:
@@ -46,8 +48,6 @@ jobs:
         if: env.ARTIFACT_TAG != ''
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ARTIFACT_TAG: ${{ inputs.artifact_tag }}
-          ARTIFACT_SHA256: ${{ inputs.artifact_sha256 }}
         run: node scripts/restore-verified-build.mjs "$ARTIFACT_TAG" "$ARTIFACT_SHA256"
 
       - name: Runner policy
