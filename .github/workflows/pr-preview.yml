@@ -2,8 +2,8 @@ name: PR preview
 
 # Downloadable, no-indexed builds for same-repository pull requests.
 on:
-  pull_request:
-    types: [opened, reopened, synchronize]
+  # A reviewer dispatches an exact same-repository revision.
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -14,11 +14,15 @@ concurrency:
 
 jobs:
   preview:
-    if: github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: ${{ contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop') && fromJSON('["self-hosted","universe-runners-1"]') || 'ubuntu-24.04' }}
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: [self-hosted, universe-runners-1]
     timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
     steps:
       - uses: actions/checkout@v4
+      - uses: bitcoinuniverseio/universe-ci-actions/universe-host-tools@c9bb29ab2b39ea95dcc430fda80416deb2c4eb85
       - uses: bitcoinuniverseio/universe-ci-actions/universe-node-env@8e24bc760556caa5ec8c7c497baaad2e9adcc912
         if: github.event.action != 'closed'
 
@@ -43,6 +47,6 @@ jobs:
       - name: Upload the preview
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: preview-pr-${{ github.event.pull_request.number }}
+          name: preview-${{ github.sha }}
           path: dist/
           retention-days: 7
