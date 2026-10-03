@@ -36,6 +36,7 @@
  * brand band frames it. Content colours stay on the --sd-* tokens. */
 :root {
   --sl-nav-height: 3.75rem;
+  --sl-menu-button-size: 2.75rem;
 
   --sl-color-black: var(--sd-nav);
   --sl-color-white: var(--sd-ink-inverse);  --sl-color-bg: var(--sd-bg);
@@ -87,7 +88,10 @@
  * both themes, so their Starlight text variables keep resolving to light ink
  * even when the light theme flips them for the reading area. */
 .header,
-.sidebar {
+.sidebar-pane,
+mobile-starlight-toc {
+  --sd-ink: var(--sd-ink-inverse);
+  --sd-muted: var(--sd-muted-inverse);
   --sl-color-white: var(--sd-ink-inverse);
   --sl-color-text: var(--sd-ink-inverse);
   --sl-color-gray-1: var(--sd-ink-inverse);
@@ -97,7 +101,8 @@
 
 /* Focus is always visible in the shell. */
 .header :focus-visible,
-.sidebar :focus-visible,
+.sidebar-pane :focus-visible,
+mobile-starlight-toc :focus-visible,
 .sd-site-footer :focus-visible,
 .sd-trust :focus-visible {
   outline: 2px solid var(--sd-focus);
