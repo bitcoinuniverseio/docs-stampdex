@@ -72,12 +72,12 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
       <span class="sd-release-dot" aria-hidden="true"></span>
       <span class="sd-release-label">Docs release</span>
       <span class="sd-release-value">{RELEASE.shortCommit}</span>
-      <span class="sd-release-live" data-release-live hidden></span>
-      <span class="sd-release-expected" hidden>docs: {RELEASE.shortCommit}</span>
+      <span class="sd-release-live" data-release-live data-expected-commit={RELEASE.shortCommit} hidden></span>
     </a>
   </div>
 
 <script>
+  import { releaseStatus } from '../../data/release-status.mjs';
   // Live API health: read-only, quick timeout, never blocks rendering,
   // shows Unknown on any failure, and sleeps while the tab is hidden.
   const el = document.querySelector("[data-release-live]");
@@ -89,17 +89,14 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
         const res = await fetch("https://stamp.api.bitcoinuniverse.io/api/version", { signal: AbortSignal.timeout(4000) });
         if (!res.ok) throw new Error(res.status);
         const body = await res.json();
-        const live = (body.gitCommit ?? "unknown").slice(0, 7);
-        const expected = document.querySelector("[data-release-expected]")?.textContent.replace("docs:", "").trim();
-        if (expected && live === expected) {
-          set("Verified", "is-ok");
-          el.title = "Production matches the commit this documentation describes";
-        } else {
-          set("Updated", "is-drift");
-          el.title = "Production has moved past this documentation's commit. The pages describe " + (expected ?? "an earlier build") + ".";
-        }
+        const status = releaseStatus(body.gitCommit, el.getAttribute('data-expected-commit'));
+        set(status, status === 'Matches' ? 'is-ok' : status === 'Differs' ? 'is-drift' : '');
+        el.title = status === 'Matches' ? 'The running release matches this docs snapshot.'
+          : status === 'Differs' ? 'The running release differs from this docs snapshot.'
+          : 'The running release could not be verified.';
       } catch {
-        el.hidden = true;
+        set('Unknown', '');
+        el.title = 'The running release could not be read.';
       }
     };
     check();
@@ -220,12 +217,6 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
     }
     .sd-release-live.is-drift {
       color: var(--sd-brand-accent);
-    }
-    .sd-release-expected[hidden] {
-      display: none;
-    }
-    .sd-release-expected {
-      display: none;
     }
     .sd-cta {
       display: inline-flex;
