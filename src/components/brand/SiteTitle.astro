@@ -25,6 +25,7 @@ const { siteTitleHref } = route;
     color: var(--sd-ink-inverse);
     white-space: nowrap;
     min-width: 0;
+    min-height: 2.75rem;
     padding: 0.25rem;
     margin: -0.25rem;
   }
@@ -60,8 +61,20 @@ const { siteTitleHref } = route;
     outline: 2px solid var(--sd-focus);
     outline-offset: 2px;
   }
-  @media (max-width: 26rem) {
+  @media (max-width: 48rem) {
     .sd-brand-docs {
+      display: none;
+    }
+  }
+  @media (max-width: 28rem) {
+    .sd-brand {
+      min-width: 2.75rem;
+      min-height: 2.75rem;
+      padding: 0;
+      margin: 0;
+      justify-content: center;
+    }
+    .sd-brand-name {
       display: none;
     }
   }
