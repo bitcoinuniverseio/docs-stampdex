@@ -285,6 +285,14 @@ for (const theme of ['light', 'dark']) {
           return linear[0] * .2126 + linear[1] * .7152 + linear[2] * .0722;
         };
         const failures = [];
+        for (const row of dialog.querySelectorAll('.sd-result-item')) {
+          const card = row.getBoundingClientRect();
+          const title = row.querySelector('.sd-result-title').getBoundingClientRect();
+          const link = row.querySelector('.sd-result-link').getBoundingClientRect();
+          if (title.bottom > card.bottom || link.bottom > card.bottom + 1) {
+            failures.push({ clippedResult: row.textContent.trim().slice(0, 50) });
+          }
+        }
         for (const element of dialog.querySelectorAll('input,button,a,.sd-result-kind,.sd-result-title,.sd-result-excerpt,.sd-ask-body,.sd-ask-badge,.sd-filter-label,.sd-footer-links')) {
           const box = element.getBoundingClientRect();
           if (!box.width || !box.height) continue;
