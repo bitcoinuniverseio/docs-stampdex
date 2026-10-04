@@ -217,7 +217,7 @@ for (const theme of ['light', 'dark']) {
           return linear[0] * .2126 + linear[1] * .7152 + linear[2] * .0722;
         };
         const issues = [];
-        for (const element of document.querySelectorAll('.sidebar-pane summary,.sidebar-pane a,header .sd-search-links a,mobile-starlight-toc summary,starlight-menu-button button')) {
+        for (const element of document.querySelectorAll('.sidebar-pane summary,.sidebar-pane a,header .sd-search-btn,header .sd-search-links a,mobile-starlight-toc summary,starlight-menu-button button')) {
           const box = element.getBoundingClientRect();
           if (!box.width || !box.height || getComputedStyle(element).visibility === 'hidden') continue;
           let parent = element;
