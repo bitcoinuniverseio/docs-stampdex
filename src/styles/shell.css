@@ -127,6 +127,13 @@ mobile-starlight-toc :focus-visible,
   color: var(--sd-muted-inverse);
 }
 
+starlight-toc {
+  color: var(--sd-ink);
+  --sl-color-gray-2: var(--sd-muted);
+}
+starlight-toc a { color: var(--sd-muted); }
+starlight-toc a[aria-current='true'] { color: var(--sl-color-text-accent); }
+
 @media (max-width: 69.999rem) {
   :root[data-has-sidebar] header.header {
     padding-inline-end: calc(var(--sl-nav-gap) + var(--sl-nav-pad-x) + var(--sl-menu-button-size));
