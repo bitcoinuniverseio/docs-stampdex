@@ -210,6 +210,8 @@ for (const theme of ['light', 'dark']) {
         expect(box.height).toBeGreaterThanOrEqual(44);
         await menu.click();
       }
+      await expect(page.locator('.sidebar-pane')).toBeVisible();
+      await expect(page.locator('.sidebar-pane a').first()).toBeVisible();
       const findings = await page.evaluate(() => {
         const luminance = color => {
           const channels = color.match(/[\d.]+/g).slice(0, 3).map(Number).map(v => v / 255);
@@ -217,7 +219,7 @@ for (const theme of ['light', 'dark']) {
           return linear[0] * .2126 + linear[1] * .7152 + linear[2] * .0722;
         };
         const issues = [];
-        for (const element of document.querySelectorAll('.sidebar-pane summary,.sidebar-pane a,header .sd-search-btn,header .sd-search-links a,mobile-starlight-toc summary,starlight-menu-button button')) {
+        for (const element of document.querySelectorAll('.sidebar-pane summary,.sidebar-pane a,header .sd-search-btn,header .sd-search-links a,starlight-toc a,mobile-starlight-toc summary,starlight-menu-button button')) {
           const box = element.getBoundingClientRect();
           if (!box.width || !box.height || getComputedStyle(element).visibility === 'hidden') continue;
           let parent = element;
