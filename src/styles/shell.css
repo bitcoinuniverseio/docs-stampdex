@@ -111,6 +111,22 @@ mobile-starlight-toc :focus-visible,
   outline-offset: 2px;
 }
 
+/* Keep the search control on the same dark surface as the header. */
+.sd-header-search .sd-search-btn {
+  background: var(--sd-nav);
+  color: var(--sd-ink-inverse);
+  border-color: var(--sd-muted-inverse);
+}
+.sd-header-search .sd-search-btn:hover {
+  background: var(--sd-nav);
+  color: var(--sd-ink-inverse);
+  border-color: var(--sd-brand-accent);
+}
+.sd-header-search .sd-search-btn kbd {
+  background: var(--sd-nav);
+  color: var(--sd-muted-inverse);
+}
+
 @media (max-width: 69.999rem) {
   :root[data-has-sidebar] header.header {
     padding-inline-end: calc(var(--sl-nav-gap) + var(--sl-nav-pad-x) + var(--sl-menu-button-size));
