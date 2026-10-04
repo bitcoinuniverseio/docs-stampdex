@@ -89,6 +89,10 @@ jobs:
         if: env.ARTIFACT_TAG == ''
         run: npm run test:mcp
 
+      - name: Release status checks
+        if: env.ARTIFACT_TAG == ''
+        run: node --test scripts/release-status.test.mjs
+
       - name: Internal links and anchors
         if: env.ARTIFACT_TAG == ''
         run: npm run check:links
