@@ -198,7 +198,7 @@ test('search results keep the component visual system', async ({ page }) => {
 });
 
 for (const theme of ['light', 'dark']) {
-  for (const width of [320, 390, 800, 1280]) {
+  for (const width of [320, 390, 800, 960, 1024, 1280]) {
     test(`navigation contrast and controls: ${theme} ${width}px`, async ({ page }) => {
       await page.setViewportSize({ width, height: 900 });
       await page.goto(`http://localhost:${boundPort}${BASE}/project/release-evidence/`, { waitUntil: 'networkidle' });
@@ -255,4 +255,14 @@ for (const theme of ['light', 'dark']) {
       }
     });
   }
+}
+
+for (const width of [960, 1024]) {
+  test(`homepage sections remain reachable at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto(`http://localhost:${boundPort}${BASE}/`, { waitUntil: 'networkidle' });
+    await expect(page.locator('header nav[aria-label="Documentation sections"]')).toBeVisible();
+    await expect(page.locator('header nav a').first()).toBeVisible();
+    await expect(page.locator('starlight-menu-button button')).toBeHidden();
+  });
 }

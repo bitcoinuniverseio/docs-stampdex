@@ -144,3 +144,9 @@ starlight-toc a[aria-current='true'] { color: var(--sl-color-text-accent); }
   :root { --sl-nav-height: 7rem; }
   starlight-menu-button button { top: var(--sl-nav-pad-y); }
 }
+
+/* The header navigation replaces the drawer from the desktop breakpoint. */
+@media (min-width: 60rem) and (max-width: 69.999rem) {
+  :root { --sl-nav-height: 6.65rem; }
+  .sd-header-sections { display: flex !important; }
+}
