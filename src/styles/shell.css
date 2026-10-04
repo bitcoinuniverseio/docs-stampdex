@@ -37,6 +37,8 @@
 :root {
   --sl-nav-height: 3.75rem;
   --sl-menu-button-size: 2.75rem;
+  --sd-content-ink: var(--sd-ink);
+  --sd-content-muted: var(--sd-muted);
 
   --sl-color-black: var(--sd-nav);
   --sl-color-white: var(--sd-ink-inverse);  --sl-color-bg: var(--sd-bg);
@@ -133,6 +135,17 @@ starlight-toc {
 }
 starlight-toc a { color: var(--sd-muted); }
 starlight-toc a[aria-current='true'] { color: var(--sl-color-text-accent); }
+
+/* A dialog in the header uses the reading area's theme, not navigation ink. */
+.sd-search-dialog {
+  --sd-ink: var(--sd-content-ink);
+  --sd-muted: var(--sd-content-muted);
+  --sl-color-white: var(--sd-content-ink);
+  --sl-color-text: var(--sd-content-ink);
+  --sl-color-gray-1: var(--sd-content-ink);
+  --sl-color-gray-2: var(--sd-content-muted);
+  color: var(--sd-content-ink);
+}
 
 @media (max-width: 69.999rem) {
   :root[data-has-sidebar] header.header {
