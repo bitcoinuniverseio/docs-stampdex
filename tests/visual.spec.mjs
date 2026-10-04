@@ -217,7 +217,7 @@ for (const theme of ['light', 'dark']) {
           return linear[0] * .2126 + linear[1] * .7152 + linear[2] * .0722;
         };
         const issues = [];
-        for (const element of document.querySelectorAll('.sidebar-pane summary,.sidebar-pane a,header .sd-search-links a,mobile-starlight-toc summary')) {
+        for (const element of document.querySelectorAll('.sidebar-pane summary,.sidebar-pane a,header .sd-search-links a,mobile-starlight-toc summary,starlight-menu-button button')) {
           const box = element.getBoundingClientRect();
           if (!box.width || !box.height || getComputedStyle(element).visibility === 'hidden') continue;
           let parent = element;
@@ -227,6 +227,16 @@ for (const theme of ['light', 'dark']) {
           const a = luminance(background), b = luminance(foreground);
           const ratio = (Math.max(a, b) + .05) / (Math.min(a, b) + .05);
           if (ratio < 4.5) issues.push({ text: element.textContent.trim().slice(0, 40), ratio });
+        }
+        const controls = [...document.querySelectorAll('header .sd-brand,header [data-open-modal],header select,header .sd-header-tools .social-icons a,starlight-menu-button button')].filter(e => e.getBoundingClientRect().width > 0 && getComputedStyle(e).display !== 'none');
+        for (let i = 0; i < controls.length; i++) {
+          const a = controls[i].getBoundingClientRect();
+          if (a.height < 44) issues.push({ smallControl: controls[i].tagName, height: a.height });
+          if (a.left < 0 || a.right > document.documentElement.clientWidth + 1) issues.push({ outsideViewport: controls[i].tagName });
+          for (let j = i + 1; j < controls.length; j++) {
+            const b = controls[j].getBoundingClientRect();
+            if (Math.min(a.right, b.right) - Math.max(a.left, b.left) > 1 && Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > 1) issues.push({ overlappingControls: [controls[i].tagName, controls[j].tagName] });
+          }
         }
         if (document.documentElement.scrollWidth > document.documentElement.clientWidth) issues.push({ overflow: true });
         return issues;
