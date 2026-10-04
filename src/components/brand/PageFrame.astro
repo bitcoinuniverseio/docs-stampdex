@@ -84,7 +84,7 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
     }
 
     /* Splash pages also host the menu button on narrow screens. */
-    :global(:not([data-has-sidebar])) .header {
+    :global(:root:not([data-has-sidebar])) .header {
       padding-inline-end: calc(
         var(--sl-nav-gap) + var(--sl-nav-pad-x) + var(--sl-menu-button-size)
       );
@@ -127,7 +127,7 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
       }
 
       :global([data-has-sidebar]) .header,
-      :global(:not([data-has-sidebar])) .header {
+      :global(:root:not([data-has-sidebar])) .header {
         padding-inline-end: calc(
           var(--sl-nav-gap) + var(--sl-nav-pad-x) + var(--sl-menu-button-size)
         );
@@ -154,11 +154,11 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
       padding-inline-start: var(--sl-content-inline-start);
     }
 
-    @media (min-width: 50rem) {
+    @media (min-width: 60rem) {
       :global([data-has-sidebar]) .header {
         padding-inline-end: var(--sl-nav-pad-x);
       }
-      :global(:not([data-has-sidebar])) .header {
+      :global(:root:not([data-has-sidebar])) .header {
         padding-inline-end: var(--sl-nav-pad-x);
       }
       .sidebar-pane {
@@ -169,7 +169,7 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
       }
       /* The splash section menu is a narrow-screen affordance only; on
          desktop the header navigation carries the same links. */
-      :global(:not([data-has-sidebar])) .sidebar-pane {
+      :global(:root:not([data-has-sidebar])) .sidebar-pane {
         --sl-sidebar-visibility: hidden;
         display: none;
       }
