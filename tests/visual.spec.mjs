@@ -266,3 +266,39 @@ for (const width of [960, 1024]) {
     await expect(page.locator('starlight-menu-button button')).toBeHidden();
   });
 }
+
+for (const theme of ['light', 'dark']) {
+  for (const width of [390, 1280]) {
+    test(`search dialog remains readable: ${theme} ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(`http://localhost:${boundPort}${BASE}/`, { waitUntil: 'networkidle' });
+      await page.locator('starlight-theme-select select').selectOption(theme);
+      await page.locator('[data-open-modal]').click();
+      await page.locator('.sd-search-input').fill('wallet');
+      await expect(page.locator('.sd-result-item').first()).toBeVisible();
+      const issues = await page.locator('.sd-search-dialog').evaluate(dialog => {
+        const luminance = color => {
+          const linear = color.match(/[\d.]+/g).slice(0, 3).map(Number).map(v => {
+            v /= 255;
+            return v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4;
+          });
+          return linear[0] * .2126 + linear[1] * .7152 + linear[2] * .0722;
+        };
+        const failures = [];
+        for (const element of dialog.querySelectorAll('input,button,a,.sd-result-kind,.sd-result-title,.sd-result-excerpt,.sd-ask-body,.sd-ask-badge,.sd-filter-label,.sd-footer-links')) {
+          const box = element.getBoundingClientRect();
+          if (!box.width || !box.height) continue;
+          let parent = element;
+          while (parent && getComputedStyle(parent).backgroundColor === 'rgba(0, 0, 0, 0)') parent = parent.parentElement;
+          const a = luminance(getComputedStyle(element).color);
+          const b = luminance(getComputedStyle(parent).backgroundColor);
+          const ratio = (Math.max(a, b) + .05) / (Math.min(a, b) + .05);
+          if (ratio < 4.5) failures.push({ text: element.textContent.trim().slice(0, 30), ratio });
+        }
+        if (dialog.scrollWidth > dialog.clientWidth + 1) failures.push({ dialogOverflow: true });
+        return failures;
+      });
+      expect(issues).toEqual([]);
+    });
+  }
+}
