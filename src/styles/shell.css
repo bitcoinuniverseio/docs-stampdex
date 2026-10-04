@@ -89,7 +89,8 @@
  * even when the light theme flips them for the reading area. */
 .header,
 .sidebar-pane,
-mobile-starlight-toc {
+mobile-starlight-toc,
+starlight-menu-button {
   color: var(--sd-ink-inverse);
   --sd-ink: var(--sd-ink-inverse);
   --sd-muted: var(--sd-muted-inverse);
@@ -108,4 +109,15 @@ mobile-starlight-toc :focus-visible,
 .sd-trust :focus-visible {
   outline: 2px solid var(--sd-focus);
   outline-offset: 2px;
+}
+
+@media (max-width: 69.999rem) {
+  :root[data-has-sidebar] header.header {
+    padding-inline-end: calc(var(--sl-nav-gap) + var(--sl-nav-pad-x) + var(--sl-menu-button-size));
+  }
+}
+
+@media (max-width: 22rem) {
+  :root { --sl-nav-height: 7rem; }
+  starlight-menu-button button { top: var(--sl-nav-pad-y); }
 }
