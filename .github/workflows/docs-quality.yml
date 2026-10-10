@@ -1,9 +1,10 @@
 name: Docs quality
 
 on:
+  pull_request:
   push:
     branches: ["codex/**"]
-  # The persistent fleet admits trusted push and dispatch jobs, not PR events.
+  # The fleet job-started hook admits same-repository pull requests and refuses forks.
   workflow_dispatch:
     inputs:
       artifact_tag:
