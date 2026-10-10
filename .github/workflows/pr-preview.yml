@@ -2,7 +2,9 @@ name: PR preview
 
 # Downloadable, no-indexed builds for same-repository pull requests.
 on:
-  # A reviewer dispatches an exact same-repository revision.
+  pull_request:
+    types: [opened, reopened, synchronize]
+  # A reviewer can also dispatch an exact same-repository revision.
   workflow_dispatch:
 
 permissions:
