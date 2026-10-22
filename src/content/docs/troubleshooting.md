@@ -111,3 +111,17 @@ Try again later.
 Open a [GitHub issue](https://github.com/bitcoinuniverseio/stampdex/issues) with what
 you did, what you expected, and what happened. For a suspected security problem, email
 `legal@bitcoinuniverse.io` instead.
+
+## Collection and logo availability
+
+The collections page stops loading within eight seconds. A failed read shows
+"Temporarily unavailable" and a Retry button. An empty collection list means
+the source answered with no results. Missing market details do not hide the
+collection. A missing price stays unknown rather than showing zero.
+
+SRC-20 tokens keep a generated logo when artwork is missing or its source fails.
+A missing logo returns 404. A source outage returns 503 and does not enter the
+server cache of missing artwork. Both states keep the token name readable.
+
+Controls for features that this deployment does not enable stay hidden.
+A capability response describes availability; it does not grant permission to trade.
