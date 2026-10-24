@@ -1,0 +1,56 @@
+---
+title: Saved rules
+description: Unreleased price, fee and order watches.
+source:
+  path: backend/src/automation; frontend/src/components/assistance
+  release: local source, not deployed
+  verified: "2026-10-24"
+contentType: how-to
+audiences: [traders, collectors]
+products: [src20, desk]
+protocols: [src20, bitcoin]
+difficulty: intro
+estimatedMinutes: 2
+lifecycle: preview
+releaseStatus: preview
+appCommit: 92a54aa2b7255ad1dbc952389e6c17b5697134aa
+lastReviewedBy: docs-stampdex maintainers
+---
+
+These changes are **unreleased**. They do not verify the live site or native
+settlement. This page adds to the preparation guide proposed in
+[PR #97](https://github.com/bitcoinuniverseio/docs-stampdex/pull/97), which remains
+open.
+
+Prerequisites: connect the wallet that will review the action.
+
+1. In Desk, prepare a buy or mint request. Choose the exact deployment.
+2. Open **Watch price or fees**. Set a time, optional limits and expiry.
+3. Choose **Save rule** and authorize wallet access.
+4. Open **Saved rules** on Desk. Choose **Review** when a draft is ready.
+
+The backend watches while the browser is closed. It prepares a review. You still
+confirm the terms and sign with your wallet. A draft does not buy or mint.
+Unknown prices, fees or network data do not meet a limit.
+
+Use **Pause**, **Resume** or **Cancel rule** to control a watch. A daily rule
+waits for you to dismiss its current review before preparing the next one.
+It skips missed runs. It does not queue catch-up buys.
+
+On an owned order, open **Watch this order** to watch progress or listing expiry
+for seven days. Expired listings return to a new listing review. The form checks
+ownership and available quantity again. A transaction seen by the network does
+not prove final delivery.
+
+Mint preparation carries the amount and batch count into the existing mint form.
+Saved mint recovery keeps the original transaction identity. Reconcile an unknown
+submission before retrying.
+
+Text and local QR capture remain available. AI, voice and document extraction
+still need the approved inference service. SRC-20 settlement uses escrow.
+
+## verification
+
+The rule appears under **Saved rules** with its current state. A ready rule
+opens a review, not a completed purchase. Use the saved order or mint progress
+to check the actual result.
