@@ -16,7 +16,7 @@ lastReviewedBy: docs-stampdex maintainers
 ---
 
 > [!NOTE]
-> **简体中文官方文档**：掌握高效检索与多维度筛选的实用技巧。 核心交易规则为非托管模式，买卖双方按标准费率收取服务费，并于比特币主网进行原子结算。
+> **简体中文文档**：浏览行情并核对来源。SRC-20 结算使用托管，请在签名前核对资金位置、费用和订单状态。
 
 
 
@@ -105,3 +105,31 @@ The `sources` object on each row is the same one the board reads.
 
 - [Token pages](/docs-stampdex/zh-cn/guides/token-pages/)
 - [Market data](/docs-stampdex/zh-cn/concepts/market-data/)
+
+## 尚未发布的准备功能，2026 年 10 月 24 日
+
+本节说明源码变化，不代表线上功能已通过验证。
+
+搜索读取保存的目录，并区分同名代币的不同部署。来源不可用、旧快照、
+目录不完整与没有匹配结果是不同状态。目录包含 SRC-20 部署和已保存的
+Stamp 挂单，尚未覆盖全部合集。
+
+在 Desk 输入 `find KEVIN`、粘贴资产链接或输入 Stamp 编号。
+输入 `buy 10 KEVIN` 或 `list 10 KEVIN at 5 sats` 可准备交易。
+请先核对资产和数量，再填入现有表单。签名仍由钱包控制。
+未知费用或未经核实的所有权不能证明交易已就绪。SRC-20 结算使用托管。
+
+Capture 接受文本文件或含一个二维码的图片。不支持识别时保留已输入的内容。
+在接入指定推理服务前，AI、语音转写和图片文字提取仍不可用，普通表单继续可用。
+
+`watch fees below 3.5 sat/vB` 打开可编辑的费用规则，请在表单中保存。
+`order ID` 读取保留的订单状态，并打开现有恢复页面。
+草稿不会下单、创建规则、签名或发送交易。
+
+未知价格不会触发低于阈值的提醒。扫描不会撤销用户暂停的规则。
+在这个尚未发布的候选版本中，保存的暂停设置在重启后继续生效。
+
+核对的源码：应用的 `backend/src/intelligence/preparation.service.ts`、
+`backend/src/market/market-catalog-snapshot.service.ts` 和
+`frontend/src/components/assistance/IntentPreparation.jsx`，基于 develop
+`74aa27e5`。浏览器与原生交易验收尚未完成。
