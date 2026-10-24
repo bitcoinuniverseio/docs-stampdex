@@ -1,0 +1,51 @@
+---
+title: 保存监控规则
+description: 尚未发布的价格、费用和订单监控。
+source:
+  path: backend/src/automation; frontend/src/components/assistance
+  release: local source, not deployed
+  verified: "2026-10-24"
+contentType: how-to
+audiences: [traders, collectors]
+products: [src20, desk]
+protocols: [src20, bitcoin]
+difficulty: intro
+estimatedMinutes: 2
+lifecycle: preview
+releaseStatus: preview
+appCommit: 92a54aa2b7255ad1dbc952389e6c17b5697134aa
+lastReviewedBy: docs-stampdex maintainers
+---
+
+这些源码变化**尚未发布**，不代表线上功能或原生交易已经通过验证。
+本页补充仍未合并的
+[PR #97](https://github.com/bitcoinuniverseio/docs-stampdex/pull/97)，不替代该提案。
+
+Prerequisites：连接将用于核对操作的钱包。
+
+1. 在 Desk 准备买入或铸造请求，选择准确的部署。
+2. 打开 **Watch price or fees**，设置时间、可选限额和到期时间。
+3. 点击 **Save rule**，授权钱包访问。
+4. 在 Desk 打开 **Saved rules**，草稿就绪后点击 **Review**。
+
+关闭浏览器后，后端仍会监控。规则只准备供你核对的草稿。
+你仍需确认条款并用钱包签名。草稿不会买入或铸造。
+价格、费用或网络数据未知时，不会满足限额条件。
+
+使用 **Pause**、**Resume** 或 **Cancel rule** 控制规则。
+每日规则等你关闭当前草稿后才安排下一次，不补做错过的买入。
+
+在自己的订单中打开 **Watch this order**，可监控进度或挂单到期，期限为七天。
+到期挂单返回新的挂单核对流程，表单会重新检查所有权和可用数量。
+网络已看到交易，不代表资产已经交付。
+
+铸造请求会将数量和批次数填入现有表单。恢复铸造时保留原交易身份。
+提交结果未知时，先核对原交易，再重试。
+
+文本和本地二维码识别仍可用。AI、语音和文档提取仍需接入指定推理服务。
+SRC-20 结算使用托管。
+
+## verification
+
+规则会出现在 **Saved rules** 中并显示当前状态。就绪规则打开核对页面，
+不代表买入已经完成。请用保存的订单或铸造进度核对实际结果。
