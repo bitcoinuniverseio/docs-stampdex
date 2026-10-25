@@ -122,6 +122,7 @@ export default defineConfig({
           label: 'How-to guides',
           items: [
             { label: 'Browse the market', slug: 'guides/browse-the-market' },
+             { label: 'Saved rules (unreleased)', slug: 'guides/saved-rules' },
             { label: 'Token pages', slug: 'guides/token-pages' },
             { label: 'Collection pages', slug: 'guides/collection-pages' },
             { label: 'Your portfolio', slug: 'guides/portfolio' },
