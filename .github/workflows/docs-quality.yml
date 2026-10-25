@@ -135,6 +135,7 @@ jobs:
 
       - name: Save the checked site
         if: env.ARTIFACT_TAG == ''
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
           name: verified-site
@@ -144,6 +145,7 @@ jobs:
 
       - name: Upload visual baselines for review and commit
         if: always()
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
           name: visual-baselines-${{ github.run_id }}
