@@ -140,7 +140,7 @@ jobs:
         with:
           name: verified-site
           path: verified-site.tar.gz
-          retention-days: 14
+          retention-days: 3
           if-no-files-found: error
 
       - name: Upload visual baselines for review and commit
@@ -150,5 +150,5 @@ jobs:
         with:
           name: visual-baselines-${{ github.run_id }}
           path: tests/visual-baselines/
-          retention-days: 14
+          retention-days: 3
           if-no-files-found: ignore
