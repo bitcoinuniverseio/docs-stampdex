@@ -24,7 +24,7 @@ jobs:
         shell: bash
     steps:
       - uses: actions/checkout@v4
-      - uses: bitcoinuniverseio/universe-ci-actions/universe-host-tools@ca7d5a2893fd27f41c26f6b62549ccad8b3c46cb
+      - uses: bitcoinuniverseio/universe-ci-actions/universe-host-tools@123fa3d72393763aaa7d6b4e2b30fbb02caa322d
       - uses: bitcoinuniverseio/universe-ci-actions/universe-node-env@8e24bc760556caa5ec8c7c497baaad2e9adcc912
         if: github.event.action != 'closed'
 
