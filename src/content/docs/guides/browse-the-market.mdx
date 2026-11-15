@@ -100,3 +100,33 @@ The `sources` object on each row is the same one the board reads.
 
 - [Token pages](/docs-stampdex/guides/token-pages/)
 - [Market data](/docs-stampdex/concepts/market-data/)
+
+## Unreleased preparation changes, 24 October 2026
+
+This section describes source changes. It does not verify the live site.
+
+Search reads the saved catalog. Results keep each deployment separate. A source
+outage, older snapshot or incomplete catalog differs from no matches. The catalog
+covers SRC-20 deployments and saved Stamp listings. Collection coverage remains
+incomplete.
+
+In Desk, enter `find KEVIN`, paste an asset link, or enter a Stamp number.
+For a trade, use `buy 10 KEVIN` or `list 10 KEVIN at 5 sats`. Review the asset
+and amount before filling the existing form. The wallet still controls signing.
+Unknown fees or ownership cannot establish readiness. SRC-20 settlement uses escrow.
+
+Use Capture for a text file or one QR code. Unsupported capture keeps typed input.
+AI, speech transcription and image text extraction remain unavailable until the
+approved inference service is connected. Normal forms remain available.
+
+`watch fees below 3.5 sat/vB` opens an editable fee rule. Save it in the fee form.
+`order ID` reads the retained order state and links to its existing recovery page.
+A draft does not place an order, create a rule, sign or send a transaction.
+
+Source reviewed: application `backend/src/intelligence/preparation.service.ts`,
+`backend/src/market/market-catalog-snapshot.service.ts` and
+`frontend/src/components/assistance/IntentPreparation.jsx`, based on develop
+`74aa27e5`. Browser and native acceptance remain unverified.
+
+Unknown price data does not trigger a below-price alert. A scan cannot undo a
+user pause. Saved pause controls survive restart in this unreleased candidate.
