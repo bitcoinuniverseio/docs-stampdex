@@ -247,6 +247,7 @@ if (project.trailingSlash === 'never') dataAttributes['data-strip-trailing-slash
 
   class SiteSearch extends HTMLElement {
     private pagefind: any = null;
+    private pagefindLoading: Promise<void> | null = null;
     private activeFilter: string = 'all';
 
     constructor() {
@@ -350,17 +351,24 @@ if (project.trailingSlash === 'never') dataAttributes['data-strip-trailing-slash
       });
     }
 
-    private async initPagefind() {
-      if (this.pagefind) return;
-      try {
-        const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
-        // @ts-ignore
-        const pf = await import(/* @vite-ignore */ `${basePath}/pagefind/pagefind.js`);
-        await pf.init();
-        this.pagefind = pf;
-      } catch (err) {
-        // Pagefind may not exist in dev server; graceful fallback
+    // Loads the index once; every caller awaits the same promise, so a query
+    // typed while the index is still loading is searched once it is ready
+    // instead of silently showing no results.
+    private initPagefind(): Promise<void> {
+      if (!this.pagefindLoading) {
+        this.pagefindLoading = (async () => {
+          try {
+            const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+            // @ts-ignore
+            const pf = await import(/* @vite-ignore */ `${basePath}/pagefind/pagefind.js`);
+            await pf.init();
+            this.pagefind = pf;
+          } catch (err) {
+            // Pagefind may not exist in dev server; graceful fallback
+          }
+        })();
       }
+      return this.pagefindLoading;
     }
 
     private async handleSearch(query: string) {
@@ -427,6 +435,9 @@ if (project.trailingSlash === 'never') dataAttributes['data-strip-trailing-slash
       }
 
       // Perform Pagefind search
+      await this.initPagefind();
+      // A newer query may have been typed while the index loaded.
+      if (query !== this.querySelector<HTMLInputElement>('.sd-search-input')!.value.trim()) return;
       if (this.pagefind) {
         try {
           const searchRes = await this.pagefind.search(query);
