@@ -135,6 +135,8 @@ jobs:
 
       - name: Save the checked site
         if: env.ARTIFACT_TAG == ''
+        # Report-only upload: keep the job green when the shared artifact storage quota is full.
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
           name: verified-site
@@ -144,6 +146,8 @@ jobs:
 
       - name: Upload visual baselines for review and commit
         if: always()
+        # Report-only upload: keep the job green when the shared artifact storage quota is full.
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
           name: visual-baselines-${{ github.run_id }}
